@@ -1,0 +1,25 @@
+.navbar {
+    display: flex;
+    align-items: center;
+}
+
+.navbar__logo {
+    width: 70px;
+    margin-left: 100px;
+    margin-right: 10px;
+}
+
+.navbar__searchBox {
+    display: flex;
+    flex: 1;
+}
+
+.navbar__searchInput {
+    height: 40px;
+    border-radius: 25px;
+    padding-left: 20px;
+    font-size: 20px;
+    border-color: grey;
+    width: 100%;
+    margin-right: 10px;
+}
