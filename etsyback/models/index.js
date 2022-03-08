@@ -1,13 +1,15 @@
-const dbConfig = require('../config/db.config.js');
-const seq = require('sequelize');
-const sequelize = new seq(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-    host: dbConfig.HOST,
-    dialect: 'mysql',
-    operatorsAliases: false,
+const Seq = require('sequelize');
+const dbConfig = require('../config/db.config');
+
+const sequelize = new Seq(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+  host: dbConfig.HOST,
+  dialect: 'mysql',
+  operatorsAliases: false,
 });
 
 const db = {};
-db.seq = seq;
+db.seq = Seq;
 db.sequelize = sequelize;
-db.users = require('./user.model.js')(sequelize, seq);
+db.users = require('./user.model')(sequelize, Seq);
+
 module.exports = db;
