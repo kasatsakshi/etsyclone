@@ -5,10 +5,11 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js",
-    "start": "node server.js",
+    "dev": "npm run knex-migrate && nodemon server.js",
+    "start": "npm run knex-migrate && node server.js",
     "knex": "node node_modules/.bin/knex",
-    "knex-migrate": "yarn knex migrate:latest",
+    "knex-migrate": "npm run knex migrate:latest",
+    "knex-rollback": "npm run knex migrate:down",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
