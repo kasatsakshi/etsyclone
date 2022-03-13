@@ -5,11 +5,9 @@ import { isValidEmail } from "../helpers/validator";
 function cleanInput(input) {
   const {
     email,
-    name
   } = input;
 
   input.email = email.trim();
-  input.name = name.trim();
 
   return input;
 }
@@ -18,13 +16,10 @@ async function validateInput(input) {
   const {
     email,
     password,
-    name
   } = input;
 
   let errorMsg;
-  if(!name) {
-    errorMsg = 'Name is missing';
-  } else if(!email) {
+  if(!email) {
     errorMsg = 'Email is missing';
   } else if(!password) {
     errorMsg = 'Password is missing'
@@ -41,7 +36,7 @@ async function validateInput(input) {
   return;
 } 
 
-export default async function signup(req, res) {
+export default async function login(req, res) {
   const input = req.body;
   const trimmedInput = cleanInput(input);
   const inputError = await validateInput(trimmedInput);
@@ -51,32 +46,23 @@ export default async function signup(req, res) {
   }
 
   const findUser = await findEntity('user', ['*'], ['email', trimmedInput.email]);
-
   //Check if this user email exists
-  if(findUser.length !== 0) {
-    return res.status(400).json({message: "Email Address already exists"});
+  if(findUser.length === 0) {
+    console.error("Account does not exists!");
+    // Adding the below message so someone cannot create fake accounts
+    return res.status(400).json({message: "Invalid Username and Password"});
   }
 
-  let addressId;
-  if(input.address) {
-    addressId = await createEntity('address', trimmedInput.address);
-    delete trimmedInput.address;
+  const isValidPassword = await bcrypt.compare(trimmedInput.password, findUser[0].password);
+  if(!isValidPassword) {
+    console.error("Invalid Username and Password");
+    return res.status(400).json({message: "Invalid Username and Password"});
   }
-  const salt = await bcrypt.genSalt(10);
-  // now we set user password to hashed password
-  const hashedPassword = await bcrypt.hash(input.password, salt);
-  const userData = {
-    ...input,
-    addressId: addressId[0],
-    userLevel: 0,
-    password: hashedPassword,
-  };
-  const user = await createEntity('user', userData);
-  const createdUser = await findEntity('user', ['*'], ['id', user[0]]);
-  const address = await findEntity('address', ['*'], ['id', createdUser[0].addressId]);
-  delete createdUser[0].addressId;
+
+  const address = await findEntity('address', ['*'], ['id', findUser[0].addressId]);
+  delete findUser[0].addressId;
   const response = {
-    ...createdUser[0],
+    ...findUser[0],
     address: address[0]
   }
 
