@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import { useSelector } from "react-redux";
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
-
+          <Route path="/signup" element={user ? <Navigate to="/" /> : <Signup />} />
         </Routes>
       </div>
     </Router>

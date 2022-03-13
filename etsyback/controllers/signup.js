@@ -67,7 +67,7 @@ export default async function signup(req, res) {
   const hashedPassword = await bcrypt.hash(input.password, salt);
   const userData = {
     ...input,
-    addressId: addressId[0],
+    addressId: addressId[0] || null,
     userLevel: 0,
     userStatus: 'active',
     lastLoginAt: new Date(),
@@ -75,11 +75,14 @@ export default async function signup(req, res) {
   };
   const user = await createEntity('user', userData);
   const createdUser = await findEntity('user', ['*'], ['id', user[0]]);
-  const address = await findEntity('address', ['*'], ['id', createdUser[0].addressId]);
-  delete createdUser[0].addressId;
-  const response = {
-    ...createdUser[0],
-    address: address[0]
+  let response;
+  if(createdUser.length >0 && createdUser[0].addressId) {
+    const address = await findEntity('address', ['*'], ['id', createdUser[0].addressId]);
+    delete createdUser[0].addressId;
+    response = {
+      ...createdUser[0],
+      address: address[0]
+    } 
   }
 
   return res.status(200).json(response);

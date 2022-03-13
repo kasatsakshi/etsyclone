@@ -1,8 +1,7 @@
 import React from 'react';
 import './Navbar.css';
 import { Link } from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import {ShoppingCart, AccountCircle} from '@mui/icons-material';
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/user";
 
@@ -26,10 +25,14 @@ function Navbar() {
             {/* User link */}
             { user 
                 ? <React.Fragment>
-                    <ShoppingCartIcon /> 
+                    <ShoppingCart />
+                    <AccountCircle />
                     <input type="button" className="btn" value="Logout" onClick={() => logout(dispatch)} />
                 </React.Fragment>
-                : <Link to='/login'><button>Login</button></Link>
+                : <React.Fragment>
+                        <Link to='/login'><button>Login</button></Link> 
+                        <Link to='/signup'><button>Singup</button></Link>
+                 </React.Fragment>
             }
 
         </nav>
