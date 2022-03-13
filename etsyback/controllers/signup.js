@@ -69,6 +69,8 @@ export default async function signup(req, res) {
     ...input,
     addressId: addressId[0],
     userLevel: 0,
+    userStatus: 'active',
+    lastLoginAt: new Date(),
     password: hashedPassword,
   };
   const user = await createEntity('user', userData);

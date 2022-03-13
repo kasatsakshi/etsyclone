@@ -2,8 +2,8 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = async function (knex) {
-   await Promise.all([
+ export async function up(knex) {
+  await Promise.all([
      knex.schema.hasTable('address').then(function(exists) {
       if (!exists) {
         return knex.schema.createTable('address', (t) => {
@@ -32,6 +32,9 @@ exports.up = async function (knex) {
           t.string('avatarUrl');
           t.string('birthday');
           t.string('bio');
+          t.string('userStatus').checkIn(['active', 'inactive']);
+          t.timestamp('lastLoginAt');
+          t.timestamp('lastLogoutAt');
           t.string('currency').notNullable().defaultTo('USD');
           t.boolean('userLevel').checkIn([0, 1, 2]); // 0-buyer, 1-seller, 2-admin
           t.integer('addressId').unsigned();
@@ -131,7 +134,7 @@ exports.up = async function (knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = async function (knex) {
+ export async function down(knex) {
   await Promise.all([
     await knex.schema.dropTableIfExists('orderDetails'),
     await knex.schema.dropTableIfExists('order'),

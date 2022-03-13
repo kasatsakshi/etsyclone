@@ -1,4 +1,4 @@
-import { createEntity, findEntity } from "../models";
+import { findEntity, updateEntity } from "../models";
 import bcrypt from "bcrypt";
 import { isValidEmail } from "../helpers/validator";
 
@@ -59,6 +59,9 @@ export default async function login(req, res) {
     return res.status(400).json({message: "Invalid Username and Password"});
   }
 
+  await updateEntity('user', {'lastLoginAt': new Date(), 'updatedAt': new Date()}, ['id', findUser[0].id]);
+
+  // TODO: Use joins here
   const address = await findEntity('address', ['*'], ['id', findUser[0].addressId]);
   delete findUser[0].addressId;
   const response = {

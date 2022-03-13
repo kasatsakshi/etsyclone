@@ -9,14 +9,27 @@ function createEntity(table, data) {
 }
 
 function findEntity(table, filter = '*', condition) {
-  if(condition) {
-    return getKnexClient()(table).select(...filter).where(...condition);
-  } else {
-    return getKnexClient()(table).select(...filter);
-  } 
+  try {
+    if(condition) {
+      return getKnexClient()(table).select(...filter).where(...condition);
+    } else {
+      return getKnexClient()(table).select(...filter);
+    } 
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function updateEntity(table, data, condition) {
+  try {
+    return getKnexClient()(table).update(data).where(...condition);
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 export {
   createEntity,
-  findEntity
+  findEntity,
+  updateEntity
 }
