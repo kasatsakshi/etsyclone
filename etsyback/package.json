@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run knex-migrate && nodemon server.js",
-    "start": "npm run knex-migrate && node server.js",
+    "dev": "npm run knex-migrate && nodemon --experimental-specifier-resolution=node server.js",
+    "start": "npm run knex-migrate && node --experimental-specifier-resolution=node server.js",
     "knex": "node node_modules/.bin/knex",
     "knex-migrate": "npm run knex migrate:latest",
     "knex-rollback": "npm run knex migrate:down",
@@ -36,5 +36,6 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "sequelize": "^6.17.0"
-  }
+  },
+  "type": "module"
 }

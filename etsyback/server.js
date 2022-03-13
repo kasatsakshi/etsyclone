@@ -1,5 +1,6 @@
-const express = require('express');
-const cors = require('cors');
+import express from "express";
+import cors from "cors";
+import routes from "./routes";
 
 const app = express();
 
@@ -9,9 +10,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// const db = require('./models');
-
-// db.sequelize.sync();
+app.use('/api/', routes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Etsy backend server is running' });

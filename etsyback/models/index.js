@@ -1,15 +1,34 @@
-const Seq = require('sequelize');
-const dbConfig = require('../config/db.config');
+import { getKnexClient } from "../helpers/knex-client";
 
-const sequelize = new Seq(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,
-  dialect: 'mysql',
-  operatorsAliases: false,
-});
+function createEntity(table, data) {
+  try {
+    return getKnexClient()(table).insert(data);
+  } catch (e) {
+    console.error(e);
+  }
+}
 
-const db = {};
-db.seq = Seq;
-db.sequelize = sequelize;
-db.users = require('./user.model')(sequelize, Seq);
+function findEntity(table, filter = '*', condition) {
+  if(condition) {
+    return getKnexClient()(table).select(...filter).where(...condition);
+  } else {
+    return getKnexClient()(table).select(...filter);
+  } 
+}
 
-module.exports = db;
+// export default async function createUser(user) {
+//   // const result = await knex('user').insert({ account_name: 'knex', user_id: insertedRows[0] })
+
+//   try {
+//     const result = await getKnexClient()('address').insert(user.address);
+//     console.log(result);
+//   } catch (e) {
+//     console.log(e);
+//   }
+
+// }
+
+export {
+  createEntity,
+  findEntity
+}

@@ -3,7 +3,7 @@
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
-module.exports = {
+const connection = {
   development: {
     client: 'mysql',
     connection: {
@@ -22,3 +22,5 @@ module.exports = {
     },
   },
 };
+
+export default connection
