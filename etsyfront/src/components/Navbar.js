@@ -3,8 +3,10 @@ import './Navbar.css';
 import { Link } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useSelector } from "react-redux";
 
 function Navbar() {
+    const user = useSelector((state) => state.user.currentUser);
     return (
         <nav className='navbar'>
             {/* Logo */}
@@ -19,11 +21,15 @@ function Navbar() {
             </div>
 
             {/* Sign in link */}
-            <Link to='/signin'>
-                <button>Sign in</button>
-            </Link>
-            {/* Checkout link */}
-            <ShoppingCartIcon />
+            {/* User link */}
+            { user 
+                ? <React.Fragment>
+                    <ShoppingCartIcon /> 
+                    <Link to='/logout'><button>Logout</button></Link>
+                </React.Fragment>
+                : <Link to='/login'><button>Login</button></Link>
+            }
+
         </nav>
     )
 }
