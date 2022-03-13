@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 // import cartReducer from "./cartRedux";
 import userReducer from "./userRedux";
+import { LOGOUT_USER } from "../actions/types";
 import {
   persistStore,
   persistReducer,
@@ -19,7 +20,21 @@ const persistConfig = {
   storage,
 };
 
-const rootReducer = combineReducers({ user: userReducer });
+// Combine all reducers.
+const appReducer = combineReducers({
+  user: userReducer,
+  state: (state = {}) => state
+});
+
+const rootReducer = (state, action) => {   
+  // Clear all data in redux store to initial.
+  if(action.type === LOGOUT_USER) {
+    storage.removeItem("persist:root");
+    state = undefined;
+  }
+  
+  return appReducer(state, action);
+};
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

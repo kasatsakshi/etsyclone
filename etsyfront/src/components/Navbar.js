@@ -3,10 +3,12 @@ import './Navbar.css';
 import { Link } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/user";
 
 function Navbar() {
     const user = useSelector((state) => state.user.currentUser);
+    const dispatch = useDispatch();
     return (
         <nav className='navbar'>
             {/* Logo */}
@@ -25,7 +27,7 @@ function Navbar() {
             { user 
                 ? <React.Fragment>
                     <ShoppingCartIcon /> 
-                    <Link to='/logout'><button>Logout</button></Link>
+                    <input type="button" className="btn" value="Logout" onClick={() => logout(dispatch)} />
                 </React.Fragment>
                 : <Link to='/login'><button>Login</button></Link>
             }
