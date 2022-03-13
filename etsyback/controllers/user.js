@@ -52,6 +52,7 @@ export default async function user(req, res) {
   // TODO: Use joins here
   const address = await findEntity('address', ['*'], ['id', findUser[0].addressId]);
   delete findUser[0].addressId;
+  delete findUser[0].password;
   const response = {
     ...findUser[0],
     address: address[0]
