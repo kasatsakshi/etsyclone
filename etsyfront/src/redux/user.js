@@ -1,4 +1,4 @@
-import { loginFailure, loginStart, loginSuccess, logoutUser, signupStart, signupSuccess, signupFailure } from "./userRedux";
+import { loginFailure, loginStart, loginSuccess, logoutUser, signupStart, signupSuccess, signupFailure, accountInfoStart, accountInfoSuccess, accountInfoFailure } from "./userRedux";
 import { publicRequest } from "../api/http";
 
 export const login = async (dispatch, user) => {
@@ -20,6 +20,18 @@ export const signup = async (dispatch, user) => {
     dispatch(signupFailure());
   }
 };
+
+export const accountInfo = async (dispatch, user) => {
+  dispatch(accountInfoStart());
+  try {
+    const res = await publicRequest.post("/user", { email: user.email});
+    dispatch(accountInfoSuccess(res.data));
+  } catch (err) {
+    console.log(err);
+    dispatch(accountInfoFailure());
+  }
+};
+
 
 export const logout = (dispatch) => {
   dispatch(logoutUser());

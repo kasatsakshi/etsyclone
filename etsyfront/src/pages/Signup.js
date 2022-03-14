@@ -72,11 +72,11 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [gender, setGender] = useState("");
+  // const [gender, setGender] = useState("");
   const [phone, setPhone] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const [bio, setBio] = useState("");
-  const [currency, setCurrency] = useState("");
+  // const [birthday, setBirthday] = useState("");
+  // const [bio, setBio] = useState("");
+  // const [currency, setCurrency] = useState("");
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [city, setCity] = useState("");
@@ -99,7 +99,8 @@ const Signup = () => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    signup(dispatch, { name, email, password, gender, phone, birthday, bio, currency, address });
+    // signup(dispatch, { name, email, password, gender, phone, birthday, bio, currency, address });
+    signup(dispatch, { name, email, password, phone, address });
   };
   return (
     <Container>
@@ -119,15 +120,15 @@ const Signup = () => {
             type="password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Input
+          {/* <Input
             placeholder="gender"
             onChange={(e) => setGender(e.target.value)}
-          />
+          /> */}
           <Input
             placeholder="phone"
             onChange={(e) => setPhone(e.target.value)}
           />
-          <Input
+          {/* <Input
             placeholder="birthday"
             onChange={(e) => setBirthday(e.target.value)}
           />
@@ -138,7 +139,7 @@ const Signup = () => {
           <Input
             placeholder="currency"
             onChange={(e) => setCurrency(e.target.value)}
-          />
+          /> */}
           <Input
             placeholder="address1"
             onChange={(e) => setAddress1(e.target.value)}

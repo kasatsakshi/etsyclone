@@ -26,7 +26,7 @@ function Navbar() {
             { user 
                 ? <React.Fragment>
                     <ShoppingCart />
-                    <AccountCircle />
+                    <Link to='/account'><AccountCircle /></Link>
                     <input type="button" className="btn" value="Logout" onClick={() => logout(dispatch)} />
                 </React.Fragment>
                 : <React.Fragment>
