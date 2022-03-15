@@ -17,36 +17,36 @@ async function validateInput(input) {
   } = input;
 
   let errorMsg;
-  if(!email) {
+  if (!email) {
     errorMsg = 'Email is missing';
   }
 
-  if(!isValidEmail(email)) {
+  if (!isValidEmail(email)) {
     errorMsg = 'Email is in incorrect format';
   }
 
-  if(errorMsg) {
+  if (errorMsg) {
     return errorMsg;
   }
 
   return;
-} 
+}
 
 export default async function user(req, res) {
   const input = req.body;
   const trimmedInput = cleanInput(input);
   const inputError = await validateInput(trimmedInput);
 
-  if(inputError) {
-    return res.status(400).json({message: inputError});
+  if (inputError) {
+    return res.status(400).json({ message: inputError });
   }
 
   const findUser = await findEntity('user', ['*'], ['email', trimmedInput.email]);
   //Check if this user email exists
-  if(findUser.length === 0) {
+  if (findUser.length === 0) {
     console.error("Email does not exists!");
     // Adding the below message so someone cannot create fake accounts
-    return res.status(400).json({message: "Email does not exists"});
+    return res.status(400).json({ message: "Email does not exists" });
   }
 
   // TODO: Use joins here

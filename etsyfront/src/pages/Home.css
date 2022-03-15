@@ -1,0 +1,13 @@
+.home__announcement{
+    text-align: center;
+    height: 80px;
+    background-color: bisque;
+}
+
+.home__announcementText{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align: center;
+    font-weight: 1;
+    font-size: 40px;
+    padding-top: 20px;
+}

@@ -1,11 +1,16 @@
 .navbar {
+    padding-top: 20px;
     display: flex;
     align-items: center;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .navbar__logo {
     width: 70px;
-    margin-left: 100px;
+    /* margin-left: 100px; */
     margin-right: 10px;
 }
 
@@ -15,11 +20,44 @@
 }
 
 .navbar__searchInput {
-    height: 40px;
+    height: 33px;
     border-radius: 25px;
     padding-left: 20px;
     font-size: 20px;
     border-color: grey;
     width: 100%;
+    margin-right: 30px;
+}
+
+.navbar__searchInput:focus{
+    outline: 2px black;
+}
+
+.navbar__userSection{
+    align-items: center;
+    display: flex;
+}
+
+.navbar__icons{
     margin-right: 10px;
+}
+
+.navbar__accountCircle{
+    color: darkorange;
+    size: 30px;
+}
+
+.navbar__button {
+    height: 35px;
+    margin-right: 20px;
+    background: none;
+    border-radius: 10px;
+    border-color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 70px;
+}
+
+.navbar__button:hover {
+    background-color: lightgrey;
 }

@@ -11,8 +11,6 @@ const Container = styled.div`
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.5)
     ),
-    url("https://images.pexels.com/photos/6984650/pexels-photo-6984650.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")
-      center;
   background-size: cover;
   display: flex;
   align-items: center;
@@ -39,8 +37,8 @@ const Account = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        if(!user) {
-          accountInfo(dispatch, { email: 'kushal8@xyz.com' });
+        if (!user) {
+          accountInfo(dispatch, { email: 's.k@xyz.com' });
         }
       } catch (err) {
         console.log(err);
@@ -52,39 +50,39 @@ const Account = () => {
   // const displayFields = ['name', 'email', 'phone', 'gender', 'birthday', 'currency', 'address']
   const displayFields = ['name', 'email', 'phone', 'address']
   const addressFields = ['address1', 'city', 'state', 'country', 'ZipCode']
-  
+
   return (
     <Container>
-    <Wrapper>
-      
-      <Title>Account Information</Title>
+      <Wrapper>
 
-      <ul>
-        {
-          Object.keys(user).map(key => {
-            if(displayFields.includes(key)) {
-              if(key === 'address') {
-                return (
-                  Object.keys(user.address).map(item => {
-                    if(addressFields.includes(item)) {
-                      return(
-                      <li key="{item}">{`${item} - ${user.address[item]}`}</li>
-                      )
-                    }
-                  })
-                )  
-              } else {
-                return (
-                  <li key="{key}">{`${key} - ${user[key]}`}</li>
-              );   
-              }       
-            }
-          })
-        }
-      </ul>  
-    </Wrapper>
+        <Title>Account Information</Title>
+
+        <ul>
+          {
+            Object.keys(user).map(key => {
+              if (displayFields.includes(key)) {
+                if (key === 'address') {
+                  return (
+                    Object.keys(user.address).map(item => {
+                      if (addressFields.includes(item)) {
+                        return (
+                          <li key="{item}">{`${item} - ${user.address[item]}`}</li>
+                        )
+                      }
+                    })
+                  )
+                } else {
+                  return (
+                    <li key="{key}">{`${key} - ${user[key]}`}</li>
+                  );
+                }
+              }
+            })
+          }
+        </ul>
+      </Wrapper>
     </Container>
-    
+
   );
 };
 

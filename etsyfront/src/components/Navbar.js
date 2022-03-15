@@ -1,7 +1,8 @@
 import React from 'react';
 import './Navbar.css';
 import { Link } from 'react-router-dom';
-import {ShoppingCart, AccountCircle} from '@mui/icons-material';
+import { ShoppingCart, AccountCircle } from '@mui/icons-material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/user";
 
@@ -21,19 +22,21 @@ function Navbar() {
                 {/* <SearchIcon className='navbar__searchIcon' /> */}
             </div>
 
-            {/* Sign in link */}
-            {/* User link */}
-            { user 
-                ? <React.Fragment>
-                    <ShoppingCart />
-                    <Link to='/account'><AccountCircle /></Link>
-                    <input type="button" className="btn" value="Logout" onClick={() => logout(dispatch)} />
-                </React.Fragment>
-                : <React.Fragment>
-                        <Link to='/login'><button>Login</button></Link> 
-                        <Link to='/signup'><button>Singup</button></Link>
-                 </React.Fragment>
-            }
+            {/* User section*/}
+            <div className='navbar__userSection'>
+                {user
+                    ? <React.Fragment>
+                        <FavoriteBorderIcon className='navbar__icons' />
+                        <ShoppingCart className='navbar__icons' />
+                        <Link to='/account' className='navbar__icons'><AccountCircle className='navbar__accountCircle' /></Link>
+                        <input type="button" className="navbar__button" value="Logout" onClick={() => logout(dispatch)} />
+                    </React.Fragment>
+                    : <React.Fragment>
+                        <Link to='/login'><button className='navbar__button'>Login</button></Link>
+                        <Link to='/signup'><button className='navbar__button'>Signup</button></Link>
+                    </React.Fragment>
+                }
+            </div>
 
         </nav>
     )
