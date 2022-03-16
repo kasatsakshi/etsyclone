@@ -70,35 +70,13 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [gender, setGender] = useState("");
-  const [phone, setPhone] = useState("");
-  // const [birthday, setBirthday] = useState("");
-  // const [bio, setBio] = useState("");
-  // const [currency, setCurrency] = useState("");
-  const [address1, setAddress1] = useState("");
-  const [address2, setAddress2] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
-  const [zipcode, setZipcode] = useState("");
-
-  const address = {
-    address1,
-    address2,
-    city,
-    state,
-    country,
-    zipcode,
-  }
-
 
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
 
   const handleClick = (e) => {
     e.preventDefault();
-    // signup(dispatch, { name, email, password, gender, phone, birthday, bio, currency, address });
-    signup(dispatch, { name, email, password, phone, address });
+    signup(dispatch, { name, email, password });
   };
   return (
     <Container>
@@ -118,51 +96,6 @@ const Signup = () => {
             type="password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          {/* <Input
-            placeholder="gender"
-            onChange={(e) => setGender(e.target.value)}
-          /> */}
-          <Input
-            placeholder="phone"
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          {/* <Input
-            placeholder="birthday"
-            onChange={(e) => setBirthday(e.target.value)}
-          />
-          <Input
-            placeholder="bio"
-            onChange={(e) => setBio(e.target.value)}
-          />
-          <Input
-            placeholder="currency"
-            onChange={(e) => setCurrency(e.target.value)}
-          /> */}
-          <Input
-            placeholder="address1"
-            onChange={(e) => setAddress1(e.target.value)}
-          />
-          <Input
-            placeholder="address2"
-            onChange={(e) => setAddress2(e.target.value)}
-          />
-          <Input
-            placeholder="city"
-            onChange={(e) => setCity(e.target.value)}
-          />
-          <Input
-            placeholder="state"
-            onChange={(e) => setState(e.target.value)}
-          />
-          <Input
-            placeholder="country"
-            onChange={(e) => setCountry(e.target.value)}
-          />
-          <Input
-            placeholder="zipcode"
-            onChange={(e) => setZipcode(e.target.value)}
-          />
-
           <Button onClick={handleClick} disabled={isFetching}>
             Signup
           </Button>

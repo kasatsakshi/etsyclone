@@ -4,6 +4,7 @@ import { mobile } from "../responsive";
 import { accountInfo } from "../redux/user";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
+import UploadImage from "../components/UploadImage";
 
 const Container = styled.div``;
 
@@ -48,7 +49,7 @@ const Account = () => {
 
 
         <Title>Account Information</Title>
-
+        <UploadImage type="user" id={user.email} />
         <ul>
           {
             Object.keys(user).map(key => {
