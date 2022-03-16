@@ -3,6 +3,7 @@
 # dependencies
 etsyfront/node_modules
 etsyback/node_modules
+etsyback/public/*
 /.pnp
 .pnp.js
 
