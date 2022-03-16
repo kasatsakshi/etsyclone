@@ -3,19 +3,9 @@ import { useEffect } from "react";
 import { mobile } from "../responsive";
 import { accountInfo } from "../redux/user";
 import { useDispatch, useSelector } from "react-redux";
+import Navbar from "../components/Navbar";
 
-const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.5),
-      rgba(255, 255, 255, 0.5)
-    ),
-  background-size: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+const Container = styled.div``;
 
 const Wrapper = styled.div`
   width: 25%;
@@ -53,7 +43,9 @@ const Account = () => {
 
   return (
     <Container>
+      <Navbar />
       <Wrapper>
+
 
         <Title>Account Information</Title>
 

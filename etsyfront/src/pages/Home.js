@@ -25,11 +25,8 @@ const Home = () => {
         <h1 className="home__announcementText">Welcome, {firstName}</h1>
       </div>
 
-      <div>
-        <ProductTile />
-        <ProductTile />
-        <ProductTile />
-      </div>
+      <ProductTile />
+
       {/* <Slider />
       <Categories />
       <Products/>
