@@ -5,6 +5,7 @@ import { accountInfo } from "../redux/user";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
 import UploadImage from "../components/UploadImage";
+import { BASE } from "../api/http";
 
 const Container = styled.div``;
 
@@ -28,9 +29,9 @@ const Account = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        if (!user) {
-          accountInfo(dispatch, { email: 's.k@xyz.com' });
-        }
+        // if (!user) {
+          accountInfo(dispatch, { email: user.email });
+        // }
       } catch (err) {
         console.log(err);
       }
@@ -46,9 +47,13 @@ const Account = () => {
     <Container>
       <Navbar />
       <Wrapper>
-
-
         <Title>Account Information</Title>
+        <div>
+          {
+            user.avatarUrl ? <img src={BASE + "/" + user.avatarUrl} height="200" width="200" alt="userProfile"></img> : 
+            <img src="defaultUser.png" height="200" width="200" alt="user avatar"></img>
+          }
+        </div>
         <UploadImage type="user" id={user.email} />
         <ul>
           {

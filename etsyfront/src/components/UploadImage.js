@@ -15,6 +15,7 @@ class UploadImage extends React.Component {
     }
     resetFileInput() {  
       document.getElementById("myImage").value = "";
+      window.location.reload(false);
     }
     onFormSubmit(e){
         e.preventDefault();

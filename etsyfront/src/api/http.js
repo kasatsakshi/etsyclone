@@ -1,5 +1,6 @@
 import axios from "axios";
 
+export const BASE = "http://localhost:8080";
 const BASE_URL = "http://localhost:8080/api/";
 // const TOKEN =
 //   JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).currentUser
