@@ -2,6 +2,7 @@ import React from "react";
 import './Home.css';
 import Navbar from "../components/Navbar";
 import ProductTile from "../components/ProductTile";
+import Error404 from "../components/Error404";
 import { useDispatch, useSelector } from "react-redux";
 
 const Home = () => {
@@ -15,22 +16,15 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      {/* <Announcement /> */}
       {user ?
       <div className="home__announcement">
         <h1 className="home__announcementText">Welcome, {firstName}</h1>
         <ProductTile />
       </div> :
       <div>
-      
+        <Error404 />
       </div>
       }
-
-      {/* <Slider />
-      <Categories />
-      <Products/>
-      <Newsletter/>
-      <Footer/> */}
     </div>
   );
 };

@@ -1,0 +1,13 @@
+.shop__landing{
+  text-align: center;
+  height: 140px;
+  background-color: bisque;
+}
+
+.shop__landing__text{
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  text-align: center;
+  font-weight: 1;
+  font-size: 40px;
+  padding-top: 40px;
+}
