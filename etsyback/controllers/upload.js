@@ -1,11 +1,15 @@
 import path from "path";
 import multer from "multer";
 import { updateEntity } from "../models";
+import fs from "fs";
 
 const storage = multer.diskStorage({
-  // destination: "./public/uploads/",
   destination: function (req, file, callback) {
-    callback(null, './public/uploads/');
+    const folder = './public/uploads/';
+    if (!fs.existsSync(folder)){
+      fs.mkdirSync(folder, { recursive: true });  
+    }
+    callback(null, folder);
   },
   filename: function(req, file, cb){
      cb(null,"image-" + Date.now() + path.extname(file.originalname));
