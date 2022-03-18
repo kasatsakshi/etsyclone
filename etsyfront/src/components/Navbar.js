@@ -29,7 +29,7 @@ function Navbar() {
                         <FavoriteBorderIcon className='navbar__icons' />
                         <ShoppingCart className='navbar__icons' />
                         <Link to='/account' className='navbar__icons'><AccountCircle className='navbar__accountCircle' /></Link>
-                        <Link to='/shop'><button className='navbar__button'>Sell on Etsy</button></Link>
+                        <Link to='/shophome'><button className='navbar__button'>Sell on Etsy</button></Link>
                         <input type="button" className="navbar__button" value="Logout" onClick={() => logout(dispatch)} />
                     </React.Fragment>
                     : <React.Fragment>

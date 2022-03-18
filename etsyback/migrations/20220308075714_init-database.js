@@ -49,7 +49,7 @@
       if (!exists) {
         return knex.schema.createTable('shop', (t) => {
           t.increments().primary; // integer id
-          t.string('name').notNullable();
+          t.string('name').notNullable().unique();
           t.string('description');
           t.string('avatarUrl');
           t.integer('userId').unsigned();

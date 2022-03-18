@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Account from './pages/Account';
 import ShopLanding from './pages/ShopLanding';
+import ShopHome from './pages/ShopHome';
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -19,6 +20,7 @@ function App() {
           <Route path="/signup" element={user ? <Navigate to="/" /> : <Signup />} />
           <Route path="/account" element={<Account />} />
           <Route path="/shop" element={<ShopLanding />} />
+          <Route path="/shophome" element={<ShopHome />} />
         </Routes>
       </div>
     </Router>
