@@ -15,6 +15,11 @@ const style = {
   p: 4,
 };
 
+const cardStyle = {
+  margin: 4,
+  width: 300
+}
+
 export default function ProductCard({productData}) {
   let productImage;
 
@@ -28,7 +33,7 @@ export default function ProductCard({productData}) {
     productImage = "defaultProduct.png"
    }
   return (
-    <Card sx={{ width: 300 }}>
+    <Card sx={cardStyle}>
       <CardHeader
         title={productData.name}
         style={{textAlign: "center"}}

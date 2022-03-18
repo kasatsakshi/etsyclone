@@ -1,4 +1,4 @@
-import { findEntity } from "../models";
+import { findEntity, createEntity } from "../models";
 
 export async function getShop(req, res) {
   const { id } = req.params
@@ -43,4 +43,33 @@ export async function isShopNameAvailable(req, res) {
 
   return res.status(200).json({ message: true });
 
+}
+
+export async function createShopProduct(req, res) {
+  const input = req.body;
+
+
+  if(!input.shopId) {
+    return res.status(400).json({message: "Cannot add a product without a shop"});
+  }
+
+
+  const findShop = await findEntity('shop', ['*'], ['id', input.shopId]);
+
+  if(findShop.length === 0) {
+    return res.status(400).json({message: "Shop doesnt exists"});
+  }
+
+  const productData = {
+    ...input,
+  };
+
+  const product = await createEntity('inventory', productData);
+  const createdProduct = await findEntity('inventory', ['*'], ['id', product[0]]);
+  const response = {
+    ...createdProduct[0]
+  };
+
+
+  return res.status(200).json(response);
 }

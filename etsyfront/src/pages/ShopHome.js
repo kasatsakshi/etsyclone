@@ -4,9 +4,7 @@ import styled from "styled-components";
 import './ShopLanding.css';
 import Navbar from "../components/Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import ShopTile from "../components/ShopTile";
-import { getShop, isShopNameAvailable } from "../redux/shop";
-import OutlinedInput from '@mui/material/OutlinedInput';
+import { getShop } from "../redux/shop";
 import { BASE } from "../api/http";
 import ProductCard from "../components/ProductCard";
 
@@ -33,21 +31,45 @@ const ContainerHeader = styled.div`
 `;
 
 const ContainerBody = styled.div`
-  width: 80%;
+  width: 100%;
   height: 100%;
   padding-top: 40px;
-  padding-left: 40px;
+  padding-left: 20px;
   display: flex;
 `;
 
 const OwnerHeader = styled.div`
   width: 100%;
   height: 10%;
-  display: flex;
   padding-right: 100px;
   display: flex;
   justify-content: right;
 `;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Input = styled.input`
+  flex: 1;
+  min-width: 40%;
+  margin: 10px 0;
+  padding: 10px;
+`;
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 
 const ShopHome = () => {
   const user = useSelector((state) => state.user.currentUser);
@@ -55,8 +77,19 @@ const ShopHome = () => {
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-
   const handleClose = () => setOpen(false);
+
+  const [productOpen, setNewProductOpen] = React.useState(false);
+  const handleOpenNewProduct = () => setNewProductOpen(true);
+  const handleCloseNewProduct = () => setNewProductOpen(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    // signup(dispatch, { name, email, password });
+  };
 
   const dispatch = useDispatch();
 
@@ -72,18 +105,6 @@ const ShopHome = () => {
     };
     fetchShops();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
 
   return (
     <div>
@@ -102,7 +123,34 @@ const ShopHome = () => {
                 <ListItem><p>0 Sales</p></ListItem>
                 <Stack direction="row" spacing={2}>
                   <ListItem><Button>Edit Shop</Button></ListItem>
-                  <ListItem><Button>Add Product</Button></ListItem>
+                  <ListItem><Button onClick={(handleOpenNewProduct)}>Add Product</Button></ListItem>
+                  <Modal
+                      open={productOpen}
+                      onClose={handleCloseNewProduct}
+                      aria-describedby="modal-modal-description"
+                    >
+                      <Box sx={style}>
+                        <Form>
+                          <Input
+                            placeholder="name"
+                            onChange={(e) => setName(e.target.value)}
+                          />
+                          <Input
+                            placeholder="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
+                          <Input
+                            placeholder="password"
+                            type="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                          />
+                          <Button onClick={handleClick} disabled={'isFetching'}>
+                            Signup
+                          </Button>
+                        </Form>
+                     </Box>
+
+                     </Modal>
                 </Stack>
               </Stack>
             </Stack>
