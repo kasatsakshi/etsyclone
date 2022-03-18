@@ -1,26 +1,37 @@
 import styled from "styled-components";
 import { useEffect } from "react";
-import { mobile } from "../responsive";
+import EditIcon from '@mui/icons-material/Edit';
+import PublicSharpIcon from '@mui/icons-material/PublicSharp';
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { accountInfo } from "../redux/user";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
 import UploadImage from "../components/UploadImage";
 import { BASE } from "../api/http";
+import './Home.css';
 
 const Container = styled.div``;
-
-const Wrapper = styled.div`
-  width: 25%;
-  padding: 20px;
-  background-color: white;
-  ${mobile({ width: "75%" })}
-`;
 
 const Title = styled.h1`
   font-size: 24px;
   font-weight: 300;
 `;
 
+const Icon = styled.div`
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #FFEADB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    transition: all 0.5s ease;
+    &:hover {
+      background-color: #e9f5f5;
+      transform: scale(1.1);
+    }
+  `;
 
 const Account = () => {
   const user = useSelector((state) => state.user.currentUser);
@@ -30,7 +41,7 @@ const Account = () => {
     const getUser = async () => {
       try {
         // if (!user) {
-          accountInfo(dispatch, { email: user.email });
+        accountInfo(dispatch, { email: user.email });
         // }
       } catch (err) {
         console.log(err);
@@ -46,39 +57,31 @@ const Account = () => {
   return (
     <Container>
       <Navbar />
-      <Wrapper>
-        <Title>Account Information</Title>
-        <div>
-          {
-            user.avatarUrl ? <img src={BASE + "/" + user.avatarUrl} height="200" width="200" alt="userProfile"></img> : 
+      {/* User Info Section */}
+      <div className='account__userInfo'>
+        {
+          user.avatarUrl ? <img className='image__avatar' src={BASE + "/" + user.avatarUrl} alt="userProfile"></img> :
             <img src="defaultUser.png" height="200" width="200" alt="user avatar"></img>
-          }
+        }
+        <span className="account__userName">{user.name}</span>
+        <Icon><EditIcon style={{ fontSize: 18 }}></EditIcon></Icon>
+      </div>
+      <UploadImage type="user" id={user.email} />
+
+      {/* Favorites Section */}
+      <div className="account__searchLine">
+        <div className="account__userFavorites">
+          <h3 className="account__favoriteHeading">Favorite Items</h3>
+          <PublicSharpIcon className="account__publicIcon" fontSize="small" />
+          <text>Public</text>
+          <Icon><EditIcon style={{ fontSize: 20 }}></EditIcon></Icon>
+          <Icon><FileUploadOutlinedIcon style={{ fontSize: 28 }} /></Icon>
         </div>
-        <UploadImage type="user" id={user.email} />
-        <ul>
-          {
-            Object.keys(user).map(key => {
-              if (displayFields.includes(key)) {
-                if (key === 'address') {
-                  return (
-                    Object.keys(user.address).map(item => {
-                      if (addressFields.includes(item)) {
-                        return (
-                          <li key="{item}">{`${item} - ${user.address[item]}`}</li>
-                        )
-                      }
-                    })
-                  )
-                } else {
-                  return (
-                    <li key="{key}">{`${key} - ${user[key]}`}</li>
-                  );
-                }
-              }
-            })
-          }
-        </ul>
-      </Wrapper>
+        <div className="space"></div>
+        <div className='account__searchBox' align="right">
+          <input type='text' className='account__searchInput' placeholder='Search your favorites' />
+        </div>
+      </div>
     </Container>
 
   );
