@@ -17,3 +17,20 @@ export async function getShop(req, res) {
   const response = await findEntity('shop', ['*'], ['userId', id]);
   return res.status(200).json(response);
 }
+
+export async function isShopNameAvailable(req, res) {
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ message: 'shop name is missing' });
+  }
+
+  const findShop = await findEntity('shop', ['*'], ['name', name]);
+
+  if (findShop.length >= 1) {
+    return res.status(200).json({ message: false});
+  }
+
+  return res.status(200).json({ message: true });
+
+}
