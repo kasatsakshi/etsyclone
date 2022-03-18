@@ -61,3 +61,12 @@
 .navbar__button:hover {
     background-color: lightgrey;
 }
+
+.footer__currency{
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 10px;
+    background-color: #232347;
+    border: none;
+    color: white;
+}

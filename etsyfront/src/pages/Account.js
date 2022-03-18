@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import { useEffect } from "react";
+import { Link } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import PublicSharpIcon from '@mui/icons-material/PublicSharp';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { accountInfo } from "../redux/user";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import UploadImage from "../components/UploadImage";
 import { BASE } from "../api/http";
 import './Home.css';
@@ -21,6 +23,7 @@ const Icon = styled.div`
     width: 35px;
     height: 35px;
     border-radius: 50%;
+    color: black;
     background-color: #FFEADB;
     display: flex;
     align-items: center;
@@ -64,7 +67,9 @@ const Account = () => {
             <img src="defaultUser.png" height="200" width="200" alt="user avatar"></img>
         }
         <span className="account__userName">{user.name}</span>
-        <Icon><EditIcon style={{ fontSize: 18 }}></EditIcon></Icon>
+        <Link to='/ProfileUpdate'>
+          <Icon><EditIcon style={{ fontSize: 18 }}></EditIcon></Icon>
+        </Link>
       </div>
       <UploadImage type="user" id={user.email} />
 
@@ -82,6 +87,7 @@ const Account = () => {
           <input type='text' className='account__searchInput' placeholder='Search your favorites' />
         </div>
       </div>
+      <Footer />
     </Container>
 
   );

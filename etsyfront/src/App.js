@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import Account from './pages/Account';
 import ShopLanding from './pages/ShopLanding';
 import ShopHome from './pages/ShopHome';
+import ProfileUpdate from './pages/ProfileUpdate';
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -21,6 +22,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/shop" element={<ShopLanding />} />
           <Route path="/shophome" element={<ShopHome />} />
+          <Route path="/ProfileUpdate" element={<ProfileUpdate />} />
         </Routes>
       </div>
     </Router>
