@@ -5,7 +5,7 @@ import './Navbar.css';
 const Container = styled.div`
     display: flex;
     background-color: #232347;
-    position: relative;
+    position: absolute;
     bottom: 0px;
     width: 100%;
     height: 80px;

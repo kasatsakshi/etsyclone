@@ -7,11 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { BASE } from "../api/http";
 import './Home.css';
 import './ProfileUpdate.css';
-import { Stack, Radio, RadioGroup, FormControlLabel, Select, MenuItem } from '@mui/material';
+import { Stack, Radio, RadioGroup, FormControlLabel } from '@mui/material';
 //import DatePicker from '@mui/lab/DatePicker';
 
 const Container = styled.div`
-align:center;
+ position: relative;
+ min-height: 100vh;
 `;
 
 const Wrapper = styled.div`
@@ -21,6 +22,7 @@ const Wrapper = styled.div`
   justify-content: center;
   margin-left: 400px;
   margin-right: 400px;
+  padding-bottom: 120px;
 `;
 
 const Form = styled.form`
@@ -157,12 +159,6 @@ const ProfileUpdate = () => {
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Phone</label>
-                                    <input className='update__input'></input>
-                                </div>
-                            </Stack>
-                            <Stack>
-                                <div className='update__nameSection'>
-                                    <label className='update__labels'>Address</label>
                                     <input className='update__input'></input>
                                 </div>
                             </Stack>
