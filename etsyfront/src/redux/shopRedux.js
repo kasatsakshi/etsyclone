@@ -4,7 +4,6 @@ const shopSlice = createSlice({
   name: "shop",
   initialState: {
     currentShop: null,
-    availableShopName: false,
     isFetching: false,
     error: false,
   },
@@ -20,21 +19,19 @@ const shopSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
-    isShopNameAvailableStart: (state) => {
-      state.isFetching = true;
-    },
-    isShopNameAvailableSuccess: (state, action) => {
-      state.isFetching = false;
-      state.currentShop = action.payload;
-      state.availableShopName =  true;
-    },
-    isShopNameAvailableFailure: (state) => {
-      state.isFetching = false;
-      state.availableShopName =  false;
-      state.error = true;
-    },
+    // isShopNameAvailableStart: (state) => {
+    //   state.isFetching = true;
+    // },
+    // isShopNameAvailableSuccess: (state, action) => {
+    //   state.isFetching = false;
+    //   state.currentShop = action.payload;
+    // },
+    // isShopNameAvailableFailure: (state) => {
+    //   state.isFetching = false;
+    //   state.error = true;
+    // },
   },
 });
 
-export const { getShopStart, getShopSuccess, getShopFailure, isShopNameAvailableStart, isShopNameAvailableSuccess, isShopNameAvailableFailure } = shopSlice.actions;
+export const { getShopStart, getShopSuccess, getShopFailure } = shopSlice.actions;
 export default shopSlice.reducer;

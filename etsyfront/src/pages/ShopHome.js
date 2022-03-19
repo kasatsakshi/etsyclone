@@ -136,11 +136,11 @@ const ShopHome = () => {
                             onChange={(e) => setName(e.target.value)}
                           />
                           <Input
-                            placeholder="email"
+                            placeholder="description"
                             onChange={(e) => setEmail(e.target.value)}
                           />
                           <Input
-                            placeholder="password"
+                            placeholder="category"
                             type="password"
                             onChange={(e) => setPassword(e.target.value)}
                           />

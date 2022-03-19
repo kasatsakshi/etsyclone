@@ -9,6 +9,7 @@ import Account from './pages/Account';
 import ShopLanding from './pages/ShopLanding';
 import ShopHome from './pages/ShopHome';
 import ProfileUpdate from './pages/ProfileUpdate';
+import ShopCreate from './pages/ShopCreate';
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -22,6 +23,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/shop" element={<ShopLanding />} />
           <Route path="/shophome" element={<ShopHome />} />
+          <Route path="/shopnew/:name" element={<ShopCreate />} />
           <Route path="/ProfileUpdate" element={<ProfileUpdate />} />
         </Routes>
       </div>

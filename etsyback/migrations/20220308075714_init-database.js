@@ -52,8 +52,8 @@
           t.string('name').notNullable().unique();
           t.string('description');
           t.string('avatarUrl');
-          t.integer('userId').unsigned();
-          t.integer('addressId').unsigned();
+          t.integer('userId').unsigned().notNullable();
+          t.integer('addressId').unsigned().notNullable();
           t.foreign('userId').references('id').inTable('user');
           t.foreign('addressId').references('id').inTable('address');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
@@ -70,9 +70,11 @@
           t.string('description');
           t.string('pictureUrl');
           t.string('category').notNullable();
+          t.integer('categoryId').unsigned();
+          t.foreign('categoryId').references('id').inTable('category');
           t.decimal('price').notNullable();
           t.integer('quantity').notNullable();
-          t.integer('shopId').unsigned();
+          t.integer('shopId').unsigned().notNullable();
           t.foreign('shopId').references('id').inTable('shop');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
@@ -81,12 +83,25 @@
       }
     }),
 
+    knex.schema.hasTable('category').then(function(exists) {
+      if (!exists) {
+        return knex.schema.createTable('category', (t) => {
+          t.increments().primary; // integer id
+          t.string('name').notNullable();
+          t.integer('shopId').unsigned();
+          t.foreign('shopId').references('id').inTable('shop');
+          t.timestamp('createdAt').defaultTo(knex.fn.now());
+          t.timestamp('updatedAt').defaultTo(knex.fn.now());
+        })
+      }
+    }),
+
     knex.schema.hasTable('userFavorites').then(function(exists) {
       if (!exists) {
         return knex.schema.createTable('userFavorites', (t) => {
           t.increments().primary; // integer id
-          t.integer('userId').unsigned();
-          t.integer('inventoryId').unsigned();
+          t.integer('userId').unsigned().notNullable();
+          t.integer('inventoryId').unsigned().notNullable();
           t.foreign('userId').references('id').inTable('user');
           t.foreign('inventoryId').references('id').inTable('inventory');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
@@ -102,8 +117,8 @@
           t.decimal('finalAmount').notNullable();
           t.string('status').checkIn(['ordered', 'inTransit', 'delivered', 'cancelled']);
           t.timestamp('orderedDate').notNullable();
-          t.integer('userId').unsigned();
-          t.integer('shopId').unsigned();
+          t.integer('userId').unsigned().notNullable();
+          t.integer('shopId').unsigned().notNullable();
           t.foreign('userId').references('id').inTable('user');
           t.foreign('shopId').references('id').inTable('shop');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
@@ -117,8 +132,8 @@
         return knex.schema.createTable('orderDetails', (t) => {
           t.increments().primary; // integer id
           t.integer('orderQuantity').notNullable();
-          t.integer('orderId').unsigned();
-          t.integer('inventoryId').unsigned();
+          t.integer('orderId').unsigned().notNullable();
+          t.integer('inventoryId').unsigned().notNullable();
           t.foreign('orderId').references('id').inTable('order');
           t.foreign('inventoryId').references('id').inTable('inventory');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
@@ -126,7 +141,6 @@
         })
       }
     }),
-
   ]);
 };
 
@@ -139,6 +153,7 @@
     await knex.schema.dropTableIfExists('orderDetails'),
     await knex.schema.dropTableIfExists('order'),
     await knex.schema.dropTableIfExists('userFavorites'),
+    await knex.schema.dropTableIfExists('order'),
     await knex.schema.dropTableIfExists('inventory'),
     await knex.schema.dropTableIfExists('shop'),
     await knex.schema.dropTableIfExists('user'),

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Navigate,
+  useNavigate
 } from "react-router-dom";
 import styled from "styled-components";
 import './ShopLanding.css';
@@ -9,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ShopTile from "../components/ShopTile";
 import { getShop, isShopNameAvailable } from "../redux/shop";
 import OutlinedInput from '@mui/material/OutlinedInput';
+import { Stack, ListItem, Link, Box, Modal } from '@mui/material';
 
 const Button = styled.button`
   width: 50%;
@@ -17,7 +19,6 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   margin-bottom: 10px;
-  margin-left: 20px;
   &:disabled {
     color: green;
     cursor: not-allowed;
@@ -38,31 +39,39 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const List = styled.ul`
-    display: flex;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Error = styled.span`
+const Red = styled.span`
   color: red;
+`;
+
+const Green = styled.span`
+  color: green;
 `;
 
 const ShopLanding = () => {
   const user = useSelector((state) => state.user.currentUser);
   const shop = useSelector((state) => state.shop.currentShop);
-  // const isShopName = useSelector((state) => state.shop.availableShopName);
+  const navigate = new useNavigate();
 
   const dispatch = useDispatch();
   const [shopName, setShopName] = useState("");
+  const [availability, setAvailablility] = useState(""); 
 
-  const checkShop = (e) => {
+  const checkShop = async (e) => {
     e.preventDefault();
-    isShopNameAvailable(dispatch, { shopName });
+    const availableShop = await isShopNameAvailable({ shopName });
+    if(availableShop.message) {
+      setAvailablility("Available");
+    } else {
+      setAvailablility("Unavailable");
+    }
   };
+
+  const nextShop = (e) => {
+    e.preventDefault();
+    // <Navigate to="/shopnew" />
+    navigate(`/shopnew/${shopName}`);
+    // navigate(['shopnew'], { state: { example: 'bar' } });
+  }
 
   useEffect(() => {
     const fetchShops = async () => {
@@ -86,9 +95,8 @@ const ShopLanding = () => {
             <h1 className="shop__landing__text">Sell on Etsy</h1>
           </div> 
           {
-            shop && shop.length > 0 ? 
-              // <Navigate to="/account" />
-              <div />
+            shop && shop.shop && shop.shop.id > 0 ? 
+              <Navigate to="/shophome" />
             : 
             <div>
               <h1 className="heading">Name your shop</h1>
@@ -96,28 +104,30 @@ const ShopLanding = () => {
               <hr/>   
 
               <Container>
-                <Form>
-                <List>
-                  <OutlinedInput
-                    required
-                    id="shop-name"
-                    label="Shop Name"
-                    placeholder="Enter Shop Name"
-                    onChange={(e) => {
-                      setShopName(e.target.value);
-                    }}
-                  /> 
-                  <Button onClick={checkShop}>
-                    Check availability
-                  </Button>
-                </List>
-
-                  {/* {error && <Error> {error} </Error>} */}
-                  
-                  if(isShopName.availableShopName) {
-                    <Navigate to="/account" />
+                <Stack spacing={2}>
+                  <Stack direction="row">
+                    <OutlinedInput
+                      required
+                      id="shop-name"
+                      label="Shop Name"
+                      placeholder="Enter Shop Name"
+                      onChange={(e) => {
+                        setShopName(e.target.value);
+                      }}
+                    /> 
+                    <Button onClick={checkShop}>
+                      Check availability
+                    </Button>
+                  </Stack>
+                  <p id="availabilty">{availability}</p>
+                  {
+                    availability === "Available" ?
+                      <Button onClick={nextShop}>
+                      Next
+                    </Button>
+                    :<p></p>
                   }
-                </Form>
+                </Stack>
               </Container>      
 
             </div>
