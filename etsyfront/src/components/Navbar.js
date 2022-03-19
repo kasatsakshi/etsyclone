@@ -50,7 +50,7 @@ function Navbar() {
                 <Link className='navbar__categoryLink' to='/'>Clothing</Link>
                 <Link className='navbar__categoryLink' to='/'>Jewellery</Link>
                 <Link className='navbar__categoryLink' to='/'>Entertainment</Link>
-                <Link className='navbar__categoryLink' to='/'>Home Decor</Link>
+                <Link className='navbar__categoryLink' to='/'>Decor</Link>
                 <Link className='navbar__categoryLink' to='/'>Art</Link>
             </Stack>
             <hr className='navbar__line' />

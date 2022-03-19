@@ -10,6 +10,7 @@ import ShopLanding from './pages/ShopLanding';
 import ShopHome from './pages/ShopHome';
 import ProfileUpdate from './pages/ProfileUpdate';
 import ShopCreate from './pages/ShopCreate';
+import ProductPage from './pages/ProductPage';
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -25,6 +26,7 @@ function App() {
           <Route path="/shophome" element={<ShopHome />} />
           <Route path="/shopnew/:name" element={<ShopCreate />} />
           <Route path="/ProfileUpdate" element={<ProfileUpdate />} />
+          <Route path="/ProductPage" element={<ProductPage />} />
         </Routes>
       </div>
     </Router>
