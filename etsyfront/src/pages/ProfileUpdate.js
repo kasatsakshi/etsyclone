@@ -8,6 +8,7 @@ import { BASE } from "../api/http";
 import './Home.css';
 import './ProfileUpdate.css';
 import { Stack, Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import defaultUser from "../assets/defaultUser.png";
 //import DatePicker from '@mui/lab/DatePicker';
 
 const Container = styled.div`
@@ -106,7 +107,7 @@ const ProfileUpdate = () => {
                                 <div className='update__picture'>
                                     {
                                         user.avatarUrl ? <img className='image__avatar' src={BASE + "/" + user.avatarUrl} alt="userProfile"></img> :
-                                            <img src="defaultUser.png" height="200" width="200" alt="user avatar"></img>
+                                            <img src={defaultUser} height="200" width="200" alt="user avatar"></img>
                                     }
                                     <p className='update__labeltext'>Must be a .jpg, .gif or .png file smaller than 10MB and at least 400px by 400px.</p>
                                 </div>

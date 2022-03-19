@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Card, CardHeader, Stack, Typography, CardActions, CardMedia, CardContent, IconButton,  Box, Modal } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import { BASE } from '../api/http';
+import defaultProduct from "../assets/defaultProduct.png";
 
 const style = {
   position: 'absolute',
@@ -30,7 +31,7 @@ export default function ProductCard({productData}) {
   if(productData.pictureUrl ) {
     productImage = BASE + "/" + productData.pictureUrl
    } else {
-    productImage = "defaultProduct.png"
+    productImage = {defaultProduct}
    }
   return (
     <Card sx={cardStyle}>

@@ -25,6 +25,13 @@ app.get('/public/uploads/*', (req, res) => {
   res.sendFile(filePath, { root: __dirname });
 });
 
+app.get('/public/shop/*', (req, res) => {
+  const filePath = req.path;
+  const fileName = req.params[0];
+  const __dirname = path.dirname(fileName);
+  res.sendFile(filePath, { root: __dirname });
+});
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);

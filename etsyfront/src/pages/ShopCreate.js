@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
 import {
   Navigate,
-  useNavigate,
-  useParams
+  useParams,
+  useNavigate
 } from "react-router-dom";
 import styled from "styled-components";
 import './ProfileUpdate.css';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { Stack, Radio, RadioGroup, FormControlLabel } from '@mui/material';
-import UploadImage from "../components/UploadImage";
+import { Stack } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
-import NotFound from "../components/Error404";
 import { shopCreate } from "../redux/shop";
-
+import defaultShop from "../assets/defaultShop.png";
 
 const Container = styled.div`
  position: relative;
@@ -43,6 +41,8 @@ const Form = styled.form`
 
 const ShopCreate = () => {
   const user = useSelector((state) => state.user.currentUser);
+  const navigate = new useNavigate();
+
   const { name } = useParams();
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
@@ -58,13 +58,13 @@ const ShopCreate = () => {
   const { isFetching, error } = useSelector((state) => state.user);
 
   const onChange = (e) => {
-    console.log();
-    setAvatarFile(e.target.files[0]);
+    setAvatarFile({file: e.target.files[0]});
   }
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault(); 
-    shopCreate(dispatch, {name, description, phone, avatarUrl, address1, address2, city, state, country, zipcode, userId: user.id});
+    await shopCreate(dispatch, {name, description, phone, avatarUrl, address1, address2, city, state, country, zipcode, userId: user.id});
+    navigate(`/shophome`);
   };
   
   return (
@@ -80,12 +80,12 @@ const ShopCreate = () => {
                     <div className='update__picture'>
                     {
                       // user.avatarUrl ? <img className='image__avatar' src={BASE + "/" + user.avatarUrl} alt="userProfile"></img> :
-                      <img src="defaultShop.png" height="200" width="200" alt="user avatar"></img>
+                      <img src={defaultShop} height="200" width="200" alt="user avatar"></img>
                     }
                     <p className='update__labeltext'>Must be a .jpg, .gif or .png file smaller than 5MB and at least 400px by 400px.</p>
                   </div>
                   </Stack>                      
-                  <input type="file" id="myImage" name="myImage" onChange= {onChange} />
+                  <input type="file" id="myImage" name="myImage" onChange= {onChange} accept="image/png, image/jpeg" />
                  </Stack>
               </Stack>
               <Stack>

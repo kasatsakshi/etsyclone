@@ -1,6 +1,5 @@
 import { getShopStart, getShopSuccess, getShopFailure, shopCreateSuccess } from "./shopRedux";
 import { publicRequest } from "../api/http";
-import axios from "axios";
 
 export const getShop = async (dispatch, user) => {
   dispatch(getShopStart());
@@ -39,6 +38,7 @@ export const shopCreate = async (dispatch, data) => {
   try {
     const res = await publicRequest.post("/shop/create", formData);
     dispatch(shopCreateSuccess(res.data));
+    return res.data;
   } catch (err) {
     console.log(err);
   }

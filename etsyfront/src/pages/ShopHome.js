@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getShop } from "../redux/shop";
 import { BASE } from "../api/http";
 import ProductCard from "../components/ProductCard";
+import defaultShop from "../assets/defaultShop.png";
+import defaultUser from "../assets/defaultUser.png";
 
 const Button = styled.button`
   width: 100%;
@@ -84,6 +86,8 @@ const ShopHome = () => {
   const user = useSelector((state) => state.user.currentUser);
   const shopInfo = useSelector((state) => state.shop.currentShop);
 
+  console.log(shopInfo);
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -127,7 +131,7 @@ const ShopHome = () => {
               {
                 shopInfo.shop.avatarUrl ?
                   <img src={BASE + "/" + shopInfo.shop.avatarUrl} height="200" width="200" alt="owner avatar"></img>
-                  : <img src="defaultShop.png" height="200" width="200" alt="owner avatar"></img>
+                  : <img src={defaultShop} height="200" width="200" alt="owner avatar"></img>
               }
               <Stack spacing={2}>
                 <ListItem><h2>{shopInfo.shop.name}</h2></ListItem>
@@ -185,7 +189,7 @@ const ShopHome = () => {
                 {
                   shopInfo.user.avatarUrl ?
                     <ListItem><img src={BASE + "/" + shopInfo.user.avatarUrl} height="100" width="100" alt="owner avatar"></img></ListItem>
-                    : <ListItem><img src="defaultShop.png" height="100" width="100" alt="owner avatar"></img></ListItem>
+                    : <ListItem><img src={defaultUser} height="100" width="100" alt="owner avatar"></img></ListItem>
                 }
                 <ListItem><p>{shopInfo.user.name}</p></ListItem>
                 <ListItem><Link onClick={(handleOpen)}>Contact</Link></ListItem>

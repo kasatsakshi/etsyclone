@@ -10,6 +10,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import UploadImage from "../components/UploadImage";
 import { BASE } from "../api/http";
+import defaultUser from "../assets/defaultUser.png";
+
 import './Home.css';
 
 const Container = styled.div``;
@@ -60,7 +62,7 @@ const Account = () => {
       <div className='account__userInfo'>
         {
           user.avatarUrl ? <img className='image__avatar' src={BASE + "/" + user.avatarUrl} alt="userProfile"></img> :
-            <img src="defaultUser.png" height="200" width="200" alt="user avatar"></img>
+            <img src={defaultUser} height="200" width="200" alt="user avatar"></img>
         }
         <span className="account__userName">{user.name}</span>
         <Link to='/ProfileUpdate'>

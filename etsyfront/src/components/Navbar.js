@@ -7,6 +7,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/user";
 import Stack from '@mui/material/Stack';
+import logo from "../assets/logo.png";
 
 function Navbar() {
     const user = useSelector((state) => state.user.currentUser);
@@ -17,7 +18,7 @@ function Navbar() {
                 <nav className='navbar'>
                     {/* Logo */}
                     <Link to="/">
-                        <img className='navbar__logo' src='logo.png' alt='Etsy' />
+                        <img className='navbar__logo' src={logo} alt='Etsy' />
                     </Link>
 
                     {/* Search text box */}
