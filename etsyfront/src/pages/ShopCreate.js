@@ -9,6 +9,8 @@ import './ProfileUpdate.css';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Stack, Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import UploadImage from "../components/UploadImage";
+import { useDispatch, useSelector } from "react-redux";
 import NotFound from "../components/Error404";
 
 const Container = styled.div`
@@ -48,8 +50,9 @@ const ShopCreate = () => {
             <Stack>
               <Stack>
                 <div className='update__pictureTextSpan'>
-                  <span>Profile Picture</span>
-                  <span className='update__chooseFile'><button>Choose File</button></span>
+                  <span className='update__chooseFile'>
+                    <UploadImage type="user" />
+                  </span>
                 </div>
                 <div className='update__picture'>
                   {

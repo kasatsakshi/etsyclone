@@ -16,6 +16,8 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   margin-bottom: 10px;
+  padding: 3px;
+  height: 35px;
   &:disabled {
     color: grey;
     cursor: not-allowed;
@@ -58,6 +60,13 @@ const Input = styled.input`
   padding: 10px;
 `;
 
+const Select = styled.select`
+  flex: 1;
+  min-width: 40%;
+  margin: 10px 0;
+  padding: 10px;
+`;
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -83,8 +92,10 @@ const ShopHome = () => {
   const handleOpenNewProduct = () => setNewProductOpen(true);
   const handleCloseNewProduct = () => setNewProductOpen(false);
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [description, setDesc] = useState("");
+  const [category, setCategory] = useState("");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -113,11 +124,11 @@ const ShopHome = () => {
         <div>
           <ContainerHeader>
             <Stack direction="row" spacing={2}>
-            {
-              shopInfo.shop.avatarUrl ?
-              <img src={BASE + "/" + shopInfo.shop.avatarUrl} height="200" width="200" alt="owner avatar"></img>
-              : <img src="defaultShop.png" height="200" width="200" alt="owner avatar"></img>
-            } 
+              {
+                shopInfo.shop.avatarUrl ?
+                  <img src={BASE + "/" + shopInfo.shop.avatarUrl} height="200" width="200" alt="owner avatar"></img>
+                  : <img src="defaultShop.png" height="200" width="200" alt="owner avatar"></img>
+              }
               <Stack spacing={2}>
                 <ListItem><h2>{shopInfo.shop.name}</h2></ListItem>
                 <ListItem><p>0 Sales</p></ListItem>
@@ -125,82 +136,96 @@ const ShopHome = () => {
                   <ListItem><Button>Edit Shop</Button></ListItem>
                   <ListItem><Button onClick={(handleOpenNewProduct)}>Add Product</Button></ListItem>
                   <Modal
-                      open={productOpen}
-                      onClose={handleCloseNewProduct}
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={style}>
-                        <Form>
-                          <Input
-                            placeholder="name"
-                            onChange={(e) => setName(e.target.value)}
-                          />
-                          <Input
-                            placeholder="description"
-                            onChange={(e) => setEmail(e.target.value)}
-                          />
-                          <Input
-                            placeholder="category"
-                            type="password"
-                            onChange={(e) => setPassword(e.target.value)}
-                          />
-                          <Button onClick={handleClick} disabled={'isFetching'}>
-                            Signup
-                          </Button>
-                        </Form>
-                     </Box>
+                    open={productOpen}
+                    onClose={handleCloseNewProduct}
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={style}>
+                      <Form>
+                        <Input
+                          placeholder="name"
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                        <Input
+                          placeholder="description"
+                          onChange={(e) => setDesc(e.target.value)}
+                        />
+                        <Select
+                          placeholder="category"
+                          onChange={(e) => setCategory(e.target.value)}
+                        >
+                          <option color='grey' value=''>category</option>
+                          <option value='1'>Clothing</option>
+                          <option value='2'>Jewellery</option>
+                          <option value='3'>Entertainment</option>
+                          <option value='4'>Home Decor</option>
+                          <option value='5'>Art</option>
+                        </Select>
+                        <Input
+                          placeholder="price"
+                          onChange={(e) => setPrice(e.target.value)}
+                        />
+                        <Input
+                          placeholder="quantity"
+                          onChange={(e) => setQuantity(e.target.value)}
+                        />
+                        <Button onClick={handleClick} disabled={'isFetching'}>
+                          Add Item
+                        </Button>
+                      </Form>
+                    </Box>
 
-                     </Modal>
+                  </Modal>
                 </Stack>
               </Stack>
             </Stack>
             <OwnerHeader>
-                <Stack spacing={0}>
-                  <ListItem><h4 style={{align: "center"}}>Shop Owner</h4></ListItem>
-                  {
-                    shopInfo.user.avatarUrl ?
+              <Stack spacing={0}>
+                <ListItem><h4 style={{ align: "center" }}>Shop Owner</h4></ListItem>
+                {
+                  shopInfo.user.avatarUrl ?
                     <ListItem><img src={BASE + "/" + shopInfo.user.avatarUrl} height="100" width="100" alt="owner avatar"></img></ListItem>
                     : <ListItem><img src="defaultShop.png" height="100" width="100" alt="owner avatar"></img></ListItem>
-                  } 
-                  <ListItem><p>{shopInfo.user.name}</p></ListItem>
-                  <ListItem><Link onClick={(handleOpen)}>Contact</Link></ListItem>
-                  <Modal
-                      open={open}
-                      onClose={handleClose}
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={style}>
-                        <p id="modal-modal-description" sx={{ mt: 2 }}>
-                          Name: {shopInfo.user.name}
-                        </p>
+                }
+                <ListItem><p>{shopInfo.user.name}</p></ListItem>
+                <ListItem><Link onClick={(handleOpen)}>Contact</Link></ListItem>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <p id="modal-modal-description" sx={{ mt: 2 }}>
+                      Name: {shopInfo.user.name}
+                    </p>
 
-                        <p id="modal-modal-description" sx={{ mt: 2 }}>
-                          Email: {shopInfo.user.email}
-                        </p>
+                    <p id="modal-modal-description" sx={{ mt: 2 }}>
+                      Email: {shopInfo.user.email}
+                    </p>
 
-                        <p id="modal-modal-description" sx={{ mt: 2 }}>
-                          Phone: {shopInfo.user.phone}
-                        </p>
-                     </Box>
+                    <p id="modal-modal-description" sx={{ mt: 2 }}>
+                      Phone: {shopInfo.user.phone}
+                    </p>
+                  </Box>
 
-                     </Modal>
-                </Stack>
+                </Modal>
+              </Stack>
             </OwnerHeader>
           </ContainerHeader>
 
           <ContainerBody>
             {
               shopInfo.inventory.length > 0 ?
-              shopInfo.inventory.map(item => {
-                return <ProductCard productData={item} />   
-              })
-              : <h2>No Products</h2>
+                shopInfo.inventory.map(item => {
+                  return <ProductCard productData={item} />
+                })
+                : <h2>No Products</h2>
             }
           </ContainerBody>
-        </div> 
+        </div>
         :
-        <div> 
-        {/* <Error404 /> */}
+        <div>
+          {/* <Error404 /> */}
         </div>
       }
     </div>
