@@ -8,12 +8,11 @@ export async function createShop(req, res) {
   const form = new formidable.IncomingForm();
   form.multiples = true;
   form.maxFileSize = 50 * 1024 * 1024; // 5MB
-  // const { openedFiles } = await form.parse(req);
   let avatarUrl = null;
-
 
   form.parse(req, async (err, fields, files) => {
     if(err) {
+      console.log(err);
       return res.status(400).json({message: "Unable to parse Input"});
     }
     if(files.avatarUrl) {
@@ -40,9 +39,7 @@ export async function createShop(req, res) {
       avatarUrl = rest.join('/');
     }
     const {userId, name, description, address1, address2, city, state, country, zipcode } = fields;
-
     const user = await findEntity('user', ['*'], ['id', parseInt(userId)]);
-    
     //Check if this user id exists
     if(user.length === 0) {
       return res.status(400).json({message: "User doesn't exists"});

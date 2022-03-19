@@ -12,6 +12,8 @@ import { Stack, Radio, RadioGroup, FormControlLabel } from '@mui/material';
 import UploadImage from "../components/UploadImage";
 import { useDispatch, useSelector } from "react-redux";
 import NotFound from "../components/Error404";
+import { shopCreate } from "../redux/shop";
+
 
 const Container = styled.div`
  position: relative;
@@ -40,7 +42,31 @@ const Form = styled.form`
   `;
 
 const ShopCreate = () => {
+  const user = useSelector((state) => state.user.currentUser);
   const { name } = useParams();
+  const [address1, setAddress1] = useState("");
+  const [address2, setAddress2] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
+  const [zipcode, setZipcode] = useState("");
+  const [description, setDescription] = useState("");
+  const [avatarUrl, setAvatarFile] = useState("");
+
+  const dispatch = useDispatch();
+  const { isFetching, error } = useSelector((state) => state.user);
+
+  const onChange = (e) => {
+    console.log();
+    setAvatarFile(e.target.files[0]);
+  }
+
+  const handleClick = (e) => {
+    e.preventDefault(); 
+    shopCreate(dispatch, {name, description, phone, avatarUrl, address1, address2, city, state, country, zipcode, userId: user.id});
+  };
+  
   return (
     <Container>
       <Navbar />
@@ -49,18 +75,18 @@ const ShopCreate = () => {
           <div className='update__form'>
             <Stack>
               <Stack>
-                <div className='update__pictureTextSpan'>
-                  <span className='update__chooseFile'>
-                    <UploadImage type="user" />
-                  </span>
-                </div>
-                <div className='update__picture'>
-                  {
-                    // user.avatarUrl ? <img className='image__avatar' src={BASE + "/" + user.avatarUrl} alt="userProfile"></img> :
-                    <img src="defaultShop.png" height="200" width="200" alt="user avatar"></img>
-                  }
-                  <p className='update__labeltext'>Must be a .jpg, .gif or .png file smaller than 10MB and at least 400px by 400px.</p>
-                </div>
+                <Stack direction="row">
+                  <Stack>
+                    <div className='update__picture'>
+                    {
+                      // user.avatarUrl ? <img className='image__avatar' src={BASE + "/" + user.avatarUrl} alt="userProfile"></img> :
+                      <img src="defaultShop.png" height="200" width="200" alt="user avatar"></img>
+                    }
+                    <p className='update__labeltext'>Must be a .jpg, .gif or .png file smaller than 5MB and at least 400px by 400px.</p>
+                  </div>
+                  </Stack>                      
+                  <input type="file" id="myImage" name="myImage" onChange= {onChange} />
+                 </Stack>
               </Stack>
               <Stack>
                 <div className='update__nameSection'>
@@ -70,36 +96,60 @@ const ShopCreate = () => {
               </Stack>
               <Stack>
                 <div className='update__nameSection'>
-                  <label className='update__labels'>Address</label>
-                  <input className='update__input'></input>
+                  <label className='update__labels'>Address 1</label>
+                  <input onChange={(e) => setAddress1(e.target.value)} className='update__input'></input>
+                </div>
+              </Stack>
+              <Stack>
+                <div className='update__nameSection'>
+                  <label className='update__labels'>Address 2</label>
+                  <input onChange={(e) => setAddress2(e.target.value)} className='update__input'></input>
+                </div>
+              </Stack>
+              <Stack>
+                <div className='update__nameSection'>
+                  <label className='update__labels'>City</label>
+                  <input onChange={(e) => setCity(e.target.value)} className='update__input'></input>
+                </div>
+              </Stack>
+              <Stack>
+                <div className='update__nameSection'>
+                  <label className='update__labels'>State</label>
+                  <input onChange={(e) => setState(e.target.value)} className='update__input'></input>
                 </div>
               </Stack>
               <Stack>
                 <div className='update__nameSection'>
                   <label className='update__labels'>Country</label>
-                  <select>
+                  <select onChange={(e) => setCountry(e.target.value)}>
                     <option>- Select your country -</option>
-                    <option value='1'>USA</option>
-                    <option value='2'>IND</option>
-                    <option value='3'>UK</option>
+                    <option value='USA'>USA</option>
+                    <option value='IND'>IND</option>
+                    <option value='UK'>UK</option>
                   </select>
                 </div>
               </Stack>
               <Stack>
                 <div className='update__nameSection'>
+                  <label className='update__labels'>ZipCode</label>
+                  <input onChange={(e) => setZipcode(e.target.value)} className='update__input'></input>
+                </div>
+              </Stack>
+              <Stack>
+                <div className='update__nameSection'>
                   <label className='update__labels'>Phone</label>
-                  <input className='update__input'></input>
+                  <input onChange={(e) => setPhone(e.target.value)} className='update__input'></input>
                 </div>
               </Stack>
               <Stack>
                 <div className='update__nameSection'>
                   <label className='update__labels'>Shop Description</label>
-                  <input className='update__about'></input>
+                  <input onChange={(e) => setDescription(e.target.value)} className='update__about'></input>
                 </div>
               </Stack>
             </Stack>
           </div>
-          <button className='update__button'>Create Shop</button>
+          <button onClick={handleClick} disabled={isFetching} className='update__button'>Create Shop</button>
         </Form>
       </Wrapper>
       <Footer />

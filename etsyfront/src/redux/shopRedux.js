@@ -19,6 +19,10 @@ const shopSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
+    shopCreateSuccess: (state, action) => {
+      state.isFetching = false;
+      state.currentShop = action.payload;
+    }
     // isShopNameAvailableStart: (state) => {
     //   state.isFetching = true;
     // },
@@ -33,5 +37,5 @@ const shopSlice = createSlice({
   },
 });
 
-export const { getShopStart, getShopSuccess, getShopFailure } = shopSlice.actions;
+export const { getShopStart, getShopSuccess, getShopFailure, shopCreateSuccess } = shopSlice.actions;
 export default shopSlice.reducer;
