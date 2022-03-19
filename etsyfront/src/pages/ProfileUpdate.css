@@ -1,0 +1,54 @@
+.update__form{
+    margin-left: 50px;
+    padding: 20px;
+}
+
+.update__pictureTextSpan{
+    flex: display;
+    position: absolute;
+}
+
+.update__chooseFile{
+    margin-left: 30px;
+}
+
+.update__picture{
+    margin-left: 60px;
+    margin-top: 30px;
+}
+
+.update__labeltext{
+    font-size: 13px;
+    color: black;
+    font-weight: 300;
+}
+
+.update__nameSection{
+    margin-top: 40px;
+    display: flex;
+}
+
+.update__labels{
+    margin-right: 30px;
+    width: 100px;
+    font-size: 15px;
+    display: inline-block;
+    text-align: right;
+}
+
+.update__input{
+    width: 300px;
+    height: 20px;
+}
+
+.update__about{
+    width: 300px;
+    height: 50px;
+}
+
+.update__button{
+    margin-top: 60px;
+    margin-left: 230px;
+    padding: 10px;
+    background-color: lightgray;
+}

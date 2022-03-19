@@ -1,15 +1,15 @@
 import { CircleFlag } from 'react-circle-flags'
 import styled from "styled-components";
-import SelectCurrency from 'react-select-currency';
 import './Navbar.css';
 
 const Container = styled.div`
     display: flex;
     background-color: #232347;
-    position: absolute;
+    position: relative;
     bottom: 0px;
     width: 100%;
     height: 80px;
+    margin-top:50px;
   `;
 
 const Left = styled.div`
@@ -56,15 +56,13 @@ const Right = styled.div`
     right: 5px;
   `;
 
-const ContactItem = styled.div`
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-  `;
-
-const Payment = styled.img`
-      width: 50%;
-  `;
+const SelectCurrency = styled.select`
+    font-size: 12px;
+    font-weight: 600;
+    background-color: #232347;
+    border: none;
+    color: white;
+`;
 
 const Footer = () => {
     return (
@@ -78,7 +76,11 @@ const Footer = () => {
                     <Title>|</Title>
                     <Title>English(US)</Title>
                     <Title>|</Title>
-                    <SelectCurrency className='footer__currency' value={'USD'} />
+                    <SelectCurrency>
+                        <option value='1'>USD</option>
+                        <option value='2'>INR</option>
+                        <option value='3'>GBP</option>
+                    </SelectCurrency>
                 </SocialContainer>
             </Left>
             <Center>
