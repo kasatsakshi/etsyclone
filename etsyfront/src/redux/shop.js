@@ -1,4 +1,4 @@
-import { getShopStart, getShopSuccess, getShopFailure, shopCreateSuccess } from "./shopRedux";
+import { getShopStart, getShopSuccess, getShopFailure, shopCreateSuccess, shopCreateFailure, getShopCategorySuccess, getShopCategoryFailure, shopProductCreateSuccess } from "./shopRedux";
 import { publicRequest } from "../api/http";
 
 export const getShop = async (dispatch, user) => {
@@ -9,6 +9,16 @@ export const getShop = async (dispatch, user) => {
   } catch (err) {
     console.log(err);
     dispatch(getShopFailure());
+  }
+};
+
+export const getShopCategories = async (dispatch, shop) => {
+  try {
+    const res = await publicRequest.get(`/shop/${shop.id}/categories`);
+    dispatch(getShopCategorySuccess(res.data));
+  } catch (err) {
+    console.log(err);
+    dispatch(getShopCategoryFailure());
   }
 };
 
@@ -38,6 +48,27 @@ export const shopCreate = async (dispatch, data) => {
   try {
     const res = await publicRequest.post("/shop/create", formData);
     dispatch(shopCreateSuccess(res.data));
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    dispatch(shopCreateFailure());
+  }
+};
+
+export const shopProductCreate = async (dispatch, data) => {
+  const formData = new FormData();
+  formData.append("name", data.name)
+  formData.append("description", data.description);
+  formData.append("isCustom", data.isCustom);
+  formData.append("category", data.category);
+  formData.append("pictureUrl", data.pictureUrl.file);
+  formData.append("price", data.price);
+  formData.append("quantity", data.quantity);
+  formData.append("shopId", data.shopid)
+
+  try {
+    const res = await publicRequest.post("/shop/product/create", formData);
+    dispatch(shopProductCreateSuccess(res.data));
     return res.data;
   } catch (err) {
     console.log(err);

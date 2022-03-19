@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Stack, ListItem, Link, Box, Modal } from '@mui/material';
+import { Stack, ListItem, Link, Box, Modal, FormControlLabel, RadioGroup, Radio } from '@mui/material';
 import styled from "styled-components";
 import './ShopLanding.css';
 import Navbar from "../components/Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import { getShop } from "../redux/shop";
+import { getShop, getShopCategories } from "../redux/shop";
 import { BASE } from "../api/http";
 import ProductCard from "../components/ProductCard";
 import defaultShop from "../assets/defaultShop.png";
 import defaultUser from "../assets/defaultUser.png";
+import { useNavigate } from "react-router-dom";
+import { shopProductCreate } from "../redux/shop";
 
 const Button = styled.button`
   width: 100%;
@@ -81,29 +83,49 @@ const style = {
   p: 4,
 };
 
+// function refreshPage(){ 
+//   console.log('reloading page');
+//   window.location.reload(); 
+// }
 
 const ShopHome = () => {
   const user = useSelector((state) => state.user.currentUser);
   const shopInfo = useSelector((state) => state.shop.currentShop);
-
-  console.log(shopInfo);
-
+  const shopCategories = useSelector((state) => state.shop.currentCategories);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const navigate = new useNavigate();
 
   const [productOpen, setNewProductOpen] = React.useState(false);
   const handleOpenNewProduct = () => setNewProductOpen(true);
   const handleCloseNewProduct = () => setNewProductOpen(false);
   const [name, setName] = useState("");
   const [description, setDesc] = useState("");
+  const [isCustom, setIsCustom] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [pictureUrl, setPicture] = useState("");
 
-  const handleClick = (e) => {
+  let isDisabled;
+
+  const pictureChange = (e) => {
+    setPicture({file: e.target.files[0]});
+  }
+  
+  const handleClick = async (e) => {
     e.preventDefault();
-    // signup(dispatch, { name, email, password });
+    await shopProductCreate(dispatch, {name, description, pictureUrl, isCustom, category, price, quantity, shopid: shopInfo.shop.id});
+    handleCloseNewProduct()
+    // navigate(`/shophome`);
+    window.location.reload(); 
+  };
+
+  const [status, setStatus] = React.useState(0);
+
+  const radioHandler = (status) => {
+    setStatus(status);
   };
 
   const dispatch = useDispatch();
@@ -118,7 +140,17 @@ const ShopHome = () => {
         console.log(err);
       }
     };
+    const fetchShopCategories = async () => {
+      try {
+        if (user) {
+          getShopCategories(dispatch, { id: shopInfo.shop.id });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
     fetchShops();
+    fetchShopCategories();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -146,6 +178,9 @@ const ShopHome = () => {
                   >
                     <Box sx={style}>
                       <Form>
+                      <label style={{alignContent: 'center', paddingBottom: 30}}>Add New Product</label>
+                      <input type="file" id="myImage" name="myImage" onChange={pictureChange} accept="image/png, image/jpeg" />
+                      <br />
                         <Input
                           placeholder="name"
                           onChange={(e) => setName(e.target.value)}
@@ -154,17 +189,35 @@ const ShopHome = () => {
                           placeholder="description"
                           onChange={(e) => setDesc(e.target.value)}
                         />
+                          <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            defaultValue="default"
+                            name="radio-buttons-group"
+                            row
+                          >
+                            <FormControlLabel onClick={(e) => radioHandler(1)} value="default" control={<Radio />} label="Default" />
+                            <FormControlLabel checked={status === 2} onClick={(e) => radioHandler(2)} value="custom" control={<Radio />} label="Custom" />
+                          </RadioGroup>
+                          {status === 2 ? isDisabled = true : isDisabled = false }
                         <Select
                           placeholder="category"
                           onChange={(e) => setCategory(e.target.value)}
+                          disabled={isDisabled}
                         >
                           <option color='grey' value=''>category</option>
-                          <option value='1'>Clothing</option>
-                          <option value='2'>Jewellery</option>
-                          <option value='3'>Entertainment</option>
-                          <option value='4'>Home Decor</option>
-                          <option value='5'>Art</option>
+                          {
+                            shopCategories.default.map(item => {
+                              return <option value={item}>{item}</option>
+                            })
+                          }
+                          {
+                            shopCategories.custom.map(item => {
+                              return <option value={item.name}>{item.name}</option>
+                            })
+                          }
                         </Select>
+                        {status === 2 ? 
+                            <Stack><Input placeholder="category name" onChange={(e) => {setCategory(e.target.value); setIsCustom(true) }}/></Stack> : <div></div>}
                         <Input
                           placeholder="price"
                           onChange={(e) => setPrice(e.target.value)}
@@ -173,12 +226,12 @@ const ShopHome = () => {
                           placeholder="quantity"
                           onChange={(e) => setQuantity(e.target.value)}
                         />
-                        <Button onClick={handleClick} disabled={'isFetching'}>
+                        <br />
+                        <Button onClick={handleClick}>
                           Add Item
                         </Button>
                       </Form>
                     </Box>
-
                   </Modal>
                 </Stack>
               </Stack>

@@ -123,31 +123,95 @@ export async function isShopNameAvailable(req, res) {
 
 }
 
-export async function createShopProduct(req, res) {
-  const input = req.body;
+export async function getShopCategories(req, res) {
+  const { shopId } = req.params
 
-
-  if(!input.shopId) {
-    return res.status(400).json({message: "Cannot add a product without a shop"});
+  if (!shopId) {
+    return res.status(400).json({ message: 'shop id is missing' });
   }
 
-
-  const findShop = await findEntity('shop', ['*'], ['id', input.shopId]);
-
-  if(findShop.length === 0) {
-    return res.status(400).json({message: "Shop doesnt exists"});
+  const shop = await findEntity('shop', ['*'], ['id', shopId]);
+  if(shop.length === 0 ) {
+    console.error("Shop does not exists!");
+    return res.status(400).json({ message: "Shop does not exists" });
   }
 
-  const productData = {
-    ...input,
-  };
+  const defaultCategories = ['Art', 'Clothing', 'Jewellery', 'Entertainment', 'Home Decor'];
+  const customCategories = await findEntity('category', ['*'], ['shopId', shopId]);
 
-  const product = await createEntity('inventory', productData);
-  const createdProduct = await findEntity('inventory', ['*'], ['id', product[0]]);
   const response = {
-    ...createdProduct[0]
-  };
-
-
+    default: defaultCategories,
+    custom: customCategories
+  }
   return res.status(200).json(response);
+
+}
+
+export async function createShopProduct(req, res) {
+  // Check incoming validation  
+  const form = new formidable.IncomingForm();
+  form.multiples = true;
+  form.maxFileSize = 50 * 1024 * 1024; // 5MB
+  let pictureUrl = null;
+
+  form.parse(req, async (err, fields, files) => {
+    if(err) {
+      console.log(err);
+      return res.status(400).json({message: "Unable to parse Input"});
+    }
+    if(files.pictureUrl) {
+      const tempFilePath = files.pictureUrl.filepath;
+      const fileName = "image-" + Date.now() + path.extname(files.pictureUrl.originalFilename);
+      const uploadedFolder = './public/products/';
+
+      if (!fs.existsSync(uploadedFolder)){
+        fs.mkdirSync(uploadedFolder, { recursive: true });  
+      }
+
+      fs.readFile(tempFilePath, function(err, data) {
+        fs.writeFile(uploadedFolder + fileName, data, function(err) {
+            fs.unlink(tempFilePath, function(err) {
+              if (err) {
+                console.error(err);
+              } 
+            });
+        });
+      });
+      const [first, ...rest] = (uploadedFolder + fileName).split('/');
+      pictureUrl = rest.join('/');
+    }
+    const {shopId, name, description, isCustom, category, price, quantity } = fields;
+
+    const findShop = await findEntity('shop', ['*'], ['id', parseInt(shopId)]);
+    if(findShop.length === 0) {
+      return res.status(400).json({message: "Shop doesn't exists"});
+    }
+
+    const user = await findEntity('user', ['*'], ['id', parseInt(findShop[0].userId)]);
+
+    const productInput = {
+      name,
+      description,
+      pictureUrl,
+      price,
+      quantity,
+      shopId,
+    }
+
+    if(isCustom) {
+      const createdCategory = await createEntity('category', {name: category, shopId});
+      productInput.categoryId = createdCategory[0];
+    } 
+
+    productInput.category = category;
+    const createdProduct = await createEntity('inventory', productInput);
+    const inventory = await findEntity('inventory', ['*'], ['id', parseInt(createdProduct[0])])
+
+    const response = {
+      user: user[0],
+      shop: findShop[0],
+      inventory,
+    }
+    return res.status(200).json(response);
+  });
 }

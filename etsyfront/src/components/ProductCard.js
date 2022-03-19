@@ -31,7 +31,7 @@ export default function ProductCard({productData}) {
   if(productData.pictureUrl ) {
     productImage = BASE + "/" + productData.pictureUrl
    } else {
-    productImage = {defaultProduct}
+    productImage = defaultProduct
    }
   return (
     <Card sx={cardStyle}>
@@ -65,7 +65,7 @@ export default function ProductCard({productData}) {
         component="img"
         height="250"
         image={productImage}
-        alt="Paella dish"
+        alt="Product picture"
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
