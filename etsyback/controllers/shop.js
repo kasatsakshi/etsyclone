@@ -4,62 +4,81 @@ import path from "path";
 import fs from "fs";
 
 export async function createShop(req, res) {
-  //Check incoming validation
-
+  //Check incoming validation  
   const form = new formidable.IncomingForm();
   form.multiples = true;
   form.maxFileSize = 50 * 1024 * 1024; // 5MB
-  // console.log(form);
-  const { openedFiles } = await form.parse(req);
-  console.log(openedFiles);
-  if(openedFiles.length > 0) {
-    const tempFilePath = openedFiles[0].filepath;
-    const fileName = "image-" + Date.now() + path.extname(openedFiles[0].originalFilename);
-    const uploadedFolder = './public/shop/';
+  // const { openedFiles } = await form.parse(req);
+  let avatarUrl = null;
 
-    if (!fs.existsSync(uploadedFolder)){
-      fs.mkdirSync(uploadedFolder, { recursive: true });  
+
+  form.parse(req, async (err, fields, files) => {
+    if(err) {
+      return res.status(400).json({message: "Unable to parse Input"});
+    }
+    if(files.avatarUrl) {
+      const tempFilePath = files.avatarUrl.filepath;
+      const fileName = "image-" + Date.now() + path.extname(files.avatarUrl.originalFilename);
+      const uploadedFolder = './public/shop/';
+
+      if (!fs.existsSync(uploadedFolder)){
+        fs.mkdirSync(uploadedFolder, { recursive: true });  
+      }
+
+      fs.readFile(tempFilePath, function(err, data) {
+        fs.writeFile(uploadedFolder + fileName, data, function(err) {
+            fs.unlink(tempFilePath, function(err) {
+                if (err) {
+                    console.error(err);
+                    } else {
+                    console.log("Image uploaded successfully");
+                }
+            });
+        });
+      });
+      const [first, ...rest] = (uploadedFolder + fileName).split('/');
+      avatarUrl = rest.join('/');
+    }
+    const {userId, name, description, address1, address2, city, state, country, zipcode } = fields;
+
+    const user = await findEntity('user', ['*'], ['id', parseInt(userId)]);
+    
+    //Check if this user id exists
+    if(user.length === 0) {
+      return res.status(400).json({message: "User doesn't exists"});
     }
 
-    fs.readFile(tempFilePath, function(err, data) {
-      fs.writeFile(uploadedFolder + fileName, data, function(err) {
-          fs.unlink(tempFilePath, function(err) {
-              if (err) {
-                  console.error(err);
-                  } else {
-                  console.log("Image uploaded successfully");
-              }
-          });
-      });
-    });
-  }
+    const shop = await findEntity('shop', ['*'], ['name', name]);
+    if (shop.length >= 1) {
+      return res.status(400).json({ message: "Shop name is taken"});
+    }
 
-  const user = await findEntity('user', ['*'], ['id', input.id]);
-  
-  //Check if this user id exists
-  if(user.length === 0) {
-    return res.status(400).json({message: "User doesn't exists"});
-  }
+    const address = {
+      address1,
+      address2,
+      city,
+      state,
+      country,
+      zipcode
+    }
+    const createdAddress = await createEntity('address', address);
+    const shopInput = {
+      name,
+      description,
+      avatarUrl,
+      userId,
+      addressId: createdAddress[0]
+    }
+    const createdShop = await createEntity('shop', shopInput);
+    const shopinfo = await findEntity('shop', ['*'], ['id', parseInt(createdShop[0])])
 
-  const shop = await findEntity('shop', ['*'], ['name', input.name]);
-  if (shop.length >= 1) {
-    return res.status(400).json({ message: "Shop name is taken"});
-  }
-
-  const address = await createEntity('address', input.address);
-  const shopInput = {
-    ...input,
-    addressId: address[0].id
-  }
-  const createdShop = await createEntity('shop', shopInput);
-
-  const response = {
-    user: user[0],
-    // shop: createdShop[0],
-    inventory: [],
-  }
-  return res.status(200).json('response');
-
+    const response = {
+      user: user[0],
+      shop: shopinfo[0],
+      inventory: [],
+    }
+    return res.status(200).json(response);
+  });
 }
 
 export async function getShop(req, res) {
