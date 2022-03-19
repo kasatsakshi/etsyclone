@@ -53,10 +53,6 @@ const Account = () => {
     getUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // const displayFields = ['name', 'email', 'phone', 'gender', 'birthday', 'currency', 'address']
-  const displayFields = ['name', 'email', 'phone', 'address']
-  const addressFields = ['address1', 'city', 'state', 'country', 'ZipCode']
-
   return (
     <Container>
       <Navbar />
@@ -71,7 +67,9 @@ const Account = () => {
           <Icon><EditIcon style={{ fontSize: 18 }}></EditIcon></Icon>
         </Link>
       </div>
-      <UploadImage type="user" id={user.email} />
+      <div className='account__uploadPicture'>
+        <UploadImage type="user" id={user.email} />
+      </div>
 
       {/* Favorites Section */}
       <div className="account__searchLine">

@@ -20,9 +20,14 @@
 }
 
 .account__userInfo{
-    margin-left: 50px;
-    margin-top: 20px;
+    margin-left: 100px;
+    margin-top: 60px;
     display: flex;
+}
+
+.account__uploadPicture{
+    margin-left: 100px;
+    margin-top: 5px;
 }
 
 .account__userName{

@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { login } from "../redux/user";
 import { mobile } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
+import './Signup.css';
 
 const Container = styled.div`
   width: 100vw;
@@ -45,21 +47,14 @@ const Button = styled.button`
   width: 40%;
   border: none;
   padding: 15px 20px;
-  background-color: teal;
+  background-color: black;
   color: white;
   cursor: pointer;
   margin-bottom: 10px;
   &:disabled {
-    color: green;
+    color: #2596be;
     cursor: not-allowed;
   }
-`;
-
-const Link = styled.a`
-  margin: 5px 0px;
-  font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
 `;
 
 const Error = styled.span`
@@ -94,8 +89,8 @@ const Login = () => {
             Login
           </Button>
           {error && <Error>Something went wrong! Try again</Error>}
-          <Link>Forgot Password?</Link>
-          <Link>Signup</Link>
+          <Link className="signup__link" to='/'>Forgot Password?</Link>
+          <Link className="signup__link" to='/signup'>Signup</Link>
         </Form>
       </Wrapper>
     </Container>
