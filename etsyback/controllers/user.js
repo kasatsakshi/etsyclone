@@ -1,5 +1,8 @@
-import { findEntity } from "../models";
+import { findEntity, updateEntity } from "../models";
 import { isValidEmail } from "../helpers/validator";
+import formidable from 'formidable';
+import path from "path";
+import fs from "fs";
 
 function cleanInput(input) {
   const {
@@ -32,7 +35,7 @@ async function validateInput(input) {
   return;
 }
 
-export default async function user(req, res) {
+export async function user(req, res) {
   const input = req.body;
   const trimmedInput = cleanInput(input);
   const inputError = await validateInput(trimmedInput);
@@ -59,4 +62,60 @@ export default async function user(req, res) {
   }
 
   return res.status(200).json(response);
+}
+
+export async function update(req, res) {
+  //Check incoming validation
+  const form = new formidable.IncomingForm();
+  form.multiples = true;
+  form.maxFileSize = 50 * 1024 * 1024; // 5MB
+
+  form.parse(req, async (err, fields, files) => {
+    if(err) {
+      console.log(err);
+      return res.status(400).json({message: "Unable to parse Input"});
+    }
+
+    const {userId, name, bio, address1, address2, city, state, country, zipcode, phone, email, gender, birthday } = fields;
+    let {avatarUrl} = fields;
+    if(files.avatarUrl) {
+      const tempFilePath = files.avatarUrl.filepath;
+      const fileName = "image-" + Date.now() + path.extname(files.avatarUrl.originalFilename);
+      const uploadedFolder = './public/uploads/';
+
+      if (!fs.existsSync(uploadedFolder)){
+        fs.mkdirSync(uploadedFolder, { recursive: true });  
+      }
+
+      fs.readFile(tempFilePath, function(err, data) {
+        fs.writeFile(uploadedFolder + fileName, data, function(err) {
+            fs.unlink(tempFilePath, function(err) {
+                if (err) {
+                  console.error(err);
+                }
+            });
+        });
+      });
+      const [first, ...rest] = (uploadedFolder + fileName).split('/');
+      avatarUrl = rest.join('/');
+    } 
+    const user = await findEntity('user', ['*'], ['id', parseInt(userId)]);
+    //Check if this user id exists
+    if(user.length === 0) {
+      return res.status(400).json({message: "User doesn't exists"});
+    }
+
+    await updateEntity('address', {address1, address2, city, state, country, zipcode}, ['id', user[0].addressId])
+    await updateEntity('user',{name, bio, phone, email, avatarUrl, gender, birthday },['id', userId] )
+
+    const findAddress = await findEntity('address', ['*'], ['id', user[0].addressId]);
+    const findUpdatedUser = await findEntity('user', ['*'], ['id', parseInt(userId)]);
+    delete findUpdatedUser[0].addressId;
+    delete findUpdatedUser[0].password;
+    const response = {
+      ...findUpdatedUser[0],
+      address: findAddress[0]
+    }
+    return res.status(200).json(response);
+  });
 }

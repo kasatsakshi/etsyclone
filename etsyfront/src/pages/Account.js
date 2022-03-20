@@ -8,7 +8,6 @@ import { accountInfo } from "../redux/user";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import UploadImage from "../components/UploadImage";
 import { BASE } from "../api/http";
 import defaultUser from "../assets/defaultUser.png";
 
@@ -65,13 +64,13 @@ const Account = () => {
             <img src={defaultUser} height="200" width="200" alt="user avatar"></img>
         }
         <span className="account__userName">{user.name}</span>
-        <Link to='/ProfileUpdate'>
+        <Link to='/profileUpdate'>
           <Icon><EditIcon style={{ fontSize: 18 }}></EditIcon></Icon>
         </Link>
       </div>
-      <div className='account__uploadPicture'>
+      {/* <div className='account__uploadPicture'>
         <UploadImage type="user" id={user.email} />
-      </div>
+      </div> */}
 
       {/* Favorites Section */}
       <div className="account__searchLine">

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import styled from 'styled-components';
@@ -7,9 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { BASE } from "../api/http";
 import './Home.css';
 import './ProfileUpdate.css';
-import { Stack, Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import { Stack, Radio, RadioGroup, FormControlLabel, Link, Box, Modal} from '@mui/material';
+
 import defaultUser from "../assets/defaultUser.png";
-//import DatePicker from '@mui/lab/DatePicker';
+import { updateUserInfo } from '../redux/user';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
  position: relative;
@@ -85,8 +87,56 @@ const Subtitle = styled.div`
  color: grey;
 `;
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
+  
 const ProfileUpdate = () => {
     const user = useSelector((state) => state.user.currentUser);
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const dispatch = useDispatch();
+
+    const [name, setName] = useState(user.name);
+    const [email, setEmail] = useState(user.email);
+    const [address1, setAddress1] = useState(user.address.address1);
+    const [address2, setAddress2] = useState(user.address.address2);
+    const [phone, setPhone] = useState(user.phone);
+    const [city, setCity] = useState(user.address.city);
+    const [state, setState] = useState(user.address.state);
+    const [country, setCountry] = useState(user.address.country);
+    const [zipcode, setZipcode] = useState(user.address.zipcode);
+    const [bio, setBio] = useState(user.bio);
+    const [birthday, setBirthday] = useState(user.birthday);
+    const [avatarUrl, setAvatarFile] = useState(user.avatarUrl);
+
+    const navigate = new useNavigate();
+
+    const handleNameChange = async (e) => {
+        e.preventDefault();
+        setName(name)
+        handleClose();
+    };
+
+    const profilePicUpdate = (e) => {
+        setAvatarFile({file: e.target.files[0]});
+      }
+
+    const saveChanges = async (e)=> {
+        e.preventDefault();
+        await updateUserInfo(dispatch, {name, email,  address1, address2, city, state, country, zipcode, bio, birthday, avatarUrl, phone, userId: user.id})
+        navigate(`/account`)
+    }
+
     return (
         <Container>
             <Navbar />
@@ -102,26 +152,45 @@ const ProfileUpdate = () => {
                             <Stack>
                                 <div className='update__pictureTextSpan'>
                                     <span>Profile Picture</span>
-                                    <span className='update__chooseFile'><button>Choose File</button></span>
+                                    <span className='update__chooseFile'><input type="file" id="myImage" name="myImage" onChange={profilePicUpdate} accept="image/png, image/jpeg"/></span>
                                 </div>
                                 <div className='update__picture'>
                                     {
                                         user.avatarUrl ? <img className='image__avatar' src={BASE + "/" + user.avatarUrl} alt="userProfile"></img> :
                                             <img src={defaultUser} height="200" width="200" alt="user avatar"></img>
                                     }
-                                    <p className='update__labeltext'>Must be a .jpg, .gif or .png file smaller than 10MB and at least 400px by 400px.</p>
+                                    <p className='update__labeltext'>Must be a .jpg, .gif or .png file smaller than 5MB and at least 400px by 400px.</p>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Your Name</label>
-                                    <p className='update__labeltext'>{user.name}</p>
+                                    <Stack direction="row" spacing={5}>
+                                        <p className='update__labeltext'>{name ? name : user.name}</p>
+                                        <Link onClick={(handleOpen)}>Change or remove</Link>
+                                        <Modal
+                                            open={open}
+                                            onClose={handleClose}
+                                            aria-describedby="modal-modal-description"
+                                            >
+                                            <Box sx={style}>
+                                                <p id="modal-modal-description" sx={{ mt: 2 }}>
+                                                    Old Name: {user.name}
+                                                </p> <br />
+                                                <Input
+                                                    placeholder="New Name"
+                                                    onChange={(e) => setName(e.target.value)}
+                                                />
+                                                <button onClick={handleNameChange} className='update__button'>Update Name</button>
+                                            </Box>
+                                        </Modal>
+                                    </Stack>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Gender</label>
-                                    <RadioGroup row>
+                                    <RadioGroup row defaultValue={user.gender}>
                                         <FormControlLabel value="female" control={<Radio />} label="Female" />
                                         <FormControlLabel value="male" control={<Radio />} label="Male" />
                                         <FormControlLabel value="ratherNotSay" control={<Radio />} label="Rather not say" />
@@ -136,96 +205,73 @@ const ProfileUpdate = () => {
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
-                                    <label className='update__labels'>Address</label>
-                                    <input className='update__input'></input>
+                                    <label className='update__labels'>Address 1</label>
+                                    <input className='update__input' onChange={(e) => setAddress1(e.target.value)} value={user.address.address1}></input>
+                                </div>
+                            </Stack>
+                            <Stack>
+                                <div className='update__nameSection'>
+                                    <label className='update__labels'>Address 2</label>
+                                    <input className='update__input' onChange={(e) => setAddress2(e.target.value)} value={user.address.address2}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>City</label>
-                                    <input className='update__input'></input>
+                                    <input className='update__input' onChange={(e) => setCity(e.target.value)} value={user.address.city}></input>
+                                </div>
+                            </Stack>
+                            <Stack>
+                                <div className='update__nameSection'>
+                                    <label className='update__labels'>State</label>
+                                    <input className='update__input' onChange={(e) => setState(e.target.value)} value={user.address.state}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Country</label>
-                                    <select>
+                                    <select onChange={(e) => setCountry(e.target.value)} value={user.address.country}>
                                         <option>- Select your country -</option>
-                                        <option value='1'>USA</option>
-                                        <option value='2'>IND</option>
-                                        <option value='3'>UK</option>
+                                        <option value='USA'>USA</option>
+                                        <option value='India'>India</option>
+                                        <option value='UK'>UK</option>
                                     </select>
+                                </div>
+                            </Stack>
+                            <Stack>
+                                <div className='update__nameSection'>
+                                    <label className='update__labels'>Zip Code</label>
+                                    <input className='update__input' onChange={(e) => setZipcode(e.target.value)} value={user.address.zipcode}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Phone</label>
-                                    <input className='update__input'></input>
+                                    <input className='update__input' onChange={(e) => setPhone(e.target.value)} value={user.phone}></input>
+                                </div>
+                            </Stack>
+                            <Stack>
+                                <div className='update__nameSection'>
+                                    <label className='update__labels'>Email</label>
+                                    <input className='update__input' onChange={(e) => setEmail(e.target.value)} value={user.email}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Birthday</label>
-                                    <select label='month'>
-                                        <option value>- month -</option>
-                                        <option value='1'>January</option>
-                                        <option value='2'>February</option>
-                                        <option value='3'>March</option>
-                                        <option value='4'>April</option>
-                                        <option value='5'>May</option>
-                                        <option value='6'>June</option>
-                                        <option value='7'>July</option>
-                                        <option value='8'>August</option>
-                                        <option value='9'>September</option>
-                                        <option value='10'>October</option>
-                                        <option value='11'>November</option>
-                                        <option value='12'>December</option>
-                                    </select>
-                                    <select>
-                                        <option value>- day -</option>
-                                        <option value='1'>1</option>
-                                        <option value='2'>2</option>
-                                        <option value='3'>3</option>
-                                        <option value='4'>4</option>
-                                        <option value='5'>5</option>
-                                        <option value='6'>6</option>
-                                        <option value='7'>7</option>
-                                        <option value='8'>8</option>
-                                        <option value='9'>9</option>
-                                        <option value='10'>10</option>
-                                        <option value='11'>11</option>
-                                        <option value='12'>12</option>
-                                        <option value='13'>13</option>
-                                        <option value='14'>14</option>
-                                        <option value='15'>15</option>
-                                        <option value='16'>16</option>
-                                        <option value='17'>17</option>
-                                        <option value='18'>18</option>
-                                        <option value='19'>19</option>
-                                        <option value='20'>20</option>
-                                        <option value='21'>21</option>
-                                        <option value='22'>22</option>
-                                        <option value='23'>23</option>
-                                        <option value='24'>24</option>
-                                        <option value='25'>25</option>
-                                        <option value='26'>26</option>
-                                        <option value='27'>27</option>
-                                        <option value='28'>28</option>
-                                        <option value='29'>29</option>
-                                        <option value='30'>30</option>
-                                        <option value='31'>31</option>
-                                    </select>
+                                    <input className='update__input' onChange={(e) => setBirthday(e.target.value)} value={user.birthday}></input>
+                                    <p className='update__labeltext' style={{'paddingLeft': 20}}>Enter in mm/dd/yyyy format</p>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>About</label>
-                                    <input className='update__about'></input>
-                                    <p className='update__labeltext'>Tell people a little about yourself.</p>
+                                    <input className='update__about' onChange={(e) => setBio(e.target.value)} value={user.bio}></input>
+                                    <p className='update__labeltext' style={{'paddingLeft': 20, 'paddingTop': 20}}>Tell people a little about yourself.</p>
                                 </div>
                             </Stack>
                         </Stack>
-                        <button className='update__button'>Save Changes</button>
+                        <button onClick={saveChanges} className='update__button'>Save Changes</button>
                     </div>
                 </Form>
             </Wrapper>

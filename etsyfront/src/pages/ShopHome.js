@@ -9,7 +9,6 @@ import { BASE } from "../api/http";
 import ProductCard from "../components/ProductCard";
 import defaultShop from "../assets/defaultShop.png";
 import defaultUser from "../assets/defaultUser.png";
-import { useNavigate } from "react-router-dom";
 import { shopProductCreate } from "../redux/shop";
 
 const Button = styled.button`
@@ -83,11 +82,6 @@ const style = {
   p: 4,
 };
 
-// function refreshPage(){ 
-//   console.log('reloading page');
-//   window.location.reload(); 
-// }
-
 const ShopHome = () => {
   const user = useSelector((state) => state.user.currentUser);
   const shopInfo = useSelector((state) => state.shop.currentShop);
@@ -95,7 +89,6 @@ const ShopHome = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const navigate = new useNavigate();
 
   const [productOpen, setNewProductOpen] = React.useState(false);
   const handleOpenNewProduct = () => setNewProductOpen(true);
@@ -118,7 +111,6 @@ const ShopHome = () => {
     e.preventDefault();
     await shopProductCreate(dispatch, {name, description, pictureUrl, isCustom, category, price, quantity, shopid: shopInfo.shop.id});
     handleCloseNewProduct()
-    // navigate(`/shophome`);
     window.location.reload(); 
   };
 

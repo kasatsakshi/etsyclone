@@ -25,8 +25,8 @@ function App() {
           <Route path="/shop" element={<ShopLanding />} />
           <Route path="/shophome" element={<ShopHome />} />
           <Route path="/shopnew/:name" element={<ShopCreate />} />
-          <Route path="/ProfileUpdate" element={<ProfileUpdate />} />
-          <Route path="/ProductPage" element={<ProductPage />} />
+          <Route path="/profileUpdate" element={<ProfileUpdate />} />
+          <Route path="/productPage" element={<ProductPage />} />
         </Routes>
       </div>
     </Router>
