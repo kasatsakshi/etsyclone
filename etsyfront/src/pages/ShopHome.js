@@ -3,6 +3,7 @@ import { Stack, ListItem, Link, Box, Modal, FormControlLabel, RadioGroup, Radio 
 import styled from "styled-components";
 import './ShopLanding.css';
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { getShop, getShopCategories } from "../redux/shop";
 import { BASE } from "../api/http";
@@ -10,6 +11,25 @@ import ProductCard from "../components/ProductCard";
 import defaultShop from "../assets/defaultShop.png";
 import defaultUser from "../assets/defaultUser.png";
 import { shopProductCreate } from "../redux/shop";
+// import { makeStyles } from "@mui/core/styles";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  CardHeader
+} from "@mui/material";
+
+const Container = styled.div`
+position: relative;
+ min-height: 100vh;
+ `;
+
+const Wrapper = styled.div`
+padding-bottom:80px;
+margin-left: 100px;
+margin-right:100px;
+`;
 
 const Button = styled.button`
   width: 100%;
@@ -41,6 +61,7 @@ const ContainerBody = styled.div`
   padding-top: 40px;
   padding-left: 20px;
   display: flex;
+  position: 'absolute';
 `;
 
 const OwnerHeader = styled.div`
@@ -104,14 +125,14 @@ const ShopHome = () => {
   let isDisabled;
 
   const pictureChange = (e) => {
-    setPicture({file: e.target.files[0]});
+    setPicture({ file: e.target.files[0] });
   }
-  
+
   const handleClick = async (e) => {
     e.preventDefault();
-    await shopProductCreate(dispatch, {name, description, pictureUrl, isCustom, category, price, quantity, shopid: shopInfo.shop.id});
+    await shopProductCreate(dispatch, { name, description, pictureUrl, isCustom, category, price, quantity, shopid: shopInfo.shop.id });
     handleCloseNewProduct()
-    window.location.reload(); 
+    window.location.reload();
   };
 
   const [status, setStatus] = React.useState(0);
@@ -146,10 +167,10 @@ const ShopHome = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div>
+    <Container>
       <Navbar />
       {user ?
-        <div>
+        <Wrapper>
           <ContainerHeader>
             <Stack direction="row" spacing={2}>
               {
@@ -170,9 +191,9 @@ const ShopHome = () => {
                   >
                     <Box sx={style}>
                       <Form>
-                      <label style={{alignContent: 'center', paddingBottom: 30}}>Add New Product</label>
-                      <input type="file" id="myImage" name="myImage" onChange={pictureChange} accept="image/png, image/jpeg" />
-                      <br />
+                        <label style={{ alignContent: 'center', paddingBottom: 30 }}>Add New Product</label>
+                        <input type="file" id="myImage" name="myImage" onChange={pictureChange} accept="image/png, image/jpeg" />
+                        <br />
                         <Input
                           placeholder="name"
                           onChange={(e) => setName(e.target.value)}
@@ -181,16 +202,16 @@ const ShopHome = () => {
                           placeholder="description"
                           onChange={(e) => setDesc(e.target.value)}
                         />
-                          <RadioGroup
-                            aria-labelledby="demo-radio-buttons-group-label"
-                            defaultValue="default"
-                            name="radio-buttons-group"
-                            row
-                          >
-                            <FormControlLabel onClick={(e) => radioHandler(1)} value="default" control={<Radio />} label="Default" />
-                            <FormControlLabel checked={status === 2} onClick={(e) => radioHandler(2)} value="custom" control={<Radio />} label="Custom" />
-                          </RadioGroup>
-                          {status === 2 ? isDisabled = true : isDisabled = false }
+                        <RadioGroup
+                          aria-labelledby="demo-radio-buttons-group-label"
+                          defaultValue="default"
+                          name="radio-buttons-group"
+                          row
+                        >
+                          <FormControlLabel onClick={(e) => radioHandler(1)} value="default" control={<Radio />} label="Default" />
+                          <FormControlLabel checked={status === 2} onClick={(e) => radioHandler(2)} value="custom" control={<Radio />} label="Custom" />
+                        </RadioGroup>
+                        {status === 2 ? isDisabled = true : isDisabled = false}
                         <Select
                           placeholder="category"
                           onChange={(e) => setCategory(e.target.value)}
@@ -198,18 +219,19 @@ const ShopHome = () => {
                         >
                           <option color='grey' value=''>category</option>
                           {
-                            shopCategories.default.map(item => {
+
+                            shopCategories && shopCategories.default.length > 0 && shopCategories.default.map(item => {
                               return <option value={item}>{item}</option>
                             })
                           }
                           {
-                            shopCategories.custom.map(item => {
+                            shopCategories && shopCategories.custom.length > 0 && shopCategories.custom.map(item => {
                               return <option value={item.name}>{item.name}</option>
                             })
                           }
                         </Select>
-                        {status === 2 ? 
-                            <Stack><Input placeholder="category name" onChange={(e) => {setCategory(e.target.value); setIsCustom(true) }}/></Stack> : <div></div>}
+                        {status === 2 ?
+                          <Stack><Input placeholder="category name" onChange={(e) => { setCategory(e.target.value); setIsCustom(true) }} /></Stack> : <div></div>}
                         <Input
                           placeholder="price"
                           onChange={(e) => setPrice(e.target.value)}
@@ -264,20 +286,24 @@ const ShopHome = () => {
 
           <ContainerBody>
             {
-              shopInfo.inventory.length > 0 ?
-                shopInfo.inventory.map(item => {
-                  return <ProductCard productData={item} />
-                })
-                : <h2>No Products</h2>
+              <Grid container spacing={2}>
+                {shopInfo.inventory.length > 0 ?
+                  shopInfo.inventory.map(data => {
+                    return <ProductCard productData={data} />
+                  })
+                  : <h2>No Products</h2>
+                }
+              </Grid>
             }
           </ContainerBody>
-        </div>
+        </Wrapper>
         :
         <div>
           {/* <Error404 /> */}
         </div>
       }
-    </div>
+      <Footer />
+    </Container>
   );
 };
 

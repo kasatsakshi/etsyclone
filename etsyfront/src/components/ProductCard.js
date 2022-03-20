@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardHeader, Stack, Typography, CardActions, CardMedia, CardContent, IconButton,  Box, Modal } from '@mui/material';
+import { Card, CardHeader, Stack, Typography, CardActions, CardMedia, CardContent, IconButton, Box, Modal } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import { BASE } from '../api/http';
 import defaultProduct from "../assets/defaultProduct.png";
@@ -9,7 +9,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 271,
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
@@ -18,29 +18,29 @@ const style = {
 
 const cardStyle = {
   margin: 4,
-  width: 300
+  width: 271
 }
 
-export default function ProductCard({productData}) {
+export default function ProductCard({ productData }) {
   let productImage;
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  if(productData.pictureUrl ) {
+  if (productData.pictureUrl) {
     productImage = BASE + "/" + productData.pictureUrl
-   } else {
+  } else {
     productImage = defaultProduct
-   }
+  }
   return (
     <Card sx={cardStyle}>
       <CardHeader
         title={productData.name}
-        style={{textAlign: "center"}}
+        style={{ textAlign: "center" }}
         action={
           <IconButton aria-label="settings">
-            <Edit 
+            <Edit
               onClick={handleOpen}
             />
           </IconButton>
@@ -72,16 +72,13 @@ export default function ProductCard({productData}) {
           {productData.description}
         </Typography>
       </CardContent>
-      <CardActions sx={{ width: 300}}>
+      <CardActions sx={{ width: 271 }}>
         <Stack direction="row">
-        <CardContent>
-            <p>category: {productData.category}</p>
+          <CardContent>
+            <p>price: {productData.price}</p>
           </CardContent>
           <CardContent>
             <p>quantity: {productData.quantity}</p>
-          </CardContent>
-          <CardContent>
-            <p>price: {productData.price}</p>
           </CardContent>
         </Stack>
       </CardActions>

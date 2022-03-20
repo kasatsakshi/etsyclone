@@ -15,6 +15,11 @@ const Wrapper = styled.div`
  padding-bottom:80px;
 `;
 
+const ContentWrapper = styled.div`
+ margin-left: 100px;
+ margin-right: 100px;
+`;
+
 const Home = () => {
   const user = useSelector((state) => state.user.currentUser);
   let firstName;
@@ -25,19 +30,19 @@ const Home = () => {
   }
   return (
     <Container>
+      <Navbar />
       <Wrapper>
-        <Navbar />
         <div>
           {user ?
             <div className="home__announcement">
               <h1 className="home__announcementText">Welcome, {firstName}</h1>
-              <ProductTile />
             </div> :
-            <div>
-
-            </div>
+            <div></div>
           }
         </div>
+        <ContentWrapper>
+          <ProductTile />
+        </ContentWrapper>
       </Wrapper>
       <Footer />
     </Container>
