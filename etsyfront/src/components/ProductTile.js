@@ -1,9 +1,13 @@
 import { FavoriteBorder, ShoppingCartOutlined } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as React from 'react';
 import { Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal } from '@mui/material';
+import defaultProduct from "../assets/defaultProduct.png";
+import { BASE } from '../api/http';
+import { createFavoriteProduct, deleteFavoriteProduct } from "../redux/product";
 
 const Info = styled.div`
     opacity: 0;
@@ -75,18 +79,56 @@ const cardStyle = {
 
 const ProductTile = ({ productData }) => {
   let productImage;
+  const favorites = useSelector((state) => state.products.favoriteProducts);
+  if (productData.pictureUrl) {
+    productImage = BASE + "/" + productData.pictureUrl
+  } else {
+    productImage = defaultProduct
+  }
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  
+  const user = useSelector((state) => state.user.currentUser);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleCheckboxChange = async (e) => {
+    user ?
+      e.target.checked ?
+        await createFavoriteProduct(dispatch, {userId: user.id, inventoryId: productData.id })
+        :
+        await deleteFavoriteProduct(dispatch, {userId: user.id, inventoryId: productData.id })
+    : navigate("/login");
+
+    window.location.reload()
+    
+  }
+
+  const checkFavorite = (id) => {
+    const data = favorites.find(function(ele) {
+      return ele.id === id;
+    });
+    
+    if (data) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   return (
     <Card sx={cardStyle}>
       <CardHeader
+        title={productData.name}
+        style={{ textAlign: "center" }}
         action={
+          // <Checkbox onClick={checkUser} icon={<FavoriteBorder />} checkedIcon={<FavoriteIcon />} />
           <Checkbox
-            icon={<FavoriteBorder />}
-            checkedIcon={<FavoriteIcon />}
-          />
+          checked={checkFavorite(productData.id)}
+          icon={<FavoriteBorder />} 
+          checkedIcon={<FavoriteIcon />} 
+          onChange={handleCheckboxChange} />
         }
       />
       <CardMedia
@@ -97,6 +139,9 @@ const ProductTile = ({ productData }) => {
       />
       <CardActions sx={{ width: 271 }}>
         <Stack direction="row">
+          <CardContent>
+            <p>price: {productData.price}</p>
+          </CardContent>
         </Stack>
       </CardActions>
     </Card>

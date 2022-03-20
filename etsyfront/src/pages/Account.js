@@ -10,10 +10,15 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { BASE } from "../api/http";
 import defaultUser from "../assets/defaultUser.png";
+import { Grid } from "@mui/material";
+import ProductTile from "../components/ProductTile";
 
 import './Home.css';
 
-const Container = styled.div``;
+const Container = styled.div`
+position: relative;
+min-height: 100vh;
+`;
 
 const Title = styled.h1`
   font-size: 24px;
@@ -36,9 +41,17 @@ const Icon = styled.div`
       transform: scale(1.1);
     }
   `;
+  
+const ContentWrapper = styled.div`
+  margin-left: 40px;
+  margin-top: 40px
+ `;
+ 
 
 const Account = () => {
   const user = useSelector((state) => state.user.currentUser);
+  const favorites = useSelector((state) => state.products.favoriteProducts);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -83,6 +96,19 @@ const Account = () => {
           <input type='text' className='account__searchInput' placeholder='Search your favorites' />
         </div>
       </div>
+
+      <ContentWrapper>
+            <Grid container spacing={2}>
+              {favorites && favorites.length > 0 ?
+              favorites.map(favorite => {
+                return (
+                  <ProductTile productData={favorite}/> 
+                )
+              }) :
+              <div></div>
+            }
+            </Grid>
+        </ContentWrapper>
       <Footer />
     </Container>
 

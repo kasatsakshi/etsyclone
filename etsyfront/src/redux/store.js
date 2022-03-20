@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 // import cartReducer from "./cartRedux";
 import userReducer from "./userRedux";
 import shopReducer from "./shopRedux";
+import productRedux from "./productRedux";
 import { LOGOUT_USER } from "../actions/types";
 import {
   persistStore,
@@ -25,6 +26,7 @@ const persistConfig = {
 const appReducer = combineReducers({
   user: userReducer,
   shop: shopReducer,
+  products: productRedux,
   state: (state = {}) => state
 });
 

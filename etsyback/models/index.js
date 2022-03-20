@@ -28,8 +28,17 @@ function updateEntity(table, data, condition) {
   }
 }
 
+function deleteEntity(table, condition) {
+  try {
+    return getKnexClient()(table).where(...condition).del();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export {
   createEntity,
   findEntity,
-  updateEntity
+  updateEntity,
+  deleteEntity
 }

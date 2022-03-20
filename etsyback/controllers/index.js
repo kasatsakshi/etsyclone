@@ -4,7 +4,7 @@ import signup from './signup';
 import upload from './upload';
 import { user, update } from "./user";
 import { createShopProduct, createShop, getShop, isShopNameAvailable, getShopCategories, updateShopProduct } from './shop';
-import { getProducts } from './products';
+import { deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites } from './products';
 
 const router = new express.Router();
 
@@ -20,5 +20,9 @@ router.post('/shop/product/create', createShopProduct)
 router.post('/shop/product/update', updateShopProduct)
 router.get('/shop/:shopId/categories', getShopCategories)
 router.get('/products', getProducts)
+
+router.post('/product/favorite', favoriteProduct);
+router.post('/product/favorite/delete', deleteFavoriteProduct);
+router.get('/user/:id/favorites', getUserFavorites);
 
 export default router;
