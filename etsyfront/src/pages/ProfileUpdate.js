@@ -206,31 +206,31 @@ const ProfileUpdate = () => {
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Address 1</label>
-                                    <input className='update__input' onChange={(e) => setAddress1(e.target.value)} value={user.address.address1}></input>
+                                    <input className='update__input' onChange={(e) => setAddress1(e.target.value)} defaultValue={user.address.address1}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Address 2</label>
-                                    <input className='update__input' onChange={(e) => setAddress2(e.target.value)} value={user.address.address2}></input>
+                                    <input className='update__input' onChange={(e) => setAddress2(e.target.value)} defaultValue={user.address.address2}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>City</label>
-                                    <input className='update__input' onChange={(e) => setCity(e.target.value)} value={user.address.city}></input>
+                                    <input className='update__input' onChange={(e) => setCity(e.target.value)} defaultValue={user.address.city}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>State</label>
-                                    <input className='update__input' onChange={(e) => setState(e.target.value)} value={user.address.state}></input>
+                                    <input className='update__input' onChange={(e) => setState(e.target.value)} defaultValue={user.address.state}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Country</label>
-                                    <select onChange={(e) => setCountry(e.target.value)} value={user.address.country}>
+                                    <select onChange={(e) => setCountry(e.target.value)} defaultValue={user.address.country}>
                                         <option>- Select your country -</option>
                                         <option value='USA'>USA</option>
                                         <option value='India'>India</option>
@@ -241,32 +241,32 @@ const ProfileUpdate = () => {
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Zip Code</label>
-                                    <input className='update__input' onChange={(e) => setZipcode(e.target.value)} value={user.address.zipcode}></input>
+                                    <input className='update__input' onChange={(e) => setZipcode(e.target.value)} defaultValue={user.address.zipcode}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Phone</label>
-                                    <input className='update__input' onChange={(e) => setPhone(e.target.value)} value={user.phone}></input>
+                                    <input className='update__input' onChange={(e) => setPhone(e.target.value)} defaultValue={user.phone}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Email</label>
-                                    <input className='update__input' onChange={(e) => setEmail(e.target.value)} value={user.email}></input>
+                                    <input type="email" className='update__input' onChange={(e) => setEmail(e.target.value)} defaultValue={user.email}></input>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>Birthday</label>
-                                    <input className='update__input' onChange={(e) => setBirthday(e.target.value)} value={user.birthday}></input>
+                                    <input className='update__input' onChange={(e) => setBirthday(e.target.value)} defaultValue={user.birthday}></input>
                                     <p className='update__labeltext' style={{'paddingLeft': 20}}>Enter in mm/dd/yyyy format</p>
                                 </div>
                             </Stack>
                             <Stack>
                                 <div className='update__nameSection'>
                                     <label className='update__labels'>About</label>
-                                    <input className='update__about' onChange={(e) => setBio(e.target.value)} value={user.bio}></input>
+                                    <input className='update__about' onChange={(e) => setBio(e.target.value)} defaultValue={user.bio}></input>
                                     <p className='update__labeltext' style={{'paddingLeft': 20, 'paddingTop': 20}}>Tell people a little about yourself.</p>
                                 </div>
                             </Stack>
