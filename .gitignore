@@ -6,6 +6,8 @@ etsyback/node_modules
 etsyback/knexfile.js
 etsyback/public/*
 etsyback/.env
+etsyback/build
+
 /.pnp
 .pnp.js
 
