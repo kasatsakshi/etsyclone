@@ -1,6 +1,9 @@
-import { FavoriteBorderOutlined, SearchOutlined, ShoppingCartOutlined } from "@mui/icons-material";
+import { FavoriteBorder, ShoppingCartOutlined } from "@mui/icons-material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import * as React from 'react';
+import { Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal } from '@mui/material';
 
 const Info = styled.div`
     opacity: 0;
@@ -65,23 +68,39 @@ const Icon = styled.div`
     }
   `;
 
-const ProductTile = ({ item }) => {
-    return (
-        <Container>
-            {/* <Circle /> */}
-            <Image src="logo.png" />
-            <Info>
-                <Icon>
-                    <ShoppingCartOutlined />
-                </Icon>
-                <Link to='/'>
-                </Link>
-                <Icon>
-                    <FavoriteBorderOutlined />
-                </Icon>
-            </Info>
-        </Container>
-    );
+const cardStyle = {
+  margin: 4,
+  width: 271
+}
+
+const ProductTile = ({ productData }) => {
+  let productImage;
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  return (
+    <Card sx={cardStyle}>
+      <CardHeader
+        action={
+          <Checkbox
+            icon={<FavoriteBorder />}
+            checkedIcon={<FavoriteIcon />}
+          />
+        }
+      />
+      <CardMedia
+        component="img"
+        height="250"
+        image={productImage}
+        alt="Product picture"
+      />
+      <CardActions sx={{ width: 271 }}>
+        <Stack direction="row">
+        </Stack>
+      </CardActions>
+    </Card>
+  );
 };
 
 export default ProductTile;
