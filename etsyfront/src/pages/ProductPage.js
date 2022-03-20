@@ -1,11 +1,12 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, {useEffect} from 'react'
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductTile from "../components/ProductTile";
 import SCard from "../components/SCard";
-import { Link } from 'react-router-dom';
-
+import { Link, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { Slider } from '@mui/material';
 
 const Container = styled.div`
 position: relative;
@@ -57,6 +58,7 @@ font-weight:300;
 
 const ProductPrice = styled.div`
 margin-top: 15px;
+margin-bottom: 40px;
 font-size:25px;
 font-weight:700;
 `;
@@ -81,22 +83,47 @@ const AddToCart = styled.button`
     color: #2596be;
 `;
 
+const OutofStock = styled.div`
+    color: red;
+    font-weight: bold;
+`;
+
+
 function ProductPage() {
+    const { productId } = useParams();
+    const products = useSelector((state) => state.products.currentProducts);
+    let filterProduct = null;
+
+    products.map(product => {
+        if(parseInt(product.id) === parseInt(productId)) {
+            filterProduct = product;
+            return filterProduct
+        }
+    });
+
     return (
         <Container>
             <Navbar />
+            { filterProduct ? 
             <Wrapper>
-                <ImageSection><SCard /></ImageSection>
+                <ImageSection><SCard productData={filterProduct}/></ImageSection>
                 <InfoSection>
-                    <Link to='/'>Sakshi's Portrait</Link>
+                    <Link to='/'>Go to the Shop</Link>
                     <SalesCount>123 sales</SalesCount>
-                    <ProductName>She's a Keeper</ProductName>
-                    <ProductDesc>Here is a prtrait of cute, sensible, hardworlking girl. Look at this amazing page she designed.</ProductDesc>
-                    <ProductPrice>1000.00</ProductPrice>
-                    <QuantitySelect></QuantitySelect>
+                    <ProductName>{filterProduct.name}</ProductName>
+                    <ProductDesc>{filterProduct.description}</ProductDesc>
+                    <ProductPrice>{filterProduct.price}</ProductPrice><br></br>
+                    {
+                        filterProduct.quantity > 0 ? 
+                        <Slider defaultValue={1}    valueLabelDisplay="on"
+                        max={filterProduct.quantity} aria-label="Default" />
+                        : <OutofStock>Out of Stock</OutofStock>
+                    }
                     <AddToCart>Add to cart</AddToCart>
                 </InfoSection>
             </Wrapper>
+            : <div></div>
+            }
             <Footer />
         </Container>
     )

@@ -101,7 +101,6 @@ const style = {
 
 const ProfileUpdate = () => {
     const user = useSelector((state) => state.user.currentUser);
-    console.log(user)
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);

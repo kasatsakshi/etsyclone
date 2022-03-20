@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import Account from './pages/Account';
 import ShopLanding from './pages/ShopLanding';
 import ShopHome from './pages/ShopHome';
+import VisitShop from './pages/VisitShop';
 import ProfileUpdate from './pages/ProfileUpdate';
 import ShopCreate from './pages/ShopCreate';
 import ProductPage from './pages/ProductPage';
@@ -24,10 +25,11 @@ function App() {
           <Route path="/signup" element={user ? <Navigate to="/" /> : <Signup />} />
           <Route path="/account" element={<Account />} />
           <Route path="/shop" element={<ShopLanding />} />
+          <Route path="/shop/:id" element={<VisitShop />} />
           <Route path="/shophome" element={<ShopHome />} />
           <Route path="/shopnew/:name" element={<ShopCreate />} />
           <Route path="/profileUpdate" element={<ProfileUpdate />} />
-          <Route path="/productPage" element={<ProductPage />} />
+          <Route path="/productPage/:productId" element={<ProductPage />} />
           <Route path="/purchases" element={<Purchases />} />
         </Routes>
       </div>

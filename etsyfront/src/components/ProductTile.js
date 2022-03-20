@@ -4,7 +4,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as React from 'react';
-import { Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal } from '@mui/material';
+import { Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal, Button } from '@mui/material';
 import defaultProduct from "../assets/defaultProduct.png";
 import { BASE } from '../api/http';
 import { createFavoriteProduct, deleteFavoriteProduct } from "../redux/product";
@@ -117,13 +117,17 @@ const ProductTile = ({ productData }) => {
       return false;
     }
   }
+
+  const viewMore = (e) => {
+    navigate(`/productPage/${productData.id}`)
+  }
+  
   return (
     <Card sx={cardStyle}>
       <CardHeader
         title={productData.name}
         style={{ textAlign: "center" }}
         action={
-          // <Checkbox onClick={checkUser} icon={<FavoriteBorder />} checkedIcon={<FavoriteIcon />} />
           <Checkbox
           checked={checkFavorite(productData.id)}
           icon={<FavoriteBorder />} 
@@ -135,6 +139,7 @@ const ProductTile = ({ productData }) => {
         component="img"
         height="250"
         image={productImage}
+        onClick={viewMore}
         alt="Product picture"
       />
       <CardActions sx={{ width: 271 }}>
