@@ -41,12 +41,13 @@ const Icon = styled.div`
       transform: scale(1.1);
     }
   `;
-  
+
 const ContentWrapper = styled.div`
-  margin-left: 40px;
+  margin-left: 100px;
+  margin-right: 100px;
   margin-top: 40px
  `;
- 
+
 
 const Account = () => {
   const user = useSelector((state) => state.user.currentUser);
@@ -98,17 +99,17 @@ const Account = () => {
       </div>
 
       <ContentWrapper>
-            <Grid container spacing={2}>
-              {favorites && favorites.length > 0 ?
-              favorites.map(favorite => {
-                return (
-                  <ProductTile productData={favorite}/> 
-                )
-              }) :
-              <div></div>
-            }
-            </Grid>
-        </ContentWrapper>
+        <Grid container spacing={2}>
+          {favorites && favorites.length > 0 ?
+            favorites.map(favorite => {
+              return (
+                <ProductTile productData={favorite} />
+              )
+            }) :
+            <div></div>
+          }
+        </Grid>
+      </ContentWrapper>
       <Footer />
     </Container>
 

@@ -23,7 +23,7 @@ export async function deleteFavoriteProduct(req, res) {
 }
 
 export async function getUserFavorites(req, res) {
-    const {id} = req.params
+    const { id } = req.params
     const findFavorites = await findEntity('userFavorites', ['*'], ['userId', id]);
     const response = [];
     await Promise.all(
@@ -34,4 +34,9 @@ export async function getUserFavorites(req, res) {
     )
 
     return res.status(200).json(response);
+}
+
+export async function searchProductsByName(req, res) {
+    const products = await findEntity('inventory', ['*']);
+    return res.status(200).json(products);
 }

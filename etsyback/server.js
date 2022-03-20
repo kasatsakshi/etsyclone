@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import routes from "./routes";
 import path from "path";
+import 'dotenv/config';
 
 const app = express();
 
@@ -10,7 +11,7 @@ const corsOptions = { origin: 'http://localhost:3000' };
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public/uploads')); 
+app.use(express.static('public/uploads'));
 
 app.use('/api/', routes);
 
