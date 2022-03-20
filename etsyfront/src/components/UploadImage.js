@@ -1,5 +1,23 @@
 import React from 'react'
 import { publicRequest } from '../api/http';
+import styled from "styled-components";
+
+const Button = styled.button`
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  padding: 3px;
+  height: 35px;
+  &:disabled {
+    color: grey;
+    cursor: not-allowed;
+  }
+`;
 
 class UploadImage extends React.Component {
     constructor(props) {
@@ -48,7 +66,7 @@ class UploadImage extends React.Component {
         return (
             <form onSubmit={this.onFormSubmit}>
                 <input type="file" id="myImage" name="myImage" onChange= {this.onChange} />
-                <button type="submit">Upload</button>
+                <Button type="submit">Upload</Button>
             </form>
         )
     }

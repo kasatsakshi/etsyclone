@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Stack, ListItem, Link, Box, Modal, FormControlLabel, RadioGroup, Radio } from '@mui/material';
+import { Stack, ListItem, Link, Box, Modal, Grid, FormControlLabel, RadioGroup, Radio, Checkbox } from '@mui/material';
 import styled from "styled-components";
 import './ShopLanding.css';
 import Navbar from "../components/Navbar";
@@ -11,14 +11,7 @@ import ProductCard from "../components/ProductCard";
 import defaultShop from "../assets/defaultShop.png";
 import defaultUser from "../assets/defaultUser.png";
 import { shopProductCreate } from "../redux/shop";
-// import { makeStyles } from "@mui/core/styles";
-import {
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  CardHeader
-} from "@mui/material";
+import UploadImage from "../components/UploadImage";
 
 const Container = styled.div`
 position: relative;
@@ -143,6 +136,10 @@ const ShopHome = () => {
 
   const dispatch = useDispatch();
 
+  const [shopOpen, setEditShop] = React.useState(false);
+  const handleOpenEditShop = () => setEditShop(true);
+  const handleCloseEditShop = () => setEditShop(false);
+
   useEffect(() => {
     const fetchShops = async () => {
       try {
@@ -182,7 +179,26 @@ const ShopHome = () => {
                 <ListItem><h2>{shopInfo.shop.name}</h2></ListItem>
                 <ListItem><p>0 Sales</p></ListItem>
                 <Stack direction="row" spacing={2}>
-                  <ListItem><Button>Edit Shop</Button></ListItem>
+                <ListItem><Button onClick={handleOpenEditShop}>Edit Shop</Button></ListItem>
+                  <Modal
+                    open={shopOpen}
+                    onClose={handleCloseEditShop}
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={style}>
+                        <Stack>
+                          {
+                            shopInfo.shop.avatarUrl ?
+                              <img src={BASE + "/" + shopInfo.shop.avatarUrl} height="200" width="200" alt="owner avatar"></img>
+                              : <img src={defaultShop} height="200" width="200" alt="owner avatar"></img>
+                          }
+                          <div style={{paddingTop: 30}}>
+                            <UploadImage type="shop" id={shopInfo.shop.id}/>
+                          </div>
+                        </Stack>
+                    </Box>
+                  </Modal>
+
                   <ListItem><Button onClick={(handleOpenNewProduct)}>Add Product</Button></ListItem>
                   <Modal
                     open={productOpen}
@@ -209,7 +225,7 @@ const ShopHome = () => {
                           row
                         >
                           <FormControlLabel onClick={(e) => radioHandler(1)} value="default" control={<Radio />} label="Default" />
-                          <FormControlLabel checked={status === 2} onClick={(e) => radioHandler(2)} value="custom" control={<Radio />} label="Custom" />
+                          <FormControlLabel checked={status === 2} onClick={(e) => radioHandler(2)} value="custom" control={<Radio />} label="Create New" />
                         </RadioGroup>
                         {status === 2 ? isDisabled = true : isDisabled = false}
                         <Select

@@ -3,7 +3,7 @@ import login from './login';
 import signup from './signup';
 import upload from './upload';
 import { user, update } from "./user";
-import { createShopProduct, createShop, getShop, isShopNameAvailable, getShopCategories } from './shop';
+import { createShopProduct, createShop, getShop, isShopNameAvailable, getShopCategories, updateShopProduct } from './shop';
 import { getProducts } from './products';
 
 const router = new express.Router();
@@ -17,6 +17,7 @@ router.get('/shop/:id', getShop)
 router.post('/shop/name/', isShopNameAvailable)
 router.post('/shop/create', createShop)
 router.post('/shop/product/create', createShopProduct)
+router.post('/shop/product/update', updateShopProduct)
 router.get('/shop/:shopId/categories', getShopCategories)
 router.get('/products', getProducts)
 

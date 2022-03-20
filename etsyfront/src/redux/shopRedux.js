@@ -39,9 +39,13 @@ const shopSlice = createSlice({
     shopProductCreateSuccess: (state, action) => {
       state.isFetching = false;
       state.currentShop = action.payload;
+    }, 
+    shopProductUpdateSuccess: (state, action) => {
+      state.isFetching = false;
+      state.currentShop = action.payload;
     },    
   },
 });
 
-export const { getShopStart, getShopSuccess, getShopFailure, shopCreateSuccess, shopCreateFailure, getShopCategorySuccess, getShopCategoryFailure, shopProductCreateSuccess } = shopSlice.actions;
+export const { getShopStart, getShopSuccess, getShopFailure, shopCreateSuccess, shopCreateFailure, getShopCategorySuccess, getShopCategoryFailure, shopProductCreateSuccess, shopProductUpdateSuccess } = shopSlice.actions;
 export default shopSlice.reducer;

@@ -5,7 +5,7 @@ import fs from "fs";
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    const folder = './public/uploads/';
+    const folder = './public/shop/';
     if (!fs.existsSync(folder)){
       fs.mkdirSync(folder, { recursive: true });  
     }
@@ -29,7 +29,9 @@ export default async function upload(req, res) {
 
     if(req.body.type === 'user') {
       await updateEntity(req.body.type, {'avatarUrl': req.file.path}, ['email',req.body.id])
-    } else {
+    } else if(req.body.type === 'shop') {
+      await updateEntity(req.body.type, {'avatarUrl': req.file.path}, ['id',req.body.id])
+    }  else {
       console.log('No valid type found');
       return res.status(400).json('Error in uploading file!');
     }

@@ -68,9 +68,6 @@ const Account = () => {
           <Icon><EditIcon style={{ fontSize: 18 }}></EditIcon></Icon>
         </Link>
       </div>
-      {/* <div className='account__uploadPicture'>
-        <UploadImage type="user" id={user.email} />
-      </div> */}
 
       {/* Favorites Section */}
       <div className="account__searchLine">
