@@ -3,6 +3,16 @@ import { getKnexClient } from "../helpers/knex-client";
 
 export async function getProducts(req, res) {
     const products = await findEntity('inventory', ['*']);
+    let total = 0
+    await Promise.all(
+        products.map(async (product) => {
+            console.log(product);
+            const temp = await findEntity('orderDetails', ['orderQuantity'], ['inventoryId', product.id]);
+            total = temp.length;
+            product.totalSales = total;
+        })
+    )
+
     return res.status(200).json(products);
 }
 

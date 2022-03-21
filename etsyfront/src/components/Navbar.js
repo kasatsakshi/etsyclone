@@ -3,12 +3,12 @@ import './Navbar.css';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, AccountCircle } from '@mui/icons-material';
 import StoreIcon from '@mui/icons-material/Store';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/user";
 import Stack from '@mui/material/Stack';
 import logo from "../assets/logo.png";
 import { searchProductsByName } from "../redux/product";
+import HistoryIcon from '@mui/icons-material/History';
 
 function Navbar() {
     const user = useSelector((state) => state.user.currentUser);
@@ -46,7 +46,7 @@ function Navbar() {
                     <div className='navbar__userSection'>
                         {user
                             ? <React.Fragment>
-                                <FavoriteBorderIcon className='navbar__icons' />
+                                <Link to='/purchases'><HistoryIcon className='navbar__icons' /></Link>
                                 <Link to='/cart'><ShoppingCart className='navbar__icons' /></Link>
                                 <Link to='/account' className='navbar__icons'><AccountCircle className='navbar__accountCircle' /></Link>
                                 <Link to='/shop'><StoreIcon className='navbar__icons' /></Link>

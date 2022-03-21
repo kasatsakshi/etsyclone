@@ -103,6 +103,17 @@ export async function getShop(req, res) {
     shop: shop[0],
     inventory,
   }
+
+  let total = 0
+  await Promise.all(
+    inventory.map(async (item) => {
+          const temp = await findEntity('orderDetails', ['orderQuantity'], ['inventoryId', item.id]);
+          total = total + temp.length;
+      })
+  )
+  response.totalSales = total;
+
+
   return res.status(200).json(response);
 }
 

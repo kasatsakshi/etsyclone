@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { getShop, getShopCategories } from "../redux/shop";
 import { BASE } from "../api/http";
-import ProductCard from "../components/ProductCard";
+import VisitShopProduct from "../components/VisitShopProduct";
 import defaultShop from "../assets/defaultShop.png";
 import defaultUser from "../assets/defaultUser.png";
 import { shopProductCreate } from "../redux/shop";
@@ -171,99 +171,13 @@ const VisitShop = () => {
           <ContainerHeader>
             <Stack direction="row" spacing={2}>
               {
-                shopInfo.shop.avatarUrl ?
+                shopInfo && shopInfo.shop.avatarUrl ?
                   <img src={BASE + "/" + shopInfo.shop.avatarUrl} height="200" width="200" alt="owner avatar"></img>
                   : <img src={defaultShop} height="200" width="200" alt="owner avatar"></img>
               }
               <Stack spacing={2}>
-                <ListItem><h2>{shopInfo.shop.name}</h2></ListItem>
-                <ListItem><p>0 Sales</p></ListItem>
-                <Stack direction="row" spacing={2}>
-                <ListItem><Button onClick={handleOpenEditShop}>Edit Shop</Button></ListItem>
-                  <Modal
-                    open={shopOpen}
-                    onClose={handleCloseEditShop}
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                        <Stack>
-                          {
-                            shopInfo.shop.avatarUrl ?
-                              <img src={BASE + "/" + shopInfo.shop.avatarUrl} height="200" width="200" alt="owner avatar"></img>
-                              : <img src={defaultShop} height="200" width="200" alt="owner avatar"></img>
-                          }
-                          <div style={{paddingTop: 30}}>
-                            <UploadImage type="shop" id={shopInfo.shop.id}/>
-                          </div>
-                        </Stack>
-                    </Box>
-                  </Modal>
-
-                  <ListItem><Button onClick={(handleOpenNewProduct)}>Add Product</Button></ListItem>
-                  <Modal
-                    open={productOpen}
-                    onClose={handleCloseNewProduct}
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                      <Form>
-                        <label style={{ alignContent: 'center', paddingBottom: 30 }}>Add New Product</label>
-                        <input type="file" id="myImage" name="myImage" onChange={pictureChange} accept="image/png, image/jpeg" />
-                        <br />
-                        <Input
-                          placeholder="name"
-                          onChange={(e) => setName(e.target.value)}
-                        />
-                        <Input
-                          placeholder="description"
-                          onChange={(e) => setDesc(e.target.value)}
-                        />
-                        <RadioGroup
-                          aria-labelledby="demo-radio-buttons-group-label"
-                          defaultValue="default"
-                          name="radio-buttons-group"
-                          row
-                        >
-                          <FormControlLabel onClick={(e) => radioHandler(1)} value="default" control={<Radio />} label="Default" />
-                          <FormControlLabel checked={status === 2} onClick={(e) => radioHandler(2)} value="custom" control={<Radio />} label="Create New" />
-                        </RadioGroup>
-                        {status === 2 ? isDisabled = true : isDisabled = false}
-                        <Select
-                          placeholder="category"
-                          onChange={(e) => setCategory(e.target.value)}
-                          disabled={isDisabled}
-                        >
-                          <option color='grey' value=''>category</option>
-                          {
-
-                            shopCategories && shopCategories.default.length > 0 && shopCategories.default.map(item => {
-                              return <option value={item}>{item}</option>
-                            })
-                          }
-                          {
-                            shopCategories && shopCategories.custom.length > 0 && shopCategories.custom.map(item => {
-                              return <option value={item.name}>{item.name}</option>
-                            })
-                          }
-                        </Select>
-                        {status === 2 ?
-                          <Stack><Input placeholder="category name" onChange={(e) => { setCategory(e.target.value); setIsCustom(true) }} /></Stack> : <div></div>}
-                        <Input
-                          placeholder="price"
-                          onChange={(e) => setPrice(e.target.value)}
-                        />
-                        <Input
-                          placeholder="quantity"
-                          onChange={(e) => setQuantity(e.target.value)}
-                        />
-                        <br />
-                        <Button onClick={handleClick}>
-                          Add Item
-                        </Button>
-                      </Form>
-                    </Box>
-                  </Modal>
-                </Stack>
+                <ListItem><h2>{ shopInfo.shop.name}</h2></ListItem>
+                <ListItem><p>{shopInfo.totalSales} Sales</p></ListItem>
               </Stack>
             </Stack>
             <OwnerHeader>
@@ -305,7 +219,7 @@ const VisitShop = () => {
               <Grid container spacing={2}>
                 {shopInfo.inventory.length > 0 ?
                   shopInfo.inventory.map(data => {
-                    return <ProductCard productData={data} />
+                    return <VisitShopProduct productData={data} />
                   })
                   : <h2>No Products</h2>
                 }

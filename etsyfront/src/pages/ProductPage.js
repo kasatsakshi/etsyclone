@@ -95,7 +95,7 @@ function ProductPage() {
     const user = useSelector((state) => state.user.currentUser);
     const products = useSelector((state) => state.products.currentProducts);
     const cartProducts = useSelector((state) => state.cart.cartProducts);
-
+    console.log(products);
     let filterProduct = null;
     const dispatch = useDispatch();
     const navigate = new useNavigate();
@@ -124,6 +124,8 @@ function ProductPage() {
         addToCart(dispatch, cartItems)
     }
 
+    const shopLink = `/shop/${filterProduct.shopId}`
+
     return (
         <Container>
             <Navbar />
@@ -131,8 +133,8 @@ function ProductPage() {
             <Wrapper>
                 <ImageSection><SCard productData={filterProduct}/></ImageSection>
                 <InfoSection>
-                    <Link to='/'>Go to the Shop</Link>
-                    <SalesCount>123 sales</SalesCount>
+                    <Link to={shopLink}>Go to the Shop</Link>
+                    <SalesCount>{filterProduct.totalSales} sales</SalesCount>
                     <ProductName>{filterProduct.name}</ProductName>
                     <ProductDesc>{filterProduct.description}</ProductDesc>
                     <ProductPrice>{filterProduct.price}</ProductPrice><br></br>

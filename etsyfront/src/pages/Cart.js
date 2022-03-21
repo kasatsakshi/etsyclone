@@ -61,8 +61,13 @@ function Cart() {
 
     const checkout = async (e) => {
         e.preventDefault(); 
-        await createOrder(dispatch, {orderItems: cartOrders, userId: user.id});
-        navigate(`/purchases`);
+        if(user.address) {
+            await createOrder(dispatch, {orderItems: cartOrders, userId: user.id});
+            navigate(`/purchases`);
+        } else {
+            alert("You need to update address before placing order");
+            navigate('/account');
+        }
       };
 
     return (
@@ -91,7 +96,7 @@ function Cart() {
                     </Stack>
                    
               </Wrapper>
-            :<NoOrders> No Orders added </NoOrders>
+            :<NoOrders> Cart is Empty </NoOrders>
             }
             <Footer />
         </Container>

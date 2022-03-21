@@ -177,7 +177,7 @@ const ShopHome = () => {
               }
               <Stack spacing={2}>
                 <ListItem><h2>{shopInfo.shop.name}</h2></ListItem>
-                <ListItem><p>0 Sales</p></ListItem>
+                <ListItem><p>{shopInfo.totalSales} Sales</p></ListItem>
                 <Stack direction="row" spacing={2}>
                 <ListItem><Button onClick={handleOpenEditShop}>Edit Shop</Button></ListItem>
                   <Modal
