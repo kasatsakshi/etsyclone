@@ -1,12 +1,13 @@
 import styled from '@emotion/styled'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductTile from "../components/ProductTile";
 import SCard from "../components/SCard";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { Slider } from '@mui/material';
+import { addToCart } from '../redux/cart';
 
 const Container = styled.div`
 position: relative;
@@ -88,11 +89,18 @@ const OutofStock = styled.div`
     font-weight: bold;
 `;
 
-
 function ProductPage() {
     const { productId } = useParams();
+    const [quantityNeeded, setQuantityNeeded] = useState(1);
+    const user = useSelector((state) => state.user.currentUser);
     const products = useSelector((state) => state.products.currentProducts);
+    const cartProducts = useSelector((state) => state.cart.cartProducts);
+
     let filterProduct = null;
+    const dispatch = useDispatch();
+    const navigate = new useNavigate();
+
+    const [cartLink, setCartLink] = React.useState(false);
 
     products.map(product => {
         if(parseInt(product.id) === parseInt(productId)) {
@@ -100,6 +108,21 @@ function ProductPage() {
             return filterProduct
         }
     });
+
+    const addtoCart = (e) => {
+        if(!user) {
+            navigate(`/login`);
+        }
+        setCartLink(true)
+        let cartItems = [];
+        if(cartProducts) {
+            cartItems = [...cartProducts];
+        }
+        const order = {...filterProduct};
+        order['quantityNeeded'] = quantityNeeded
+        cartItems.push(order);
+        addToCart(dispatch, cartItems)
+    }
 
     return (
         <Container>
@@ -115,11 +138,12 @@ function ProductPage() {
                     <ProductPrice>{filterProduct.price}</ProductPrice><br></br>
                     {
                         filterProduct.quantity > 0 ? 
-                        <Slider defaultValue={1}    valueLabelDisplay="on"
+                        <Slider defaultValue={1} onChange={(e) => setQuantityNeeded(e.target.value)}  valueLabelDisplay="on"
                         max={filterProduct.quantity} aria-label="Default" />
                         : <OutofStock>Out of Stock</OutofStock>
                     }
-                    <AddToCart>Add to cart</AddToCart>
+                    <AddToCart onClick={addtoCart}>Add to cart</AddToCart>
+                    { cartLink ? <AddToCart><Link to='/cart'>Go to Cart</Link></AddToCart>: <div></div>}
                 </InfoSection>
             </Wrapper>
             : <div></div>

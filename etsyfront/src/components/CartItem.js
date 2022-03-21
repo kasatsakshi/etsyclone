@@ -77,7 +77,7 @@ const cardStyle = {
   width: 271
 }
 
-const ProductTile = ({ productData }) => {
+const CartItem = ({ productData }) => {
   let productImage;
   const favorites = useSelector((state) => state.products.favoriteProducts);
   if (productData.pictureUrl) {
@@ -85,41 +85,10 @@ const ProductTile = ({ productData }) => {
   } else {
     productImage = defaultProduct
   }
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   
   const user = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const handleCheckboxChange = async (e) => {
-    user ?
-      e.target.checked ?
-        await createFavoriteProduct(dispatch, {userId: user.id, inventoryId: productData.id })
-        :
-        await deleteFavoriteProduct(dispatch, {userId: user.id, inventoryId: productData.id })
-    : navigate("/login");
-
-    window.location.reload()
-    
-  }
-
-  const checkFavorite = (id) => {
-    if(!favorites) {
-      return false;
-    }
-    const data =  favorites.find(function(ele) {
-      return ele.id === id;
-    });
-    
-    if (data) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   const viewMore = (e) => {
     navigate(`/productPage/${productData.id}`)
@@ -130,13 +99,6 @@ const ProductTile = ({ productData }) => {
       <CardHeader
         title={productData.name}
         style={{ textAlign: "center" }}
-        action={
-          <Checkbox
-          checked={checkFavorite(productData.id)}
-          icon={<FavoriteBorder />} 
-          checkedIcon={<FavoriteIcon />} 
-          onChange={handleCheckboxChange} />
-        }
       />
       <CardMedia
         component="img"
@@ -150,10 +112,13 @@ const ProductTile = ({ productData }) => {
           <CardContent>
             <p>price: {productData.price}</p>
           </CardContent>
+          <CardContent>
+            <p>quantity: {productData.quantityNeeded}</p>
+          </CardContent>
         </Stack>
       </CardActions>
     </Card>
   );
 };
 
-export default ProductTile;
+export default CartItem;

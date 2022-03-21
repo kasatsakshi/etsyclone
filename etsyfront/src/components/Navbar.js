@@ -47,7 +47,7 @@ function Navbar() {
                         {user
                             ? <React.Fragment>
                                 <FavoriteBorderIcon className='navbar__icons' />
-                                <ShoppingCart className='navbar__icons' />
+                                <Link to='/cart'><ShoppingCart className='navbar__icons' /></Link>
                                 <Link to='/account' className='navbar__icons'><AccountCircle className='navbar__accountCircle' /></Link>
                                 <Link to='/shop'><StoreIcon className='navbar__icons' /></Link>
                                 <input type="button" className="navbar__button" value="Logout" onClick={() => logout(dispatch)} />

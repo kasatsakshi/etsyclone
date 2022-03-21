@@ -15,6 +15,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import cartRedux from "./cartRedux";
 
 const persistConfig = {
   key: "root",
@@ -27,6 +28,7 @@ const appReducer = combineReducers({
   user: userReducer,
   shop: shopReducer,
   products: productRedux,
+  cart: cartRedux,
   state: (state = {}) => state
 });
 

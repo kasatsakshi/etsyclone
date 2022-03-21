@@ -13,6 +13,7 @@ import ProfileUpdate from './pages/ProfileUpdate';
 import ShopCreate from './pages/ShopCreate';
 import ProductPage from './pages/ProductPage';
 import Purchases from './pages/Purchases';
+import Cart from './pages/Cart';
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -31,6 +32,7 @@ function App() {
           <Route path="/profileUpdate" element={<ProfileUpdate />} />
           <Route path="/productPage/:productId" element={<ProductPage />} />
           <Route path="/purchases" element={<Purchases />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </div>
     </Router>

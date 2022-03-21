@@ -21,6 +21,9 @@ function SCard({productData}) {
 
   }
   const checkFavorite = () => {
+    if(!favorites) {
+      return false;
+    }
     const data = favorites.find(function(ele) {
       return ele.inventoryId === productData.id || ele.id === parseInt(productData.id);
     });
