@@ -7,7 +7,7 @@ import CartItem from "../components/CartItem";
 import { Grid, Stack } from "@mui/material";
 import {
     useNavigate
-  } from "react-router-dom";
+} from "react-router-dom";
 import { createOrder } from '../redux/cart';
 
 const Container = styled.div`
@@ -60,31 +60,26 @@ function Cart() {
 
 
     const checkout = async (e) => {
-        e.preventDefault(); 
-        if(user.address) {
-            await createOrder(dispatch, {orderItems: cartOrders, userId: user.id});
-            navigate(`/purchases`);
-        } else {
-            alert("You need to update address before placing order");
-            navigate('/account');
-        }
-      };
+        e.preventDefault();
+        await createOrder(dispatch, { orderItems: cartOrders, userId: user.id });
+        navigate(`/purchases`);
+    };
 
     return (
         <Container>
             <Navbar />
-            { cartOrders && cartOrders.length > 0  ? 
+            {cartOrders && cartOrders.length > 0 ?
                 <Wrapper>
                     <Heading>Your Cart</Heading>
                     <Grid container spacing={2}>
                         {cartOrders && cartOrders.length > 0 ?
-                        cartOrders.map(cartItem => {
-                            finalPrice = finalPrice + (cartItem.quantityNeeded * cartItem.price)
-                            return (
-                                <CartItem productData={cartItem}/> 
-                            )
-                        })
-                        : <div></div> }
+                            cartOrders.map(cartItem => {
+                                finalPrice = finalPrice + (cartItem.quantityNeeded * cartItem.price)
+                                return (
+                                    <CartItem productData={cartItem} />
+                                )
+                            })
+                            : <div></div>}
                     </Grid>
                     <Stack direction="row">
                         <Stack>
@@ -94,9 +89,9 @@ function Cart() {
                         <Button onClick={checkout}>Proceed to Checkout</Button>
 
                     </Stack>
-                   
-              </Wrapper>
-            :<NoOrders> Cart is Empty </NoOrders>
+
+                </Wrapper>
+                : <NoOrders> Cart is Empty </NoOrders>
             }
             <Footer />
         </Container>
