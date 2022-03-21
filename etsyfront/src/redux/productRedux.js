@@ -44,12 +44,12 @@ const productsSlice = createSlice({
     },
     getSearchProductByNameSuccess: (state, action) => {
       state.isFetching = false;
-      console.log(action.payload);
       state.searchedProducts = action.payload;
     },
     getSearchProductByNameFailure: (state) => {
       state.isFetching = false;
       state.error = true;
+      state.searchedProducts = null;
     },
   }
 });

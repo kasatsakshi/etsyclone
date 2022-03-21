@@ -27,15 +27,15 @@ const Home = () => {
   const user = useSelector((state) => state.user.currentUser);
   const products = useSelector((state) => state.products.currentProducts);
   const favorites = useSelector((state) => state.products.favoriteProducts);
-  //const searchedProducts = useSelector((state) => state.products.searchedProducts);
-  console.log(products);
-  let searched = [];
-  products.map(product => {
-    if (product.name.includes('bruh')) {
-      searched.push(product);
-    }
-  });
-  console.log(searched);
+  const searchedProducts = useSelector((state) => state.products.searchedProducts);
+  console.log(searchedProducts);
+  // let searched = [];
+  // products && products.map(product => {
+  //   if (product.name.includes('bruh')) {
+  //     searched.push(product);
+  //   }
+  // });
+  // console.log(searched);
 
   const dispatch = useDispatch();
   let firstName;
@@ -76,20 +76,17 @@ const Home = () => {
             <div></div>
           }
         </div>
-        {/* <ContentWrapper>
-          {
-            <Grid container spacing={2}>
-              {searchedProducts && searchedProducts.length > 0 ?
-                searchedProducts.map(product => {
-                  return (
-                    <ProductTile productData={product} />
-                  )
-                }) :
-                <div></div>
-              }
-            </Grid>
-          }
-        </ContentWrapper> */}
+        {searchedProducts && searchedProducts.length > 0 ?
+          <ContentWrapper>
+              <Grid container spacing={2}>
+                  {searchedProducts.map((product) => {
+                    return (
+                      <ProductTile productData={product} />
+                    )
+                  })}
+              </Grid>
+          </ContentWrapper>
+        : 
         <ContentWrapper>
           {
             <Grid container spacing={2}>
@@ -104,6 +101,7 @@ const Home = () => {
             </Grid>
           }
         </ContentWrapper>
+        }
         {
           user ?
             favorites && favorites.length > 0 ?

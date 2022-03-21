@@ -5,6 +5,7 @@ import upload from './upload';
 import { user, update } from "./user";
 import { createShopProduct, createShop, getShop, isShopNameAvailable, getShopCategories, updateShopProduct } from './shop';
 import { deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites, searchProductsByName } from './products';
+import { createOrder, getOrders } from './order';
 
 const router = new express.Router();
 
@@ -26,5 +27,8 @@ router.post('/product/favorite/delete', deleteFavoriteProduct);
 router.get('/user/:id/favorites', getUserFavorites);
 
 router.get('/product/search/:name', searchProductsByName);
+
+router.post('/order', createOrder);
+router.get('/orders/:id', getOrders)
 
 export default router;

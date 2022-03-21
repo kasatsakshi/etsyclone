@@ -116,11 +116,10 @@
           t.increments().primary; // integer id
           t.decimal('finalAmount').notNullable();
           t.string('status').checkIn(['ordered', 'inTransit', 'delivered', 'cancelled']);
+          t.string('orderId');
           t.timestamp('orderedDate').notNullable();
           t.integer('userId').unsigned().notNullable();
-          t.integer('shopId').unsigned().notNullable();
           t.foreign('userId').references('id').inTable('user');
-          t.foreign('shopId').references('id').inTable('shop');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
         })
@@ -132,9 +131,15 @@
         return knex.schema.createTable('orderDetails', (t) => {
           t.increments().primary; // integer id
           t.integer('orderQuantity').notNullable();
-          t.integer('orderId').unsigned().notNullable();
+          t.string('orderId')
+          t.decimal('price');
+          t.string('pictureUrl');
+          t.string('category');
+          t.string('name');
+          t.string('description');
+          t.integer('shopId').unsigned().notNullable();
+          t.foreign('shopId').references('id').inTable('shop');
           t.integer('inventoryId').unsigned().notNullable();
-          t.foreign('orderId').references('id').inTable('order');
           t.foreign('inventoryId').references('id').inTable('inventory');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());

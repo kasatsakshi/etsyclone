@@ -15,13 +15,13 @@ function Navbar() {
     const dispatch = useDispatch();
     const [searchParam, setSearchParam] = useState("");
 
-    const handleKeyPress = (e) => {
+    const handleKeyPress = async (e) => {
         try {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 setSearchParam(e.target.value)
-                this.props.onSelectParams(searchParam);
-                //await searchProductsByName(dispatch, { searchParam });
+                // this.props.onSelectParams(searchParam);
+                await searchProductsByName(dispatch, { searchParam });
             }
         } catch (err) {
             console.log(err);

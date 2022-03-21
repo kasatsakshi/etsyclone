@@ -9,20 +9,20 @@ import {
 export const getProducts = async (dispatch, shop) => {
   try {
     const res = await publicRequest.get(`/products`);
-    dispatch(getProductsSuccess(res.data));
+    await dispatch(getProductsSuccess(res.data));
   } catch (err) {
     console.log(err);
-    dispatch(getProductsFailure());
+    await dispatch(getProductsFailure());
   }
 };
 
 export const createFavoriteProduct = async (dispatch, product) => {
   try {
     const res = await publicRequest.post(`/product/favorite`, product);
-    dispatch(createFavoriteProductSuccess(res.data));
+    await dispatch(createFavoriteProductSuccess(res.data));
   } catch (err) {
     console.log(err);
-    dispatch(createFavoriteProductFailure());
+    await dispatch(createFavoriteProductFailure());
   }
 };
 
