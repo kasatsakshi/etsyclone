@@ -5,6 +5,7 @@ const productsSlice = createSlice({
   initialState: {
     currentProducts: null,
     favoriteProducts: null,
+    searchedProducts: null,
     isFetching: false,
     error: false,
   },
@@ -41,10 +42,19 @@ const productsSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
+    getSearchProductByNameSuccess: (state, action) => {
+      state.isFetching = false;
+      console.log(action.payload);
+      state.searchedProducts = action.payload;
+    },
+    getSearchProductByNameFailure: (state) => {
+      state.isFetching = false;
+      state.error = true;
+    },
   }
 });
 
-export const { getProductsSuccess, getProductsFailure, createFavoriteProductSuccess, 
+export const { getProductsSuccess, getProductsFailure, createFavoriteProductSuccess,
   createFavoriteProductFailure, deleteFavoriteProductSuccess, getUserFavoritesSuccess, getUserFavoritesFailure,
-  deleteFavoriteProductFailure } = productsSlice.actions;
+  deleteFavoriteProductFailure, getSearchProductByNameSuccess, getSearchProductByNameFailure } = productsSlice.actions;
 export default productsSlice.reducer;

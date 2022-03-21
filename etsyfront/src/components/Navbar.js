@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Navbar.css';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, AccountCircle } from '@mui/icons-material';
@@ -8,10 +8,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/user";
 import Stack from '@mui/material/Stack';
 import logo from "../assets/logo.png";
+import { searchProductsByName } from "../redux/product";
 
 function Navbar() {
     const user = useSelector((state) => state.user.currentUser);
     const dispatch = useDispatch();
+    const [searchParam, setSearchParam] = useState("");
+
+    const handleKeyPress = (e) => {
+        try {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                setSearchParam(e.target.value)
+                this.props.onSelectParams(searchParam);
+                //await searchProductsByName(dispatch, { searchParam });
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
     return (
         <div>
             <Stack>
@@ -23,8 +38,8 @@ function Navbar() {
 
                     {/* Search text box */}
                     <div className='navbar__searchBox'>
-                        <input type='text' className='navbar__searchInput' placeholder='Search for anything' />
-                        {/* <SearchIcon className='navbar__searchIcon' /> */}
+                        <input type='text' className='navbar__searchInput' placeholder='Search for anything'
+                            onKeyUp={handleKeyPress} />
                     </div>
 
                     {/* User section*/}

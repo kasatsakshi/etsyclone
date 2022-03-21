@@ -1,7 +1,10 @@
 import { publicRequest } from "../api/http";
-import { getProductsFailure, getProductsSuccess, createFavoriteProductSuccess,
+import {
+  getProductsFailure, getProductsSuccess, createFavoriteProductSuccess,
   getUserFavoritesSuccess, getUserFavoritesFailure,
-  createFavoriteProductFailure, deleteFavoriteProductSuccess, deleteFavoriteProductFailure } from "./productRedux";
+  createFavoriteProductFailure, deleteFavoriteProductSuccess, deleteFavoriteProductFailure,
+  getSearchProductByNameSuccess, getSearchProductByNameFailure,
+} from "./productRedux";
 
 export const getProducts = async (dispatch, shop) => {
   try {
@@ -41,5 +44,17 @@ export const getUserFavorites = async (dispatch, user) => {
   } catch (err) {
     console.log(err);
     dispatch(getUserFavoritesFailure());
+  }
+};
+
+export const searchProductsByName = async (dispatch, data) => {
+  try {
+    console.log(data.searchParam);
+    const res = await publicRequest.get(`/product/search/${data.searchParam}`);
+    console.log(res.data);
+    dispatch(getSearchProductByNameSuccess(res.data));
+  } catch (err) {
+    console.log(err);
+    dispatch(getSearchProductByNameFailure());
   }
 };

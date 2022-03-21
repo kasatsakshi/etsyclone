@@ -1,4 +1,4 @@
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import './Home.css';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -27,6 +27,15 @@ const Home = () => {
   const user = useSelector((state) => state.user.currentUser);
   const products = useSelector((state) => state.products.currentProducts);
   const favorites = useSelector((state) => state.products.favoriteProducts);
+  //const searchedProducts = useSelector((state) => state.products.searchedProducts);
+  console.log(products);
+  let searched = [];
+  products.map(product => {
+    if (product.name.includes('bruh')) {
+      searched.push(product);
+    }
+  });
+  console.log(searched);
 
   const dispatch = useDispatch();
   let firstName;
@@ -47,14 +56,14 @@ const Home = () => {
     const fetchFavorites = async () => {
       try {
         await getUserFavorites(dispatch, user)
-      }  catch (err) {
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
     fetchProducts();
     fetchFavorites();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  
+
   return (
     <Container>
       <Navbar />
@@ -67,41 +76,58 @@ const Home = () => {
             <div></div>
           }
         </div>
+        {/* <ContentWrapper>
+          {
+            <Grid container spacing={2}>
+              {searchedProducts && searchedProducts.length > 0 ?
+                searchedProducts.map(product => {
+                  return (
+                    <ProductTile productData={product} />
+                  )
+                }) :
+                <div></div>
+              }
+            </Grid>
+          }
+        </ContentWrapper> */}
         <ContentWrapper>
           {
             <Grid container spacing={2}>
-          {products && products.length > 0 ?
-          products.map(product => {
-            return (
-              <ProductTile productData={product}/> 
-            )
-          }) :
-          <div></div>
-        }
-        </Grid>
-        }
+              {products && products.length > 0 ?
+                products.map(product => {
+                  return (
+                    <ProductTile productData={product} />
+                  )
+                }) :
+                <div></div>
+              }
+            </Grid>
+          }
         </ContentWrapper>
         {
-          user ? 
-          <ContentWrapper>
-            <h1>User Favorites</h1>
-          </ContentWrapper> : <div></div>
+          user ?
+            favorites && favorites.length > 0 ?
+              <ContentWrapper>
+                <h1>User Favorites</h1>
+              </ContentWrapper>
+              : <div></div>
+            : <div></div>
         }
         <ContentWrapper>
           {
-          user ?   
-          <Grid container spacing={2}>
-          {favorites && favorites.length > 0 ?
-          favorites.map(favorite => {
-            return (
-              <ProductTile productData={favorite}/> 
-            )
-          }) :
-          <div></div>
-        }
-        </Grid>
-        : <div></div>
-        }
+            user ?
+              <Grid container spacing={2}>
+                {favorites && favorites.length > 0 ?
+                  favorites.map(favorite => {
+                    return (
+                      <ProductTile productData={favorite} />
+                    )
+                  }) :
+                  <div></div>
+                }
+              </Grid>
+              : <div></div>
+          }
         </ContentWrapper>
       </Wrapper>
       <Footer />

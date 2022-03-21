@@ -10,11 +10,11 @@ function createEntity(table, data) {
 
 function findEntity(table, filter = '*', condition) {
   try {
-    if(condition) {
+    if (condition) {
       return getKnexClient()(table).select(...filter).where(...condition);
     } else {
       return getKnexClient()(table).select(...filter);
-    } 
+    }
   } catch (e) {
     console.error(e);
   }
@@ -36,9 +36,18 @@ function deleteEntity(table, condition) {
   }
 }
 
+async function findByNameEntity(table, filter = '*', condition) {
+  try {
+    return getKnexClient()(table).select(...filter).where(...condition);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export {
   createEntity,
   findEntity,
   updateEntity,
-  deleteEntity
+  deleteEntity,
+  findByNameEntity
 }

@@ -1,5 +1,6 @@
-import { createEntity, deleteEntity, findEntity } from "../models";
+import { createEntity, findEntity, findByNameEntity } from "../models";
 import { getKnexClient } from "../helpers/knex-client";
+import knex from "knex";
 
 
 export async function getProducts(req, res) {
@@ -37,6 +38,7 @@ export async function getUserFavorites(req, res) {
 }
 
 export async function searchProductsByName(req, res) {
-    const products = await findEntity('inventory', ['*']);
+    const input = '%' + req.params.name + '%';
+    const products = await findByNameEntity('inventory', ['*'], ['name', 'LIKE', input]);
     return res.status(200).json(products);
 }
