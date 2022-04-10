@@ -1,6 +1,7 @@
 import { CircleFlag } from 'react-circle-flags'
 import styled from "styled-components";
 import './Navbar.css';
+import Currency from './Currency';
 
 const Container = styled.div`
     display: flex;
@@ -65,34 +66,35 @@ const SelectCurrency = styled.select`
 `;
 
 const Footer = () => {
-    return (
-        <Container>
-            <Left>
-                <SocialContainer>
-                    <CountryIcon>
-                        <CircleFlag countryCode="us" height="25" />
-                    </CountryIcon>
-                    <Title>United States</Title>
-                    <Title>|</Title>
-                    <Title>English(US)</Title>
-                    <Title>|</Title>
-                    <SelectCurrency>
-                        <option value='1'>USD</option>
-                        <option value='2'>INR</option>
-                        <option value='3'>GBP</option>
-                    </SelectCurrency>
-                </SocialContainer>
-            </Left>
-            <Center>
-            </Center>
-            <Right>
-                <Title>2022 Etsy, Inc</Title>
-                <Title>Terms of Use</Title>
-                <Title>Privacy</Title>
-                <Title>Interest based ads</Title>
-            </Right>
-        </Container>
-    );
+  return (
+    <Container>
+      <Left>
+        <SocialContainer>
+          <CountryIcon>
+            <CircleFlag countryCode="us" height="25" />
+          </CountryIcon>
+          <Title>United States</Title>
+          <Title>|</Title>
+          <Title>English(US)</Title>
+          <Title>|</Title>
+          <Currency></Currency>
+          <SelectCurrency>
+            <option value='1'>USD</option>
+            <option value='2'>INR</option>
+            <option value='3'>GBP</option>
+          </SelectCurrency>
+        </SocialContainer>
+      </Left>
+      <Center>
+      </Center>
+      <Right>
+        <Title>2022 Etsy, Inc</Title>
+        <Title>Terms of Use</Title>
+        <Title>Privacy</Title>
+        <Title>Interest based ads</Title>
+      </Right>
+    </Container>
+  );
 };
 
 export default Footer

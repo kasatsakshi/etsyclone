@@ -37,12 +37,12 @@ const Heading = styled.h1`
 `;
 
 const Button = styled.button`
-  width: 10%;
+  width: 8%;
   border: none;
   border-radius:50px;
   margin-top: 20px;
   margin-left: 20px;
-  padding: 15px 20px;
+  padding: 10px 10px;
   background-color: black;
   color: white;
   cursor: pointer;
@@ -86,7 +86,7 @@ function Cart() {
                             <h3>Items added: {cartOrders.length} </h3>
                             <h1>Total Price: {finalPrice} </h1>
                         </Stack>
-                        <Button onClick={checkout}>Proceed to Checkout</Button>
+                        <Button onClick={checkout}>Checkout</Button>
 
                     </Stack>
 

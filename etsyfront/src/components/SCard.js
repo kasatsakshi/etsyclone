@@ -7,24 +7,24 @@ import { BASE } from '../api/http';
 import { FavoriteBorder } from "@mui/icons-material";
 import { createFavoriteProduct, deleteFavoriteProduct } from "../redux/product";
 
-function SCard({productData}) {
+function SCard({ productData }) {
   let productImage;
   const favorites = useSelector((state) => state.products.favoriteProducts);
   const user = useSelector((state) => state.user.currentUser);
 
   const dispatch = useDispatch();
 
-  if( productData.pictureUrl) {
+  if (productData.pictureUrl) {
     productImage = BASE + "/" + productData.pictureUrl
-  } else{
+  } else {
     productImage = defaultProduct
 
   }
   const checkFavorite = () => {
-    if(!favorites) {
+    if (!favorites) {
       return false;
     }
-    const data = favorites.find(function(ele) {
+    const data = favorites.find(function (ele) {
       return ele.inventoryId === productData.id || ele.id === parseInt(productData.id);
     });
     if (data) {
@@ -36,9 +36,9 @@ function SCard({productData}) {
 
   const handleCheckboxChange = async (e) => {
     e.target.checked ?
-      await createFavoriteProduct(dispatch, {userId: user.id, inventoryId: productData.id })
+      await createFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
       :
-      await deleteFavoriteProduct(dispatch, {userId: user.id, inventoryId: productData.id })
+      await deleteFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
 
     // window.location.reload()
   }
@@ -47,7 +47,7 @@ function SCard({productData}) {
     <Card >
       <CardMedia
         component="img"
-        height="90%"
+        height="500px"
         image={productImage}
         alt="Picture"
         width="90%"
@@ -56,10 +56,10 @@ function SCard({productData}) {
         style={{ textAlign: "center" }}
         action={
           <Checkbox
-          checked={checkFavorite()}
-          icon={<FavoriteBorder />} 
-          checkedIcon={<FavoriteIcon />} 
-          onChange={handleCheckboxChange} />
+            checked={checkFavorite()}
+            icon={<FavoriteBorder />}
+            checkedIcon={<FavoriteIcon />}
+            onChange={handleCheckboxChange} />
         }
       />
       {/* <CardActions disableSpacing>
