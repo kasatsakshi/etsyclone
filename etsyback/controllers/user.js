@@ -64,6 +64,31 @@ export async function user(req, res) {
   return res.status(200).json(response);
 }
 
+export async function updateCurrency(req, res) {
+  const input = req.body;
+  const userId = input.userId;
+  const currency = input.currency;
+
+  const findUser = await findEntity('user', ['*'], ['id', parseInt(userId)]);
+  //Check if this user exists
+  if (findUser.length === 0) {
+    console.error("User does not exists!");
+    return res.status(400).json({ message: "User does not exists" });
+  }
+
+  await updateEntity('user',{ currency},['id', userId]);
+
+  const findAddress = await findEntity('address', ['*'], ['id', findUser[0].addressId]);
+  const findUpdatedUser = await findEntity('user', ['*'], ['id', parseInt(userId)]);
+  delete findUpdatedUser[0].addressId;
+  delete findUpdatedUser[0].password;
+  const response = {
+    ...findUpdatedUser[0],
+    address: findAddress[0]
+  }
+  return res.status(200).json(response);
+}
+
 export async function update(req, res) {
   //Check incoming validation
   const form = new formidable.IncomingForm();
@@ -119,3 +144,4 @@ export async function update(req, res) {
     return res.status(200).json(response);
   });
 }
+

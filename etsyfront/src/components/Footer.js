@@ -1,7 +1,9 @@
 import { CircleFlag } from 'react-circle-flags'
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { updateCurrency } from '../redux/user';
+import { useNavigate } from "react-router-dom";
 import './Navbar.css';
-import Currency from './Currency';
 
 const Container = styled.div`
     display: flex;
@@ -66,6 +68,19 @@ const SelectCurrency = styled.select`
 `;
 
 const Footer = () => {
+  const user = useSelector((state) => state.user.currentUser);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+
+  const handleCurrencyChange = async(currency) => {
+    user ?
+      await updateCurrency(dispatch, {userId: user.id, currency })
+  : navigate("/login");
+
+  window.location.reload()
+  }
+
   return (
     <Container>
       <Left>
@@ -77,11 +92,10 @@ const Footer = () => {
           <Title>|</Title>
           <Title>English(US)</Title>
           <Title>|</Title>
-          <Currency></Currency>
-          <SelectCurrency>
-            <option value='1'>USD</option>
-            <option value='2'>INR</option>
-            <option value='3'>GBP</option>
+          <SelectCurrency defaultValue={ user ? user.currency : 'USD'} onChange={e => handleCurrencyChange(e.target.value)}>
+            <option value='USD'>USD</option>
+            <option value='INR'>INR</option>
+            <option value='GBP'>GBP</option>
           </SelectCurrency>
         </SocialContainer>
       </Left>

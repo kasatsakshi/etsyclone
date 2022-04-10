@@ -2,7 +2,7 @@ import express from 'express';
 import login from './login';
 import signup from './signup';
 import upload from './upload';
-import { user, update } from "./user";
+import { user, update, updateCurrency } from "./user";
 import { createShopProduct, createShop, getShop, isShopNameAvailable, getShopCategories, updateShopProduct } from './shop';
 import { deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites, searchProductsByName } from './products';
 import { createOrder, getOrders } from './order';
@@ -13,6 +13,7 @@ router.post('/signup', signup);
 router.post('/login', login);
 router.post('/user', user);
 router.post('/user/update', update);
+router.put('/user/update/currency', updateCurrency);
 router.post('/upload', upload);
 router.get('/shop/:id', getShop)
 router.post('/shop/name/', isShopNameAvailable)

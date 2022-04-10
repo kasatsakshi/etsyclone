@@ -52,7 +52,7 @@ export default async function login(req, res) {
     // Adding the below message so someone cannot create fake accounts
     return res.status(400).json({message: "Invalid Username and Password"});
   }
-
+  
   const isValidPassword = await bcrypt.compare(trimmedInput.password, findUser[0].password);
   if(!isValidPassword) {
     console.error("Invalid Username and Password");

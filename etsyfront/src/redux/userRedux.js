@@ -45,11 +45,15 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.currentUser = action.payload;
     },
+    updateUserCurrencySuccess: (state, action) => {
+      state.isFetching = false;
+      state.currentUser = action.payload;
+    },
     logoutUser(state, action) {
       // Note that this should be left intentionally empty.
     },
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logoutUser, signupStart, signupSuccess, signupFailure,accountInfoStart, accountInfoSuccess, accountInfoFailure, updateUserInfoSuccess } = userSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, logoutUser, signupStart, signupSuccess, signupFailure,accountInfoStart, accountInfoSuccess, accountInfoFailure, updateUserInfoSuccess, updateUserCurrencySuccess } = userSlice.actions;
 export default userSlice.reducer;

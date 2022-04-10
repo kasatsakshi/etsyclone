@@ -28,7 +28,6 @@ const Home = () => {
   const products = useSelector((state) => state.products.currentProducts);
   const favorites = useSelector((state) => state.products.favoriteProducts);
   const searchedProducts = useSelector((state) => state.products.searchedProducts);
-  console.log(searchedProducts);
   // let searched = [];
   // products && products.map(product => {
   //   if (product.name.includes('bruh')) {

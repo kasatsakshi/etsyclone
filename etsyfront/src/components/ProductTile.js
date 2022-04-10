@@ -8,6 +8,7 @@ import { Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent,
 import defaultProduct from "../assets/defaultProduct.png";
 import { BASE } from '../api/http';
 import { createFavoriteProduct, deleteFavoriteProduct } from "../redux/product";
+import { numberFormat } from "../util/currency";
 
 const Info = styled.div`
     opacity: 0;
@@ -148,7 +149,7 @@ const ProductTile = ({ productData }) => {
       <CardActions sx={{ width: 271 }}>
         <Stack direction="row">
           <CardContent>
-            <p>price: {productData.price}</p>
+            <p>{numberFormat(productData.price, user? user.currency : 'USD')}</p>
           </CardContent>
         </Stack>
       </CardActions>

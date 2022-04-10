@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import ProductTile from "../components/ProductTile";
 import SCard from "../components/SCard";
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { Button, ButtonGroup } from '@mui/material';
 import { addToCart } from '../redux/cart';
+import { numberFormat } from "../util/currency";
 
 const Container = styled.div`
 position: relative;
@@ -36,8 +36,6 @@ margin-top:20px;
 width: 450px;
 padding: 20px;
 `;
-
-const ShopName = styled.link``;
 
 const SalesCount = styled.div`
 padding: 1px;
@@ -135,7 +133,7 @@ function ProductPage() {
                         <SalesCount>{filterProduct.totalSales} sales</SalesCount>
                         <ProductName>{filterProduct.name}</ProductName>
                         <ProductDesc>{filterProduct.description}</ProductDesc>
-                        <ProductPrice>{filterProduct.price}</ProductPrice><br></br>
+                        <ProductPrice>{numberFormat(filterProduct.price, user? user.currency : 'USD')}</ProductPrice><br></br>
                         {
                             filterProduct.quantity > 0 ?
                                 // <Slider defaultValue={1} onChange={(e) => setQuantityNeeded(e.target.value)}  valueLabelDisplay="on"

@@ -6,7 +6,6 @@ export async function getProducts(req, res) {
     let total = 0
     await Promise.all(
         products.map(async (product) => {
-            console.log(product);
             const temp = await findEntity('orderDetails', ['orderQuantity'], ['inventoryId', product.id]);
             total = temp.length;
             product.totalSales = total;

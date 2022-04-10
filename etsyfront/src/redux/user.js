@@ -1,4 +1,7 @@
-import { loginFailure, loginStart, loginSuccess, logoutUser, signupStart, signupSuccess, signupFailure, accountInfoStart, accountInfoSuccess, accountInfoFailure, updateUserInfoSuccess } from "./userRedux";
+import { loginFailure, loginStart, loginSuccess, logoutUser, 
+  signupStart, signupSuccess, signupFailure, accountInfoStart, 
+  accountInfoSuccess, accountInfoFailure, updateUserInfoSuccess,
+  updateUserCurrencySuccess} from "./userRedux";
 import { publicRequest } from "../api/http";
 
 export const login = async (dispatch, user) => {
@@ -58,6 +61,15 @@ export const updateUserInfo = async (dispatch, data) => {
   }
 };
 
+export const updateCurrency = async (dispatch, data) => {
+  try {
+    const res = await publicRequest.put("/user/update/currency", data);
+    dispatch(updateUserCurrencySuccess(res.data))
+  } catch(err) {
+    console.log(err);
+  }
+
+}
 
 export const logout = (dispatch) => {
   dispatch(logoutUser());
