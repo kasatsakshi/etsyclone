@@ -1,28 +1,46 @@
 import { getKnexClient } from "../helpers/knex-client";
 
-function createEntity(table, data) {
+function createEntity(DB) {
   try {
-    return getKnexClient()(table).insert(data);
+    return DB.save();
   } catch (e) {
     console.error(e);
   }
 }
 
-function findEntity(table, filter = '*', condition) {
+function findEntity(DB, condition, filter) {
   try {
-    if (condition) {
-      return getKnexClient()(table).select(...filter).where(...condition);
-    } else {
-      return getKnexClient()(table).select(...filter);
+    if(filter) {
+      return DB.find(condition, filter);
     }
+    return DB.find(condition);
   } catch (e) {
     console.error(e);
   }
 }
 
-function updateEntity(table, data, condition) {
+function findOneEntity(DB, condition, filter) {
   try {
-    return getKnexClient()(table).update(data).where(...condition);
+    if(filter) {
+      return DB.findOne(condition, filter);
+    }
+    return DB.findOne(condition);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function updateEntity(DB, condition, data) {
+  try {
+    return DB.update(data).where(...condition);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function updateOneEntity(DB, condition, data) {
+  try {
+    return DB.update(data).where(condition);
   } catch (e) {
     console.error(e);
   }
@@ -47,7 +65,9 @@ async function findByNameEntity(table, filter = '*', condition) {
 export {
   createEntity,
   findEntity,
+  findOneEntity,
   updateEntity,
+  updateOneEntity,
   deleteEntity,
   findByNameEntity
 }

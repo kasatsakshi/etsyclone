@@ -2,9 +2,36 @@ import express from "express";
 import cors from "cors";
 import routes from "./routes";
 import path from "path";
+import mongoose from 'mongoose';
+import config from './config';
+import passport from 'passport';
+import passportJWT from 'passport-jwt';
+import User from "./models/users";
+import { SECRET } from './helpers/constant';
+
+const JWTStrategy   = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
+
+passport.use(new JWTStrategy({
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey   : SECRET
+},
+ function (jwtPayload, done) {
+   return User.findById(jwtPayload.data.id)
+   .then(user => 
+   {
+     return done(null, user);
+   }
+ ).catch(err => 
+ {
+   return done(err);
+ });
+}
+))
+
 
 const app = express();
-const corsOptions = { origin: ['http://localhost:3000', 'http://34.238.124.46/'] };
+const corsOptions = { origin: '*' };
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -37,6 +64,20 @@ app.get('/public/products/*', (req, res) => {
   const __dirname = path.dirname(fileName);
   res.sendFile(filePath, { root: __dirname });
 });
+
+app.get('/test', passport.authenticate('jwt',{session: false}),(req,res,next)=>{
+  res.json("Testing token authentication")
+})
+
+// Connect to MongoDB
+mongoose
+  .connect(config.mongo.uri, config.mongo.connectionOptions)
+  .catch(err => {
+    console.log("Cannot connect to the database!", err);
+    process.exit();
+  });
+
+mongoose.Promise = global.Promise;
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

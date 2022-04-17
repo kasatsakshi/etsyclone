@@ -1,6 +1,6 @@
-import { createEntity, findEntity } from "../models";
-import bcrypt from "bcrypt";
+import { createEntity, findOneEntity } from "../models";
 import { isValidEmail } from "../helpers/validator";
+import User from '../models/users';
 
 function cleanInput(input) {
   const {
@@ -50,29 +50,25 @@ export default async function signup(req, res) {
     return res.status(400).json({message: inputError});
   }
 
-  const findUser = await findEntity('user', ['*'], ['email', trimmedInput.email]);
+  const findUser = await findOneEntity(User, {'email': trimmedInput.email});
 
   //Check if this user email exists
-  if(findUser.length !== 0) {
+  if(findUser) {
     return res.status(400).json({message: "Email Address already exists"});
   }
-
-  const salt = await bcrypt.genSalt(10);
-  // now we set user password to hashed password
-  const hashedPassword = await bcrypt.hash(input.password, salt);
-  const userData = {
-    ...input,
+  const userData = new User({
+    ...trimmedInput,
     userLevel: 0,
     userStatus: 'active',
     lastLoginAt: new Date(),
-    password: hashedPassword,
-  };
-  const user = await createEntity('user', userData);
-  const createdUser = await findEntity('user', ['*'], ['id', user[0]]);
-  const response = {
-    ...createdUser[0]
-  };
+  });
+  const createdUser = await createEntity(userData)
+  
+  if (!createdUser) {
+    return res.status(500).json({ message: "Signup failed. Try again" });
+  }
 
+  const response = ({...createdUser}._doc);
   delete response.password;
 
   return res.status(200).json(response);

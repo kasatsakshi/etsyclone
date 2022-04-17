@@ -1,6 +1,8 @@
-import { findEntity, updateEntity } from "../models";
+import { findOneEntity, updateOneEntity } from "../models";
 import bcrypt from "bcrypt";
 import { isValidEmail } from "../helpers/validator";
+import User from '../models/users';
+import { signToken } from "../helpers/auth";
 
 function cleanInput(input) {
   const {
@@ -45,30 +47,30 @@ export default async function login(req, res) {
     return res.status(400).json({message: inputError});
   }
 
-  const findUser = await findEntity('user', ['*'], ['email', trimmedInput.email]);
+  const findUser = await findOneEntity(User, {'email': trimmedInput.email});
   //Check if this user email exists
-  if(findUser.length === 0) {
+  if(!findUser) {
     console.error("Account does not exists!");
     // Adding the below message so someone cannot create fake accounts
     return res.status(400).json({message: "Invalid Username and Password"});
   }
   
-  const isValidPassword = await bcrypt.compare(trimmedInput.password, findUser[0].password);
+  const isValidPassword = await bcrypt.compare(trimmedInput.password, findUser.password);
   if(!isValidPassword) {
     console.error("Invalid Username and Password");
     return res.status(400).json({message: "Invalid Username and Password"});
   }
 
-  await updateEntity('user', {'lastLoginAt': new Date(), 'updatedAt': new Date()}, ['id', findUser[0].id]);
+  await updateOneEntity(User,{'_id': findUser._id} ,{'lastLoginAt': new Date(), 'updatedAt': new Date()});
 
-  // TODO: Use joins here
-  const address = await findEntity('address', ['*'], ['id', findUser[0].addressId]);
-  delete findUser[0].addressId;
-  delete findUser[0].password;
-  const response = {
-    ...findUser[0],
-    address: address[0]
-  }
+  const response = ({...findUser}._doc);
+  delete response.password;
 
+  // Generate JWT token
+  const token = await signToken(findUser)
+
+  res.set({
+    'X-Auth-Token': token
+  });   
   return res.status(200).json(response);
 }
