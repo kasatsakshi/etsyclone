@@ -40,7 +40,7 @@ function updateEntity(DB, condition, data) {
 
 function updateOneEntity(DB, condition, data) {
   try {
-    return DB.update(data).where(condition);
+    return DB.updateOne(data).where(condition);
   } catch (e) {
     console.error(e);
   }

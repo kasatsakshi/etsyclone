@@ -4,34 +4,10 @@ import routes from "./routes";
 import path from "path";
 import mongoose from 'mongoose';
 import config from './config';
-import passport from 'passport';
-import passportJWT from 'passport-jwt';
-import User from "./models/users";
-import { SECRET } from './helpers/constant';
-
-const JWTStrategy   = passportJWT.Strategy;
-const ExtractJWT = passportJWT.ExtractJwt;
-
-passport.use(new JWTStrategy({
-  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-  secretOrKey   : SECRET
-},
- function (jwtPayload, done) {
-   return User.findById(jwtPayload.data.id)
-   .then(user => 
-   {
-     return done(null, user);
-   }
- ).catch(err => 
- {
-   return done(err);
- });
-}
-))
-
+import passport from "./helpers/passport";
 
 const app = express();
-const corsOptions = { origin: '*' };
+const corsOptions = { origin: '*', exposedHeaders: 'X-Auth-Token'};
 
 app.use(cors(corsOptions));
 app.use(express.json());

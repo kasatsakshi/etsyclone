@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 // export const BASE = "http://34.238.124.46:8080";
 // const BASE_URL = "http://34.238.124.46:8080/api/";
 export const BASE = "http://localhost:8080";
@@ -9,9 +8,9 @@ const BASE_URL = "http://localhost:8080/api/";
 //   JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).currentUser
 //     .accessToken || "";
 
-const user = JSON.parse(localStorage.getItem("persist:root"))?.user;
-const currentUser = user && JSON.parse(user).currentUser;
-const TOKEN = currentUser?.accessToken;
+// const user = JSON.parse(localStorage.getItem("persist:root"))?.user;
+// const currentUser = user && JSON.parse(user).currentUser;
+const TOKEN = localStorage.getItem("token")
 
 export const publicRequest = axios.create({
   baseURL: BASE_URL,
@@ -19,5 +18,5 @@ export const publicRequest = axios.create({
 
 export const userRequest = axios.create({
   baseURL: BASE_URL,
-  header: { token: `Bearer ${TOKEN}` },
+  headers: { Authorization: `Bearer ${TOKEN}` },
 });

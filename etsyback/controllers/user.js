@@ -1,8 +1,10 @@
-import { findEntity, updateEntity } from "../models";
+import { findEntity, findOneEntity, updateEntity, updateOneEntity } from "../models";
 import { isValidEmail } from "../helpers/validator";
 import formidable from 'formidable';
 import path from "path";
 import fs from "fs";
+import { decodeToken } from "../helpers/auth";
+import User from '../models/users';
 
 function cleanInput(input) {
   const {
@@ -36,7 +38,9 @@ async function validateInput(input) {
 }
 
 export async function user(req, res) {
-  const input = req.body;
+  const token = req.headers.authorization;
+  const payload = await decodeToken(token);
+  const input = payload.data;
   const trimmedInput = cleanInput(input);
   const inputError = await validateInput(trimmedInput);
 
@@ -44,52 +48,47 @@ export async function user(req, res) {
     return res.status(400).json({ message: inputError });
   }
 
-  const findUser = await findEntity('user', ['*'], ['email', trimmedInput.email]);
+  const findUser = await findOneEntity(User, {'email': trimmedInput.email});
   //Check if this user email exists
-  if (findUser.length === 0) {
+  if (!findUser) {
     console.error("Email does not exists!");
     // Adding the below message so someone cannot create fake accounts
-    return res.status(400).json({ message: "Email does not exists" });
+    return res.status(400).json({ message: "User does not exists" });
   }
 
-  // TODO: Use joins here
-  const address = await findEntity('address', ['*'], ['id', findUser[0].addressId]);
-  delete findUser[0].addressId;
-  delete findUser[0].password;
-  const response = {
-    ...findUser[0],
-    address: address[0]
-  }
-
+  const response = ({...findUser}._doc);
+  delete response.password;
   return res.status(200).json(response);
 }
 
 export async function updateCurrency(req, res) {
   const input = req.body;
-  const userId = input.userId;
+  const token = req.headers.authorization;
+  const payload = await decodeToken(token);
+  const userId = payload.data.id;
   const currency = input.currency;
 
-  const findUser = await findEntity('user', ['*'], ['id', parseInt(userId)]);
+  const findUser = await findOneEntity(User, {'email': trimmedInput.email});
   //Check if this user exists
-  if (findUser.length === 0) {
+  if (!findUser) {
     console.error("User does not exists!");
     return res.status(400).json({ message: "User does not exists" });
   }
 
-  await updateEntity('user',{ currency},['id', userId]);
+  await updateOneEntity(User, {'_id': userId}, { currency});
 
-  const findAddress = await findEntity('address', ['*'], ['id', findUser[0].addressId]);
-  const findUpdatedUser = await findEntity('user', ['*'], ['id', parseInt(userId)]);
-  delete findUpdatedUser[0].addressId;
-  delete findUpdatedUser[0].password;
-  const response = {
-    ...findUpdatedUser[0],
-    address: findAddress[0]
-  }
+  const findUpdatedUser = await findOneEntity(User, {'_id': userId});
+
+  const response = ({...findUpdatedUser}._doc);
+  delete response.password;
+
   return res.status(200).json(response);
 }
 
 export async function update(req, res) {
+  const token = req.headers.authorization;
+  const payload = await decodeToken(token);
+  const userId = payload.data.id;
   //Check incoming validation
   const form = new formidable.IncomingForm();
   form.multiples = true;
@@ -101,7 +100,7 @@ export async function update(req, res) {
       return res.status(400).json({message: "Unable to parse Input"});
     }
 
-    const {userId, name, bio, address1, address2, city, state, country, zipcode, phone, email, gender, birthday } = fields;
+    const {name, bio, address, phone, email, gender, birthday } = fields;
     let {avatarUrl} = fields;
     if(files.avatarUrl) {
       const tempFilePath = files.avatarUrl.filepath;
@@ -124,23 +123,19 @@ export async function update(req, res) {
       const [first, ...rest] = (uploadedFolder + fileName).split('/');
       avatarUrl = rest.join('/');
     } 
-    const user = await findEntity('user', ['*'], ['id', parseInt(userId)]);
-    //Check if this user id exists
-    if(user.length === 0) {
+    const user = await findOneEntity(User, {'_id': userId});
+    //Check if this user exists
+    if(!user) {
       return res.status(400).json({message: "User doesn't exists"});
     }
 
-    await updateEntity('address', {address1, address2, city, state, country, zipcode}, ['id', user[0].addressId])
-    await updateEntity('user',{name, bio, phone, email, avatarUrl, gender, birthday },['id', userId] )
+    await updateOneEntity(User,{'_id': userId} ,{name, bio, phone, email, address, avatarUrl, gender, birthday, 'updatedAt': new Date() } )
 
-    const findAddress = await findEntity('address', ['*'], ['id', user[0].addressId]);
-    const findUpdatedUser = await findEntity('user', ['*'], ['id', parseInt(userId)]);
-    delete findUpdatedUser[0].addressId;
-    delete findUpdatedUser[0].password;
-    const response = {
-      ...findUpdatedUser[0],
-      address: findAddress[0]
-    }
+    const findUpdatedUser = await findOneEntity(User, {'_id': userId});
+
+    const response = ({...findUpdatedUser}._doc);
+    delete response.password;
+
     return res.status(200).json(response);
   });
 }

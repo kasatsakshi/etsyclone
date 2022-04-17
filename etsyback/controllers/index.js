@@ -7,13 +7,15 @@ import { createShopProduct, createShop, getShop, isShopNameAvailable, getShopCat
 import { deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites, searchProductsByName } from './products';
 import { createOrder, getOrders } from './order';
 
+import passport from "../helpers/passport";
+
 const router = new express.Router();
 
 router.post('/signup', signup);
 router.post('/login', login);
-router.post('/user', user);
-router.post('/user/update', update);
-router.put('/user/update/currency', updateCurrency);
+router.get('/user', passport.authenticate('jwt',{session: false}), user);
+router.put('/user/update', passport.authenticate('jwt',{session: false}), update);
+router.put('/user/update/currency', passport.authenticate('jwt',{session: false}), updateCurrency);
 router.post('/upload', upload);
 router.get('/shop/:id', getShop)
 router.post('/shop/name/', isShopNameAvailable)
@@ -25,7 +27,7 @@ router.get('/products', getProducts)
 
 router.post('/product/favorite', favoriteProduct);
 router.post('/product/favorite/delete', deleteFavoriteProduct);
-router.get('/user/:id/favorites', getUserFavorites);
+router.get('/user/favorites',passport.authenticate('jwt',{session: false}), getUserFavorites);
 
 router.get('/product/search/:name', searchProductsByName);
 

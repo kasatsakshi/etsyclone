@@ -2,12 +2,14 @@ import { loginFailure, loginStart, loginSuccess, logoutUser,
   signupStart, signupSuccess, signupFailure, accountInfoStart, 
   accountInfoSuccess, accountInfoFailure, updateUserInfoSuccess,
   updateUserCurrencySuccess} from "./userRedux";
-import { publicRequest } from "../api/http";
+import { publicRequest, userRequest } from "../api/http";
 
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
   try {
     const res = await publicRequest.post("/login", user);
+    const token = res.headers['x-auth-token']
+    localStorage.setItem('token', token);
     dispatch(loginSuccess(res.data));
   } catch (err) {
     dispatch(loginFailure());
@@ -18,6 +20,8 @@ export const signup = async (dispatch, user) => {
   dispatch(signupStart());
   try {
     const res = await publicRequest.post("/signup", user);
+    const token = res.headers['x-auth-token']
+    localStorage.setItem('token', token);
     dispatch(signupSuccess(res.data));
   } catch (err) {
     dispatch(signupFailure());
@@ -27,7 +31,7 @@ export const signup = async (dispatch, user) => {
 export const accountInfo = async (dispatch, user) => {
   dispatch(accountInfoStart());
   try {
-    const res = await publicRequest.post("/user", { email: user.email});
+    const res = await userRequest.get("/user");
     dispatch(accountInfoSuccess(res.data));
   } catch (err) {
     console.log(err);
@@ -40,12 +44,7 @@ export const updateUserInfo = async (dispatch, data) => {
     const formData = new FormData();
     formData.append("name", data.name)
     formData.append("email", data.email);
-    formData.append("address1", data.address1);
-    formData.append("address2",data.address2);
-    formData.append("city", data.city);
-    formData.append("state", data.state);
-    formData.append("country", data.country);
-    formData.append("zipcode", data.zipcode);
+    formData.append("address", data.address);
     formData.append("bio", data.bio);
     formData.append("phone", data.phone);
     if(data.avatarUrl.file) {
@@ -53,8 +52,7 @@ export const updateUserInfo = async (dispatch, data) => {
     } else {
       formData.append("avatarUrl", data.avatarUrl);
     }
-    formData.append("userId", data.userId)
-    const res = await publicRequest.post("/user/update", formData);
+    const res = await userRequest.put("/user/update", formData);
     dispatch(updateUserInfoSuccess(res.data));
   } catch (err) {
     console.log(err);

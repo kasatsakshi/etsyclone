@@ -134,7 +134,15 @@ const ProfileUpdate = () => {
 
     const saveChanges = async (e) => {
         e.preventDefault();
-        await updateUserInfo(dispatch, { name, email, address1, address2, city, state, country, zipcode, bio, birthday, avatarUrl, phone, userId: user.id })
+        const address = {
+            address1, 
+            address2, 
+            city, 
+            state, 
+            country, 
+            zipcode
+        }
+        await updateUserInfo(dispatch, { name, email, address, bio, birthday, avatarUrl, phone, userId: user.id })
         navigate(`/account`)
     }
 

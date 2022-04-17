@@ -7,3 +7,8 @@ export async function signToken(user) {
     exp: new Date().setDate(new Date().getDate() + 1)
   },SECRET);
 }
+
+export async function decodeToken(bearerToken) {
+  const token = bearerToken.split(' ')[1];
+  return jwt.decode(token, SECRET)
+}

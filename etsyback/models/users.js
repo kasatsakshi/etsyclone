@@ -54,7 +54,7 @@ const userInfoSchema = new mongoose.Schema({
       default: 0
     },
     address: {
-      type: String,
+      type: Object,
     },
     createdAt: {
       type: Date,

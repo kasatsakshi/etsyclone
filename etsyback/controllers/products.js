@@ -1,8 +1,11 @@
-import { createEntity, findEntity, findByNameEntity } from "../models";
+import { createEntity, findEntity, findOneEntity, findByNameEntity } from "../models";
 import { getKnexClient } from "../helpers/knex-client";
+import { decodeToken } from "../helpers/auth";
+import UserFavorites from '../models/userFavorites';
+import Inventory from '../models/inventory';
 
 export async function getProducts(req, res) {
-    const products = await findEntity('inventory', ['*']);
+    const products = await findEntity(Inventory);
     let total = 0
     await Promise.all(
         products.map(async (product) => {
@@ -31,12 +34,14 @@ export async function deleteFavoriteProduct(req, res) {
 }
 
 export async function getUserFavorites(req, res) {
-    const { id } = req.params
-    const findFavorites = await findEntity('userFavorites', ['*'], ['userId', id]);
+    const token = req.headers.authorization;
+    const payload = await decodeToken(token);
+    const userId = payload.data.id;
+    const findFavorites = await findEntity(UserFavorites, {'userId': userId});
     const response = [];
     await Promise.all(
         findFavorites.map(async (product) => {
-            const temp = await findEntity('inventory', ['*'], ['id', product.inventoryId]);
+            const temp = await findOneEntity(Inventory, {'_id' : product.inventoryId});
             response.push(temp[0]);
         })
     )

@@ -1,4 +1,4 @@
-import { publicRequest } from "../api/http";
+import { publicRequest, userRequest } from "../api/http";
 import {
   getProductsFailure, getProductsSuccess, createFavoriteProductSuccess,
   getUserFavoritesSuccess, getUserFavoritesFailure,
@@ -39,7 +39,7 @@ export const deleteFavoriteProduct = async (dispatch, product) => {
 
 export const getUserFavorites = async (dispatch, user) => {
   try {
-    const res = await publicRequest.get(`/user/${user.id}/favorites`);
+    const res = await userRequest.get(`/user/favorites`);
     dispatch(getUserFavoritesSuccess(res.data));
   } catch (err) {
     console.log(err);
