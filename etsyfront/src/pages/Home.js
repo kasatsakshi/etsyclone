@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import './Home.css';
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import ProductTile from "../components/ProductTile";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import { getProducts, getUserFavorites } from "../redux/product";
-import { Grid } from "@mui/material";
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
+import { Grid } from '@mui/material';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import ProductTile from '../components/ProductTile';
+import { getProducts, getUserFavorites } from '../redux/product';
 
 const Container = styled.div`
  position: relative;
@@ -23,7 +23,7 @@ const ContentWrapper = styled.div`
  margin-top: 40px
 `;
 
-const Home = () => {
+function Home() {
   const user = useSelector((state) => state.user.currentUser);
   const products = useSelector((state) => state.products.currentProducts);
   const favorites = useSelector((state) => state.products.favoriteProducts);
@@ -39,9 +39,9 @@ const Home = () => {
   const dispatch = useDispatch();
   let firstName;
   if (user && user.name) {
-    firstName = user.name.split(" ")[0];
+    firstName = user.name.split(' ')[0];
   } else {
-    firstName = "Guest"
+    firstName = 'Guest';
   }
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const Home = () => {
     };
     const fetchFavorites = async () => {
       try {
-        await getUserFavorites(dispatch, user)
+        await getUserFavorites(dispatch, user);
       } catch (err) {
         console.log(err);
       }
@@ -68,69 +68,68 @@ const Home = () => {
       <Navbar />
       <Wrapper>
         <div>
-          {user ?
-            <div className="home__announcement">
-              <h1 className="home__announcementText">Welcome, {firstName}</h1>
-            </div> :
-            <div></div>
-          }
+          {user
+            ? (
+              <div className="home__announcement">
+                <h1 className="home__announcementText">
+                  Welcome,
+                  {firstName}
+                </h1>
+              </div>
+            )
+            : <div />}
         </div>
-        {searchedProducts && searchedProducts.length > 0 ?
-          <ContentWrapper>
+        {searchedProducts && searchedProducts.length > 0
+          ? (
+            <ContentWrapper>
               <Grid container spacing={2}>
-                  {searchedProducts.map((product) => {
-                    return (
-                      <ProductTile productData={product} />
-                    )
-                  })}
+                {searchedProducts.map((product) => (
+                  <ProductTile productData={product} />
+                ))}
               </Grid>
-          </ContentWrapper>
-        : 
-        <ContentWrapper>
-          {
-            <Grid container spacing={2}>
-              {products && products.length > 0 ?
-                products.map(product => {
-                  return (
+            </ContentWrapper>
+          )
+          : (
+            <ContentWrapper>
+              <Grid container spacing={2}>
+                {products && products.length > 0
+                  ? products.map((product) => (
                     <ProductTile productData={product} />
-                  )
-                }) :
-                <div></div>
-              }
-            </Grid>
-          }
-        </ContentWrapper>
-        }
+                  ))
+                  : <div />}
+              </Grid>
+            </ContentWrapper>
+          )}
         {
-          user ?
-            favorites && favorites.length > 0 ?
-              <ContentWrapper>
-                <h1>User Favorites</h1>
-              </ContentWrapper>
-              : <div></div>
-            : <div></div>
+          user
+            ? favorites && favorites.length > 0
+              ? (
+                <ContentWrapper>
+                  <h1>User Favorites</h1>
+                </ContentWrapper>
+              )
+              : <div />
+            : <div />
         }
         <ContentWrapper>
           {
-            user ?
-              <Grid container spacing={2}>
-                {favorites && favorites.length > 0 ?
-                  favorites.map(favorite => {
-                    return (
+            user
+              ? (
+                <Grid container spacing={2}>
+                  {favorites && favorites.length > 0
+                    ? favorites.map((favorite) => (
                       <ProductTile productData={favorite} />
-                    )
-                  }) :
-                  <div></div>
-                }
-              </Grid>
-              : <div></div>
+                    ))
+                    : <div />}
+                </Grid>
+              )
+              : <div />
           }
         </ContentWrapper>
       </Wrapper>
       <Footer />
     </Container>
   );
-};
+}
 
 export default Home;
-

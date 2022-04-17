@@ -3,8 +3,8 @@ export const numberFormat = (number, currency) => {
     style: 'currency',
     currency,
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   }).format(number);
 
   return format;
-}
+};

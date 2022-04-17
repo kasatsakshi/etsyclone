@@ -1,14 +1,16 @@
-import { FavoriteBorder, ShoppingCartOutlined } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { FavoriteBorder, ShoppingCartOutlined } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import * as React from 'react';
-import { Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal, Button } from '@mui/material';
-import defaultProduct from "../assets/defaultProduct.png";
+import {
+  Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal, Button,
+} from '@mui/material';
+import defaultProduct from '../assets/defaultProduct.png';
 import { BASE } from '../api/http';
-import { createFavoriteProduct, deleteFavoriteProduct } from "../redux/product";
-import { numberFormat } from "../util/currency";
+import { createFavoriteProduct, deleteFavoriteProduct } from '../redux/product';
+import { numberFormat } from '../util/currency';
 
 const Info = styled.div`
     opacity: 0;
@@ -75,69 +77,65 @@ const Icon = styled.div`
 
 const cardStyle = {
   margin: 4,
-  width: 271
-}
+  width: 271,
+};
 
-const ProductTile = ({ productData }) => {
+function ProductTile({ productData }) {
   let productImage;
   const favorites = useSelector((state) => state.products.favoriteProducts);
   if (productData.pictureUrl) {
-    productImage = BASE + "/" + productData.pictureUrl
+    productImage = `${BASE}/${productData.pictureUrl}`;
   } else {
-    productImage = defaultProduct
+    productImage = defaultProduct;
   }
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
   const user = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleCheckboxChange = async (e) => {
-    user ?
-      e.target.checked ?
-        await createFavoriteProduct(dispatch, {userId: user.id, inventoryId: productData.id })
-        :
-        await deleteFavoriteProduct(dispatch, {userId: user.id, inventoryId: productData.id })
-    : navigate("/login");
+    user
+      ? e.target.checked
+        ? await createFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
+        : await deleteFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
+      : navigate('/login');
 
-    window.location.reload()
-    
-  }
+    window.location.reload();
+  };
 
   const checkFavorite = (id) => {
-    if(!favorites) {
+    if (!favorites) {
       return false;
     }
-    const data =  favorites.find(function(ele) {
-      return ele.id === id;
-    });
-    
+    const data = favorites.find((ele) => ele.id === id);
+
     if (data) {
       return true;
-    } else {
-      return false;
     }
-  }
+    return false;
+  };
 
   const viewMore = (e) => {
-    navigate(`/productPage/${productData.id}`)
-  }
-  
+    navigate(`/productPage/${productData.id}`);
+  };
+
   return (
     <Card sx={cardStyle}>
       <CardHeader
         title={productData.name}
-        style={{ textAlign: "center" }}
-        action={
+        style={{ textAlign: 'center' }}
+        action={(
           <Checkbox
-          checked={checkFavorite(productData.id)}
-          icon={<FavoriteBorder />} 
-          checkedIcon={<FavoriteIcon />} 
-          onChange={handleCheckboxChange} />
-        }
+            checked={checkFavorite(productData.id)}
+            icon={<FavoriteBorder />}
+            checkedIcon={<FavoriteIcon />}
+            onChange={handleCheckboxChange}
+          />
+        )}
       />
       <CardMedia
         component="img"
@@ -149,12 +147,12 @@ const ProductTile = ({ productData }) => {
       <CardActions sx={{ width: 271 }}>
         <Stack direction="row">
           <CardContent>
-            <p>{numberFormat(productData.price, user? user.currency : 'USD')}</p>
+            <p>{numberFormat(productData.price, user ? user.currency : 'USD')}</p>
           </CardContent>
         </Stack>
       </CardActions>
     </Card>
   );
-};
+}
 
 export default ProductTile;

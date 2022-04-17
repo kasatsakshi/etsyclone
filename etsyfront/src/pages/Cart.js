@@ -1,13 +1,13 @@
 import React from 'react';
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import CartItem from "../components/CartItem";
-import { Grid, Stack } from "@mui/material";
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { Grid, Stack } from '@mui/material';
 import {
-    useNavigate
-} from "react-router-dom";
+  useNavigate,
+} from 'react-router-dom';
+import CartItem from '../components/CartItem';
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 import { createOrder } from '../redux/cart';
 
 const Container = styled.div`
@@ -51,51 +51,57 @@ const Button = styled.button`
 `;
 
 function Cart() {
-    const cartOrders = useSelector((state) => state.cart.cartProducts);
-    let finalPrice = 0;
+  const cartOrders = useSelector((state) => state.cart.cartProducts);
+  let finalPrice = 0;
 
-    const user = useSelector((state) => state.user.currentUser);
-    const navigate = new useNavigate();
-    const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.currentUser);
+  const navigate = new useNavigate();
+  const dispatch = useDispatch();
 
+  const checkout = async (e) => {
+    e.preventDefault();
+    await createOrder(dispatch, { orderItems: cartOrders, userId: user.id });
+    navigate('/purchases');
+  };
 
-    const checkout = async (e) => {
-        e.preventDefault();
-        await createOrder(dispatch, { orderItems: cartOrders, userId: user.id });
-        navigate(`/purchases`);
-    };
+  return (
+    <Container>
+      <Navbar />
+      {cartOrders && cartOrders.length > 0
+        ? (
+          <Wrapper>
+            <Heading>Your Cart</Heading>
+            <Grid container spacing={2}>
+              {cartOrders && cartOrders.length > 0
+                ? cartOrders.map((cartItem) => {
+                  finalPrice += (cartItem.quantityNeeded * cartItem.price);
+                  return (
+                    <CartItem productData={cartItem} />
+                  );
+                })
+                : <div />}
+            </Grid>
+            <Stack direction="row">
+              <Stack>
+                <h3>
+                  Items added:
+                  {cartOrders.length}
+                </h3>
+                <h1>
+                  Total Price:
+                  {finalPrice}
+                </h1>
+              </Stack>
+              <Button onClick={checkout}>Checkout</Button>
 
-    return (
-        <Container>
-            <Navbar />
-            {cartOrders && cartOrders.length > 0 ?
-                <Wrapper>
-                    <Heading>Your Cart</Heading>
-                    <Grid container spacing={2}>
-                        {cartOrders && cartOrders.length > 0 ?
-                            cartOrders.map(cartItem => {
-                                finalPrice = finalPrice + (cartItem.quantityNeeded * cartItem.price)
-                                return (
-                                    <CartItem productData={cartItem} />
-                                )
-                            })
-                            : <div></div>}
-                    </Grid>
-                    <Stack direction="row">
-                        <Stack>
-                            <h3>Items added: {cartOrders.length} </h3>
-                            <h1>Total Price: {finalPrice} </h1>
-                        </Stack>
-                        <Button onClick={checkout}>Checkout</Button>
+            </Stack>
 
-                    </Stack>
-
-                </Wrapper>
-                : <NoOrders> Cart is Empty </NoOrders>
-            }
-            <Footer />
-        </Container>
-    )
+          </Wrapper>
+        )
+        : <NoOrders> Cart is Empty </NoOrders>}
+      <Footer />
+    </Container>
+  );
 }
 
-export default Cart
+export default Cart;

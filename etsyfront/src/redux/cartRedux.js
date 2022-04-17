@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const cartSlice = createSlice({
-  name: "cart",
+  name: 'cart',
   initialState: {
     cartProducts: [],
     purchases: [],
@@ -29,8 +29,10 @@ const cartSlice = createSlice({
       state.isFetching = false;
       state.purchases = action.payload;
     },
-  }
+  },
 });
 
-export const { addCartSuccess, addCartFailure, getOrderSuccess, createOrderSuccess, createOrderFailure } = cartSlice.actions;
+export const {
+  addCartSuccess, addCartFailure, getOrderSuccess, createOrderSuccess, createOrderFailure,
+} = cartSlice.actions;
 export default cartSlice.reducer;

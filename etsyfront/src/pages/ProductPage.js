@@ -1,13 +1,13 @@
-import styled from '@emotion/styled'
-import React, { useState } from 'react'
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import SCard from "../components/SCard";
+import styled from '@emotion/styled';
+import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, ButtonGroup } from '@mui/material';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import SCard from '../components/SCard';
 import { addToCart } from '../redux/cart';
-import { numberFormat } from "../util/currency";
+import { numberFormat } from '../util/currency';
 
 const Container = styled.div`
 position: relative;
@@ -87,77 +87,88 @@ const OutofStock = styled.div`
 `;
 
 function ProductPage() {
-    const { productId } = useParams();
-    const [quantityNeeded, setQuantityNeeded] = useState(1);
-    const user = useSelector((state) => state.user.currentUser);
-    const products = useSelector((state) => state.products.currentProducts);
-    const cartProducts = useSelector((state) => state.cart.cartProducts);
-    let filterProduct = null;
-    const dispatch = useDispatch();
-    const navigate = new useNavigate();
+  const { productId } = useParams();
+  const [quantityNeeded, setQuantityNeeded] = useState(1);
+  const user = useSelector((state) => state.user.currentUser);
+  const products = useSelector((state) => state.products.currentProducts);
+  const cartProducts = useSelector((state) => state.cart.cartProducts);
+  let filterProduct = null;
+  const dispatch = useDispatch();
+  const navigate = new useNavigate();
 
-    const [cartLink, setCartLink] = React.useState(false);
+  const [cartLink, setCartLink] = React.useState(false);
 
-    products.map(product => {
-        if (parseInt(product.id) === parseInt(productId)) {
-            filterProduct = product;
-            return filterProduct
-        }
-    });
-
-    const addtoCart = (e) => {
-        if (!user) {
-            navigate(`/login`);
-        }
-        setCartLink(true)
-        let cartItems = [];
-        if (cartProducts) {
-            cartItems = [...cartProducts];
-        }
-        const order = { ...filterProduct };
-        order['quantityNeeded'] = quantityNeeded
-        cartItems.push(order);
-        addToCart(dispatch, cartItems)
+  products.map((product) => {
+    if (parseInt(product.id) === parseInt(productId)) {
+      filterProduct = product;
+      return filterProduct;
     }
+  });
 
-    const shopLink = `/shop/${filterProduct.shopId}`
+  const addtoCart = (e) => {
+    if (!user) {
+      navigate('/login');
+    }
+    setCartLink(true);
+    let cartItems = [];
+    if (cartProducts) {
+      cartItems = [...cartProducts];
+    }
+    const order = { ...filterProduct };
+    order.quantityNeeded = quantityNeeded;
+    cartItems.push(order);
+    addToCart(dispatch, cartItems);
+  };
 
-    return (
-        <Container>
-            <Navbar />
-            {filterProduct ?
-                <Wrapper>
-                    <ImageSection><SCard productData={filterProduct} /></ImageSection>
-                    <InfoSection>
-                        <Link to={shopLink}>Go to the Shop</Link>
-                        <SalesCount>{filterProduct.totalSales} sales</SalesCount>
-                        <ProductName>{filterProduct.name}</ProductName>
-                        <ProductDesc>{filterProduct.description}</ProductDesc>
-                        <ProductPrice>{numberFormat(filterProduct.price, user? user.currency : 'USD')}</ProductPrice><br></br>
-                        {
-                            filterProduct.quantity > 0 ?
-                                // <Slider defaultValue={1} onChange={(e) => setQuantityNeeded(e.target.value)}  valueLabelDisplay="on"
-                                // max={filterProduct.quantity} aria-label="Default" />
+  const shopLink = `/shop/${filterProduct.shopId}`;
+
+  return (
+    <Container>
+      <Navbar />
+      {filterProduct
+        ? (
+          <Wrapper>
+            <ImageSection><SCard productData={filterProduct} /></ImageSection>
+            <InfoSection>
+              <Link to={shopLink}>Go to the Shop</Link>
+              <SalesCount>
+                {filterProduct.totalSales}
+                {' '}
+                sales
+              </SalesCount>
+              <ProductName>{filterProduct.name}</ProductName>
+              <ProductDesc>{filterProduct.description}</ProductDesc>
+              <ProductPrice>{numberFormat(filterProduct.price, user ? user.currency : 'USD')}</ProductPrice>
+              <br />
+              {
+                            filterProduct.quantity > 0
+                            // <Slider defaultValue={1} onChange={(e) => setQuantityNeeded(e.target.value)}  valueLabelDisplay="on"
+                            // max={filterProduct.quantity} aria-label="Default" />
+                              ? (
                                 <ButtonGroup
-                                    sx={{ height: 30, paddingLeft: 1, marginBottom: 15, paddingTop: 0 }}
-                                    disableElevation variant="outlined"
-                                    color="inherit"
+                                  sx={{
+                                    height: 30, paddingLeft: 1, marginBottom: 15, paddingTop: 0,
+                                  }}
+                                  disableElevation
+                                  variant="outlined"
+                                  color="inherit"
                                 >
-                                    <Button disabled={quantityNeeded >= filterProduct.quantity} onClick={() => setQuantityNeeded(quantityNeeded + 1)}>+</Button>
-                                    {<Button>{quantityNeeded}</Button>}
-                                    <Button disabled={quantityNeeded <= 1} onClick={() => setQuantityNeeded(quantityNeeded - 1)}>-</Button>
+                                  <Button disabled={quantityNeeded >= filterProduct.quantity} onClick={() => setQuantityNeeded(quantityNeeded + 1)}>+</Button>
+                                  <Button>{quantityNeeded}</Button>
+                                  <Button disabled={quantityNeeded <= 1} onClick={() => setQuantityNeeded(quantityNeeded - 1)}>-</Button>
                                 </ButtonGroup>
-                                : <OutofStock>Out of Stock</OutofStock>
+                              )
+                              : <OutofStock>Out of Stock</OutofStock>
                         }
-                        <AddToCart onClick={addtoCart}>Add to cart</AddToCart>
-                        {cartLink ? <AddToCart><Link to='/cart'>Go to Cart</Link></AddToCart> : <div></div>}
-                    </InfoSection>
-                </Wrapper>
-                : <div></div>
-            }
-            <Footer />
-        </Container>
-    )
+              <AddToCart onClick={addtoCart}>Add to cart</AddToCart>
+              {cartLink ? <AddToCart><Link to="/cart">Go to Cart</Link></AddToCart> : <div />}
+            </InfoSection>
+          </Wrapper>
+        )
+        : <div />}
+      <Footer />
+    </Container>
+  );
 }
 
-export default ProductPage
+export default ProductPage;

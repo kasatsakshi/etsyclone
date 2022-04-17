@@ -1,9 +1,9 @@
-import { useState } from "react";
-import styled from "styled-components";
-import { login } from "../redux/user";
-import { mobile } from "../responsive";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from 'react';
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { login } from '../redux/user';
+import { mobile } from '../responsive';
 import './Signup.css';
 
 const Container = styled.div`
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   width: 25%;
   padding: 20px;
   background-color: white;
-  ${mobile({ width: "75%" })}
+  ${mobile({ width: '75%' })}
 `;
 
 const Title = styled.h1`
@@ -61,9 +61,9 @@ const Error = styled.span`
   color: red;
 `;
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
 
@@ -89,12 +89,12 @@ const Login = () => {
             Login
           </Button>
           {error && <Error>Something went wrong! Try again</Error>}
-          <Link className="signup__link" to='/'>Forgot Password?</Link>
-          <Link className="signup__link" to='/signup'>Signup</Link>
+          <Link className="signup__link" to="/">Forgot Password?</Link>
+          <Link className="signup__link" to="/signup">Signup</Link>
         </Form>
       </Wrapper>
     </Container>
   );
-};
+}
 
 export default Login;

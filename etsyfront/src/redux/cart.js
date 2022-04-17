@@ -1,24 +1,26 @@
-import { addCartSuccess, addCartFailure, createOrderSuccess, createOrderFailure, getOrderSuccess } from "./cartRedux";
-import { publicRequest } from "../api/http";
+import {
+  addCartSuccess, addCartFailure, createOrderSuccess, createOrderFailure, getOrderSuccess,
+} from './cartRedux';
+import { publicRequest } from '../api/http';
 
 export const addToCart = async (dispatch, order) => {
   try {
     await dispatch(addCartSuccess(order));
   } catch (err) {
     console.log(err);
-     dispatch(addCartFailure());
+    dispatch(addCartFailure());
   }
-}
+};
 
 export const createOrder = async (dispatch, order) => {
   try {
-    const res = await publicRequest.post(`/order`, order);
+    const res = await publicRequest.post('/order', order);
     await dispatch(createOrderSuccess(res.data));
   } catch (err) {
     console.log(err);
-     dispatch(createOrderFailure());
+    dispatch(createOrderFailure());
   }
-}
+};
 
 export const getOrders = async (dispatch, user) => {
   try {

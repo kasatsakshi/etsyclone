@@ -1,13 +1,15 @@
-import { FavoriteBorder, ShoppingCartOutlined } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { FavoriteBorder, ShoppingCartOutlined } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import * as React from 'react';
-import { Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal, Button } from '@mui/material';
-import defaultProduct from "../assets/defaultProduct.png";
+import {
+  Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal, Button,
+} from '@mui/material';
+import defaultProduct from '../assets/defaultProduct.png';
 import { BASE } from '../api/http';
-import { createFavoriteProduct, deleteFavoriteProduct } from "../redux/product";
+import { createFavoriteProduct, deleteFavoriteProduct } from '../redux/product';
 
 const Info = styled.div`
     opacity: 0;
@@ -74,37 +76,37 @@ const Icon = styled.div`
 
 const cardStyle = {
   margin: 4,
-  width: 300
-}
+  width: 300,
+};
 
-const PurchaseOrders = ({ orderData, orderItemData }) => {
+function PurchaseOrders({ orderData, orderItemData }) {
   let productImage;
   const favorites = useSelector((state) => state.products.favoriteProducts);
   if (orderItemData.pictureUrl) {
-    productImage = BASE + "/" + orderItemData.pictureUrl
+    productImage = `${BASE}/${orderItemData.pictureUrl}`;
   } else {
-    productImage = defaultProduct
+    productImage = defaultProduct;
   }
-  
+
   const user = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const viewMore = (e) => {
-    navigate(`/productPage/${orderData.id}`)
-  }
+    navigate(`/productPage/${orderData.id}`);
+  };
 
-  const options = { 
-  month: '2-digit', 
-  day: '2-digit',
-  year: 'numeric', 
-};
-  
+  const options = {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+  };
+
   return (
     <Card sx={cardStyle}>
       <CardHeader
         title={orderItemData.name}
-        style={{ textAlign: "center" }}
+        style={{ textAlign: 'center' }}
       />
       <CardMedia
         component="img"
@@ -116,18 +118,27 @@ const PurchaseOrders = ({ orderData, orderItemData }) => {
       <CardActions sx={{ width: 300 }}>
         <Stack direction="row">
           <CardContent>
-            <p>price: {orderItemData.price}</p>
+            <p>
+              price:
+              {orderItemData.price}
+            </p>
           </CardContent>
           <CardContent>
-            <p>quantity: {orderItemData.orderQuantity}</p>
+            <p>
+              quantity:
+              {orderItemData.orderQuantity}
+            </p>
           </CardContent>
           <CardContent>
-            <p>purchase on: {new Date(orderData.orderedDate).toLocaleDateString('en-US', options)}</p>
+            <p>
+              purchase on:
+              {new Date(orderData.orderedDate).toLocaleDateString('en-US', options)}
+            </p>
           </CardContent>
         </Stack>
       </CardActions>
     </Card>
   );
-};
+}
 
 export default PurchaseOrders;

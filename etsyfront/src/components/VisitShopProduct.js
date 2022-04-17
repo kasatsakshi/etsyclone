@@ -1,14 +1,16 @@
-import React, {useState} from 'react';
-import { Card, CardHeader, Stack, Typography, 
-  CardActions, CardMedia, CardContent, 
+import React, { useState } from 'react';
+import {
+  Card, CardHeader, Stack, Typography,
+  CardActions, CardMedia, CardContent,
   FormControlLabel, RadioGroup, Radio,
-  IconButton, Box, Modal } from '@mui/material';
+  IconButton, Box, Modal,
+} from '@mui/material';
 import { Edit } from '@mui/icons-material';
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { BASE } from '../api/http';
-import defaultProduct from "../assets/defaultProduct.png";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { shopProductUpdate } from "../redux/shop";
+import defaultProduct from '../assets/defaultProduct.png';
+import { shopProductUpdate } from '../redux/shop';
 
 const style = {
   position: 'absolute',
@@ -54,8 +56,8 @@ const Select = styled.select`
 
 const cardStyle = {
   margin: 4,
-  width: 271
-}
+  width: 271,
+};
 
 export default function VisitShopProduct({ productData }) {
   let productImage;
@@ -70,22 +72,24 @@ export default function VisitShopProduct({ productData }) {
 
   const [name, setName] = useState(productData.name);
   const [description, setDesc] = useState(productData.description);
-  const [isCustom, setIsCustom] = useState("");
+  const [isCustom, setIsCustom] = useState('');
   const [category, setCategory] = useState(productData.category);
   const [price, setPrice] = useState(productData.price);
   const [quantity, setQuantity] = useState(productData.quantity);
-  const [pictureUrl, setPicture] = useState(productData.pictureUrl);  
+  const [pictureUrl, setPicture] = useState(productData.pictureUrl);
 
   const handleClick = async (e) => {
     e.preventDefault();
-    await shopProductUpdate(dispatch, { name, description, pictureUrl, isCustom, category, price, quantity, productId: productData.id });
-    handleClose()
+    await shopProductUpdate(dispatch, {
+      name, description, pictureUrl, isCustom, category, price, quantity, productId: productData.id,
+    });
+    handleClose();
     window.location.reload();
   };
-  
+
   const pictureChange = (e) => {
     setPicture({ file: e.target.files[0] });
-  }
+  };
 
   const [status, setStatus] = React.useState(0);
   const radioHandler = (status) => {
@@ -93,15 +97,15 @@ export default function VisitShopProduct({ productData }) {
   };
 
   if (productData.pictureUrl) {
-    productImage = BASE + "/" + productData.pictureUrl
+    productImage = `${BASE}/${productData.pictureUrl}`;
   } else {
-    productImage = defaultProduct
+    productImage = defaultProduct;
   }
   return (
     <Card sx={cardStyle}>
       <CardHeader
         title={productData.name}
-        style={{ textAlign: "center" }}
+        style={{ textAlign: 'center' }}
       />
       <Modal
         open={open}
@@ -110,13 +114,13 @@ export default function VisitShopProduct({ productData }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-        <Stack>
-          {
-            productData.pictureUrl ?
-              <img src={BASE + "/" + productData.pictureUrl} height="200" width="200" alt="product avatar"></img>
-              : <img src={defaultProduct} height="200" width="200" alt="owner avatar"></img>
+          <Stack>
+            {
+            productData.pictureUrl
+              ? <img src={`${BASE}/${productData.pictureUrl}`} height="200" width="200" alt="product avatar" />
+              : <img src={defaultProduct} height="200" width="200" alt="owner avatar" />
           }
-            <input style={{paddingTop: 20}} type="file" id="myImage" name="myImage" onChange={pictureChange} accept="image/png, image/jpeg" />
+            <input style={{ paddingTop: 20 }} type="file" id="myImage" name="myImage" onChange={pictureChange} accept="image/png, image/jpeg" />
             <Input
               type="text"
               placeholder="name"
@@ -124,11 +128,11 @@ export default function VisitShopProduct({ productData }) {
               defaultValue={productData.name}
             />
             <Input
-              type={"text"}
+              type="text"
               placeholder="description"
               onChange={(e) => setDesc(e.target.value)}
               defaultValue={productData.description}
-            ></Input>
+            />
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="default"
@@ -145,21 +149,17 @@ export default function VisitShopProduct({ productData }) {
               disabled={isDisabled}
               value={productData.category}
             >
-              <option color='grey' value=''>category</option>
+              <option color="grey" value="">category</option>
               {
 
-                shopCategories && shopCategories.default.length > 0 && shopCategories.default.map(item => {
-                  return <option value={item}>{item}</option>
-                })
+                shopCategories && shopCategories.default.length > 0 && shopCategories.default.map((item) => <option value={item}>{item}</option>)
               }
               {
-                shopCategories && shopCategories.custom.length > 0 && shopCategories.custom.map(item => {
-                  return <option value={item.name}>{item.name}</option>
-                })
+                shopCategories && shopCategories.custom.length > 0 && shopCategories.custom.map((item) => <option value={item.name}>{item.name}</option>)
               }
             </Select>
-            {status === 2 ?
-            <Stack><Input placeholder="category name" onChange={(e) => { setCategory(e.target.value); setIsCustom(true) }} /></Stack> : <div></div>}
+            {status === 2
+              ? <Stack><Input placeholder="category name" onChange={(e) => { setCategory(e.target.value); setIsCustom(true); }} /></Stack> : <div />}
             <Input
               placeholder="price"
               type="number"
@@ -192,10 +192,16 @@ export default function VisitShopProduct({ productData }) {
       <CardActions sx={{ width: 271 }}>
         <Stack direction="row">
           <CardContent>
-            <p>price: {productData.price}</p>
+            <p>
+              price:
+              {productData.price}
+            </p>
           </CardContent>
           <CardContent>
-            <p>quantity: {productData.quantity}</p>
+            <p>
+              quantity:
+              {productData.quantity}
+            </p>
           </CardContent>
         </Stack>
       </CardActions>

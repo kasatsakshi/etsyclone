@@ -1,11 +1,10 @@
-import React from 'react';
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import styled from "styled-components";
-import { Grid, Stack } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import PurchaseOrders from "../components/PurchaseOrders";
-import { useEffect } from "react";
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { Grid, Stack } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
+import PurchaseOrders from '../components/PurchaseOrders';
 import { getOrders } from '../redux/cart';
 
 const Container = styled.div`
@@ -36,55 +35,61 @@ const Heading = styled.h1`
 `;
 
 function Purchases() {
-    const orders = useSelector((state) => state.cart.purchases);
-    const user = useSelector((state) => state.user.currentUser);
-    console.log(orders);
-    const dispatch = useDispatch();
+  const orders = useSelector((state) => state.cart.purchases);
+  const user = useSelector((state) => state.user.currentUser);
+  console.log(orders);
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        const getUser = async () => {
-          try {
-            getOrders(dispatch, { id: user.id });
-          } catch (err) {
-            console.log(err);
-          }
-        };
-        getUser();
-      }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        getOrders(dispatch, { id: user.id });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUser();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    return (
-        <Container>
-        <Navbar />
-        { orders && orders.length > 0  ? 
-            <Wrapper>
-                <Heading>Your Purchase Orders</Heading>
+  return (
+    <Container>
+      <Navbar />
+      { orders && orders.length > 0
+        ? (
+          <Wrapper>
+            <Heading>Your Purchase Orders</Heading>
 
-                <Stack container spacing={2}>
-                    {orders && orders.length > 0 ?
-                        orders.map(order => {
-                            return (
-                                <div>
-                                    <h4>Order Id: {order.order.orderId}</h4>
-                                    <p>Final Amount: {order.order.finalAmount}</p>
-                                    <p>Ordered Date: {order.order.orderedDate}</p>
-                                    <Stack direction="row">
-                                    { order.orderDetails.map(orderDetail => {
-                                    return (
-                                        <PurchaseOrders orderData={order.order} orderItemData={orderDetail}/> 
-                                    ) 
-                                })}
-                                    </Stack>
-                                </div>
-                            )
-                        })
-                    : <div></div> }
-                </Stack>           
+            <Stack container spacing={2}>
+              {orders && orders.length > 0
+                ? orders.map((order) => (
+                  <div>
+                    <h4>
+                      Order Id:
+                      {order.order.orderId}
+                    </h4>
+                    <p>
+                      Final Amount:
+                      {order.order.finalAmount}
+                    </p>
+                    <p>
+                      Ordered Date:
+                      {order.order.orderedDate}
+                    </p>
+                    <Stack direction="row">
+                      { order.orderDetails.map((orderDetail) => (
+                        <PurchaseOrders orderData={order.order} orderItemData={orderDetail} />
+                      ))}
+                    </Stack>
+                  </div>
+                ))
+                : <div /> }
+            </Stack>
           </Wrapper>
-        :<NoOrders> No Purchase Orders </NoOrders>
-        }
-        <Footer />
+        )
+        : <NoOrders> No Purchase Orders </NoOrders>}
+      <Footer />
     </Container>
-    )
+  );
 }
 
-export default Purchases
+export default Purchases;

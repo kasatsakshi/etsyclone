@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const productsSlice = createSlice({
-  name: "products",
+  name: 'products',
   initialState: {
     currentProducts: null,
     favoriteProducts: null,
@@ -51,10 +51,12 @@ const productsSlice = createSlice({
       state.error = true;
       state.searchedProducts = null;
     },
-  }
+  },
 });
 
-export const { getProductsSuccess, getProductsFailure, createFavoriteProductSuccess,
+export const {
+  getProductsSuccess, getProductsFailure, createFavoriteProductSuccess,
   createFavoriteProductFailure, deleteFavoriteProductSuccess, getUserFavoritesSuccess, getUserFavoritesFailure,
-  deleteFavoriteProductFailure, getSearchProductByNameSuccess, getSearchProductByNameFailure } = productsSlice.actions;
+  deleteFavoriteProductFailure, getSearchProductByNameSuccess, getSearchProductByNameFailure,
+} = productsSlice.actions;
 export default productsSlice.reducer;

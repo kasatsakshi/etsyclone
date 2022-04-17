@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import {
+  BrowserRouter as Router, Routes, Route, Navigate,
+} from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Account from './pages/Account';
 import ShopLanding from './pages/ShopLanding';
 import ShopHome from './pages/ShopHome';

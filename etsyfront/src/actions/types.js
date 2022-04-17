@@ -1,1 +1,1 @@
-export const LOGOUT_USER = "user/logoutUser";
+export const LOGOUT_USER = 'user/logoutUser';

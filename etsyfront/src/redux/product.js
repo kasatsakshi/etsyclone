@@ -1,14 +1,14 @@
-import { publicRequest, userRequest } from "../api/http";
+import { publicRequest, userRequest } from '../api/http';
 import {
   getProductsFailure, getProductsSuccess, createFavoriteProductSuccess,
   getUserFavoritesSuccess, getUserFavoritesFailure,
   createFavoriteProductFailure, deleteFavoriteProductSuccess, deleteFavoriteProductFailure,
   getSearchProductByNameSuccess, getSearchProductByNameFailure,
-} from "./productRedux";
+} from './productRedux';
 
 export const getProducts = async (dispatch, shop) => {
   try {
-    const res = await publicRequest.get(`/products`);
+    const res = await publicRequest.get('/products');
     await dispatch(getProductsSuccess(res.data));
   } catch (err) {
     console.log(err);
@@ -18,7 +18,7 @@ export const getProducts = async (dispatch, shop) => {
 
 export const createFavoriteProduct = async (dispatch, product) => {
   try {
-    const res = await publicRequest.post(`/product/favorite`, product);
+    const res = await publicRequest.post('/product/favorite', product);
     await dispatch(createFavoriteProductSuccess(res.data));
   } catch (err) {
     console.log(err);
@@ -26,10 +26,9 @@ export const createFavoriteProduct = async (dispatch, product) => {
   }
 };
 
-
 export const deleteFavoriteProduct = async (dispatch, product) => {
   try {
-    const res = await publicRequest.post(`/product/favorite/delete`, product);
+    const res = await publicRequest.post('/product/favorite/delete', product);
     dispatch(deleteFavoriteProductSuccess(res.data));
   } catch (err) {
     console.log(err);
@@ -39,7 +38,7 @@ export const deleteFavoriteProduct = async (dispatch, product) => {
 
 export const getUserFavorites = async (dispatch, user) => {
   try {
-    const res = await userRequest.get(`/user/favorites`);
+    const res = await userRequest.get('/user/favorites');
     dispatch(getUserFavoritesSuccess(res.data));
   } catch (err) {
     console.log(err);

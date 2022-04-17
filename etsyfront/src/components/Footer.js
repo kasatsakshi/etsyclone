@@ -1,8 +1,8 @@
-import { CircleFlag } from 'react-circle-flags'
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import { CircleFlag } from 'react-circle-flags';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { updateCurrency } from '../redux/user';
-import { useNavigate } from "react-router-dom";
 import './Navbar.css';
 
 const Container = styled.div`
@@ -67,19 +67,18 @@ const SelectCurrency = styled.select`
     color: white;
 `;
 
-const Footer = () => {
+function Footer() {
   const user = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const handleCurrencyChange = async (currency) => {
+    user
+      ? await updateCurrency(dispatch, { userId: user.id, currency })
+      : navigate('/login');
 
-  const handleCurrencyChange = async(currency) => {
-    user ?
-      await updateCurrency(dispatch, {userId: user.id, currency })
-  : navigate("/login");
-
-  window.location.reload()
-  }
+    window.location.reload();
+  };
 
   return (
     <Container>
@@ -92,15 +91,14 @@ const Footer = () => {
           <Title>|</Title>
           <Title>English(US)</Title>
           <Title>|</Title>
-          <SelectCurrency defaultValue={ user ? user.currency : 'USD'} onChange={e => handleCurrencyChange(e.target.value)}>
-            <option value='USD'>USD</option>
-            <option value='INR'>INR</option>
-            <option value='GBP'>GBP</option>
+          <SelectCurrency defaultValue={user ? user.currency : 'USD'} onChange={(e) => handleCurrencyChange(e.target.value)}>
+            <option value="USD">USD</option>
+            <option value="INR">INR</option>
+            <option value="GBP">GBP</option>
           </SelectCurrency>
         </SocialContainer>
       </Left>
-      <Center>
-      </Center>
+      <Center />
       <Right>
         <Title>2022 Etsy, Inc</Title>
         <Title>Terms of Use</Title>
@@ -109,6 +107,6 @@ const Footer = () => {
       </Right>
     </Container>
   );
-};
+}
 
-export default Footer
+export default Footer;

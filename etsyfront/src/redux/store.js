@@ -1,9 +1,5 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 // import cartReducer from "./cartRedux";
-import userReducer from "./userRedux";
-import shopReducer from "./shopRedux";
-import productRedux from "./productRedux";
-import { LOGOUT_USER } from "../actions/types";
 import {
   persistStore,
   persistReducer,
@@ -13,12 +9,16 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import cartRedux from "./cartRedux";
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import userReducer from './userRedux';
+import shopReducer from './shopRedux';
+import productRedux from './productRedux';
+import { LOGOUT_USER } from '../actions/types';
+import cartRedux from './cartRedux';
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   version: 1,
   storage,
 };
@@ -29,16 +29,16 @@ const appReducer = combineReducers({
   shop: shopReducer,
   products: productRedux,
   cart: cartRedux,
-  state: (state = {}) => state
+  state: (state = {}) => state,
 });
 
-const rootReducer = (state, action) => {   
+const rootReducer = (state, action) => {
   // Clear all data in redux store to initial.
-  if(action.type === LOGOUT_USER) {
-    storage.removeItem("persist:root");
+  if (action.type === LOGOUT_USER) {
+    storage.removeItem('persist:root');
     state = undefined;
   }
-  
+
   return appReducer(state, action);
 };
 
@@ -46,12 +46,11 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
 });
 
-export let persistor = persistStore(store);
+export const persistor = persistStore(store);

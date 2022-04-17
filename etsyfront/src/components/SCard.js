@@ -1,11 +1,13 @@
 import React from 'react';
-import { Card, CardHeader, Checkbox, CardMedia } from '@mui/material';
+import {
+  Card, CardHeader, Checkbox, CardMedia,
+} from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import defaultProduct from "../assets/defaultProduct.png";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+import { FavoriteBorder } from '@mui/icons-material';
+import defaultProduct from '../assets/defaultProduct.png';
 import { BASE } from '../api/http';
-import { FavoriteBorder } from "@mui/icons-material";
-import { createFavoriteProduct, deleteFavoriteProduct } from "../redux/product";
+import { createFavoriteProduct, deleteFavoriteProduct } from '../redux/product';
 
 function SCard({ productData }) {
   let productImage;
@@ -15,36 +17,31 @@ function SCard({ productData }) {
   const dispatch = useDispatch();
 
   if (productData.pictureUrl) {
-    productImage = BASE + "/" + productData.pictureUrl
+    productImage = `${BASE}/${productData.pictureUrl}`;
   } else {
-    productImage = defaultProduct
-
+    productImage = defaultProduct;
   }
   const checkFavorite = () => {
     if (!favorites) {
       return false;
     }
-    const data = favorites.find(function (ele) {
-      return ele.inventoryId === productData.id || ele.id === parseInt(productData.id);
-    });
+    const data = favorites.find((ele) => ele.inventoryId === productData.id || ele.id === parseInt(productData.id));
     if (data) {
       return true;
-    } else {
-      return false;
     }
-  }
+    return false;
+  };
 
   const handleCheckboxChange = async (e) => {
-    e.target.checked ?
-      await createFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
-      :
-      await deleteFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
+    e.target.checked
+      ? await createFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
+      : await deleteFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id });
 
     // window.location.reload()
-  }
+  };
 
   return (
-    <Card >
+    <Card>
       <CardMedia
         component="img"
         height="500px"
@@ -53,25 +50,26 @@ function SCard({ productData }) {
         width="90%"
       />
       <CardHeader
-        style={{ textAlign: "center" }}
-        action={
+        style={{ textAlign: 'center' }}
+        action={(
           <Checkbox
             checked={checkFavorite()}
             icon={<FavoriteBorder />}
             checkedIcon={<FavoriteIcon />}
-            onChange={handleCheckboxChange} />
-        }
+            onChange={handleCheckboxChange}
+          />
+        )}
       />
       {/* <CardActions disableSpacing>
         <IconButton>
-        { checkFavorite(productData.id) ? 
+        { checkFavorite(productData.id) ?
           <FavoriteIcon />
           : <FavoriteBorder />
         }
         </IconButton>
       </CardActions> */}
     </Card>
-  )
+  );
 }
 
-export default SCard
+export default SCard;
