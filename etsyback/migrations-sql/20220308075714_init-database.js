@@ -2,12 +2,12 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
- export async function up(knex) {
-  await Promise.all([
-     knex.schema.hasTable('address').then(function(exists) {
+export async function up(knex) {
+  return Promise.all([
+    knex.schema.hasTable('address').then((exists) => {
       if (!exists) {
         return knex.schema.createTable('address', (t) => {
-          t.increments().primary; // integer id
+          // t.increments().primary; // integer id
           t.string('address1').notNullable();
           t.string('address2');
           t.string('city').notNullable();
@@ -16,14 +16,15 @@
           t.string('zipcode').notNullable();
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
-        })
+        });
       }
+      return null;
     }),
 
-    knex.schema.hasTable('user').then(function(exists) {
+    knex.schema.hasTable('user').then((exists) => {
       if (!exists) {
         return knex.schema.createTable('user', (t) => {
-          t.increments().primary; // integer id
+          // t.increments().primary; // integer id
           t.string('name');
           t.string('email').unique();
           t.string('password').notNullable();
@@ -41,14 +42,15 @@
           t.foreign('addressId').references('id').inTable('address');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
-        })
+        });
       }
+      return null;
     }),
 
-    knex.schema.hasTable('shop').then(function(exists) {
+    knex.schema.hasTable('shop').then((exists) => {
       if (!exists) {
         return knex.schema.createTable('shop', (t) => {
-          t.increments().primary; // integer id
+          // t.increments().primary; // integer id
           t.string('name').notNullable().unique();
           t.string('description');
           t.string('avatarUrl');
@@ -58,14 +60,15 @@
           t.foreign('addressId').references('id').inTable('address');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
-        })
+        });
       }
+      return null;
     }),
 
-    knex.schema.hasTable('inventory').then(function(exists) {
+    knex.schema.hasTable('inventory').then((exists) => {
       if (!exists) {
         return knex.schema.createTable('inventory', (t) => {
-          t.increments().primary; // integer id
+          // t.increments().primary; // integer id
           t.string('name').notNullable();
           t.string('description');
           t.string('pictureUrl');
@@ -79,41 +82,45 @@
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
           t.timestamp('deletedAt');
-        })
+        });
       }
+      return null;
     }),
 
-    knex.schema.hasTable('category').then(function(exists) {
+    knex.schema.hasTable('category').then((exists) => {
       if (!exists) {
         return knex.schema.createTable('category', (t) => {
-          t.increments().primary; // integer id
+          // t.increments().primary; // integer id
           t.string('name').notNullable();
           t.integer('shopId').unsigned();
           t.foreign('shopId').references('id').inTable('shop');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
-        })
+        });
       }
+      return null;
     }),
 
-    knex.schema.hasTable('userFavorites').then(function(exists) {
+    knex.schema.hasTable('userFavorites').then((exists) => {
       if (!exists) {
         return knex.schema.createTable('userFavorites', (t) => {
-          t.increments().primary; // integer id
+          // t.increments().primary; // integer id
           t.integer('userId').unsigned().notNullable();
           t.integer('inventoryId').unsigned().notNullable();
           t.foreign('userId').references('id').inTable('user');
           t.foreign('inventoryId').references('id').inTable('inventory');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
-        })
+        });
       }
+
+      return null;
     }),
 
-    knex.schema.hasTable('order').then(function(exists) {
+    knex.schema.hasTable('order').then((exists) => {
       if (!exists) {
         return knex.schema.createTable('order', (t) => {
-          t.increments().primary; // integer id
+          // t.increments().primary; // integer id
           t.decimal('finalAmount').notNullable();
           t.string('status').checkIn(['ordered', 'inTransit', 'delivered', 'cancelled']);
           t.string('orderId');
@@ -122,16 +129,18 @@
           t.foreign('userId').references('id').inTable('user');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
-        })
+        });
       }
+
+      return null;
     }),
 
-    knex.schema.hasTable('orderDetails').then(function(exists) {
+    knex.schema.hasTable('orderDetails').then((exists) => {
       if (!exists) {
         return knex.schema.createTable('orderDetails', (t) => {
-          t.increments().primary; // integer id
+          // t.increments().primary; // integer id
           t.integer('orderQuantity').notNullable();
-          t.string('orderId')
+          t.string('orderId');
           t.decimal('price');
           t.string('pictureUrl');
           t.string('category');
@@ -143,18 +152,19 @@
           t.foreign('inventoryId').references('id').inTable('inventory');
           t.timestamp('createdAt').defaultTo(knex.fn.now());
           t.timestamp('updatedAt').defaultTo(knex.fn.now());
-        })
+        });
       }
+      return null;
     }),
   ]);
-};
+}
 
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
- export async function down(knex) {
-  await Promise.all([
+export async function down(knex) {
+  return Promise.all([
     await knex.schema.dropTableIfExists('orderDetails'),
     await knex.schema.dropTableIfExists('order'),
     await knex.schema.dropTableIfExists('userFavorites'),
@@ -164,4 +174,4 @@
     await knex.schema.dropTableIfExists('user'),
     await knex.schema.dropTableIfExists('address'),
   ]);
-};
+}

@@ -1,1 +1,1 @@
-export const SECRET = "esty@clone";
+export const SECRET = 'esty@clone';

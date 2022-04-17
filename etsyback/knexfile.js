@@ -22,4 +22,4 @@ const connection = {
   },
 };
 
-export default connection
+export default connection;

@@ -1,11 +1,11 @@
-import { createEntity, findOneEntity } from "../models";
-import { isValidEmail } from "../helpers/validator";
+import { createEntity, findOneEntity } from '../models';
+import { isValidEmail } from '../helpers/validator';
 import User from '../models/users';
 
 function cleanInput(input) {
   const {
     email,
-    name
+    name,
   } = input;
 
   input.email = email.trim();
@@ -18,43 +18,43 @@ async function validateInput(input) {
   const {
     email,
     password,
-    name
+    name,
   } = input;
 
   let errorMsg;
-  if(!name) {
+  if (!name) {
     errorMsg = 'Name is missing';
-  } else if(!email) {
+  } else if (!email) {
     errorMsg = 'Email is missing';
-  } else if(!password) {
-    errorMsg = 'Password is missing'
+  } else if (!password) {
+    errorMsg = 'Password is missing';
   }
 
-  if(!isValidEmail(email)) {
+  if (!isValidEmail(email)) {
     errorMsg = 'Email is in incorrect format';
   }
 
-  if(errorMsg) {
+  if (errorMsg) {
     return errorMsg;
   }
 
-  return;
-} 
+  return null;
+}
 
 export default async function signup(req, res) {
   const input = req.body;
   const trimmedInput = cleanInput(input);
   const inputError = await validateInput(trimmedInput);
 
-  if(inputError) {
-    return res.status(400).json({message: inputError});
+  if (inputError) {
+    return res.status(400).json({ message: inputError });
   }
 
-  const findUser = await findOneEntity(User, {'email': trimmedInput.email});
+  const findUser = await findOneEntity(User, { email: trimmedInput.email });
 
-  //Check if this user email exists
-  if(findUser) {
-    return res.status(400).json({message: "Email Address already exists"});
+  // Check if this user email exists
+  if (findUser) {
+    return res.status(400).json({ message: 'Email Address already exists' });
   }
   const userData = new User({
     ...trimmedInput,
@@ -62,13 +62,13 @@ export default async function signup(req, res) {
     userStatus: 'active',
     lastLoginAt: new Date(),
   });
-  const createdUser = await createEntity(userData)
-  
+  const createdUser = await createEntity(userData);
+
   if (!createdUser) {
-    return res.status(500).json({ message: "Signup failed. Try again" });
+    return res.status(500).json({ message: 'Signup failed. Try again' });
   }
 
-  const response = ({...createdUser}._doc);
+  const response = ({ ...createdUser }._doc);
   delete response.password;
 
   return res.status(200).json(response);

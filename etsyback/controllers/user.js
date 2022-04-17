@@ -1,9 +1,11 @@
-import { findEntity, findOneEntity, updateEntity, updateOneEntity } from "../models";
-import { isValidEmail } from "../helpers/validator";
 import formidable from 'formidable';
-import path from "path";
-import fs from "fs";
-import { decodeToken } from "../helpers/auth";
+import path from 'path';
+import fs from 'fs';
+import { isValidEmail } from '../helpers/validator';
+import {
+  findOneEntity, updateOneEntity,
+} from '../models';
+import { decodeToken } from '../helpers/auth';
 import User from '../models/users';
 
 function cleanInput(input) {
@@ -34,7 +36,7 @@ async function validateInput(input) {
     return errorMsg;
   }
 
-  return;
+  return null;
 }
 
 export async function user(req, res) {
@@ -48,15 +50,15 @@ export async function user(req, res) {
     return res.status(400).json({ message: inputError });
   }
 
-  const findUser = await findOneEntity(User, {'email': trimmedInput.email});
-  //Check if this user email exists
+  const findUser = await findOneEntity(User, { email: trimmedInput.email });
+  // Check if this user email exists
   if (!findUser) {
-    console.error("Email does not exists!");
+    console.error('Email does not exists!');
     // Adding the below message so someone cannot create fake accounts
-    return res.status(400).json({ message: "User does not exists" });
+    return res.status(400).json({ message: 'User does not exists' });
   }
 
-  const response = ({...findUser}._doc);
+  const response = ({ ...findUser }._doc);
   delete response.password;
   return res.status(200).json(response);
 }
@@ -65,21 +67,21 @@ export async function updateCurrency(req, res) {
   const input = req.body;
   const token = req.headers.authorization;
   const payload = await decodeToken(token);
-  const userId = payload.data.id;
-  const currency = input.currency;
+  const { userId, email } = payload.data;
+  const { currency } = input;
 
-  const findUser = await findOneEntity(User, {'email': trimmedInput.email});
-  //Check if this user exists
+  const findUser = await findOneEntity(User, { email });
+  // Check if this user exists
   if (!findUser) {
-    console.error("User does not exists!");
-    return res.status(400).json({ message: "User does not exists" });
+    console.error('User does not exists!');
+    return res.status(400).json({ message: 'User does not exists' });
   }
 
-  await updateOneEntity(User, {'_id': userId}, { currency});
+  await updateOneEntity(User, { _id: userId }, { currency });
 
-  const findUpdatedUser = await findOneEntity(User, {'_id': userId});
+  const findUpdatedUser = await findOneEntity(User, { _id: userId });
 
-  const response = ({...findUpdatedUser}._doc);
+  const response = ({ ...findUpdatedUser }._doc);
   delete response.password;
 
   return res.status(200).json(response);
@@ -89,54 +91,57 @@ export async function update(req, res) {
   const token = req.headers.authorization;
   const payload = await decodeToken(token);
   const userId = payload.data.id;
-  //Check incoming validation
+  // Check incoming validation
   const form = new formidable.IncomingForm();
   form.multiples = true;
   form.maxFileSize = 50 * 1024 * 1024; // 5MB
 
   form.parse(req, async (err, fields, files) => {
-    if(err) {
+    if (err) {
       console.log(err);
-      return res.status(400).json({message: "Unable to parse Input"});
+      return res.status(400).json({ message: 'Unable to parse Input' });
     }
 
-    const {name, bio, address, phone, email, gender, birthday } = fields;
-    let {avatarUrl} = fields;
-    if(files.avatarUrl) {
+    const {
+      name, bio, address, phone, email, gender, birthday,
+    } = fields;
+    let { avatarUrl } = fields;
+    if (files.avatarUrl) {
       const tempFilePath = files.avatarUrl.filepath;
-      const fileName = "image-" + Date.now() + path.extname(files.avatarUrl.originalFilename);
+      const fileName = `image-${Date.now()}${path.extname(files.avatarUrl.originalFilename)}`;
       const uploadedFolder = './public/uploads/';
 
-      if (!fs.existsSync(uploadedFolder)){
-        fs.mkdirSync(uploadedFolder, { recursive: true });  
+      if (!fs.existsSync(uploadedFolder)) {
+        fs.mkdirSync(uploadedFolder, { recursive: true });
       }
 
-      fs.readFile(tempFilePath, function(err, data) {
-        fs.writeFile(uploadedFolder + fileName, data, function(err) {
-            fs.unlink(tempFilePath, function(err) {
-                if (err) {
-                  console.error(err);
-                }
-            });
+      fs.readFile(tempFilePath, (err, data) => {
+        fs.writeFile(uploadedFolder + fileName, data, (err) => {
+          fs.unlink(tempFilePath, (err) => {
+            if (err) {
+              console.error(err);
+            }
+          });
         });
       });
       const [first, ...rest] = (uploadedFolder + fileName).split('/');
       avatarUrl = rest.join('/');
-    } 
-    const user = await findOneEntity(User, {'_id': userId});
-    //Check if this user exists
-    if(!user) {
-      return res.status(400).json({message: "User doesn't exists"});
+    }
+    const user = await findOneEntity(User, { _id: userId });
+    // Check if this user exists
+    if (!user) {
+      return res.status(400).json({ message: "User doesn't exists" });
     }
 
-    await updateOneEntity(User,{'_id': userId} ,{name, bio, phone, email, address, avatarUrl, gender, birthday, 'updatedAt': new Date() } )
+    await updateOneEntity(User, { _id: userId }, {
+      name, bio, phone, email, address, avatarUrl, gender, birthday, updatedAt: new Date(),
+    });
 
-    const findUpdatedUser = await findOneEntity(User, {'_id': userId});
+    const findUpdatedUser = await findOneEntity(User, { _id: userId });
 
-    const response = ({...findUpdatedUser}._doc);
+    const response = ({ ...findUpdatedUser }._doc);
     delete response.password;
 
     return res.status(200).json(response);
   });
 }
-
