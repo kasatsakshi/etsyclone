@@ -46,9 +46,11 @@ export const updateUserInfo = async (dispatch, data) => {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('email', data.email);
-    formData.append('address', data.address);
+    formData.append('address', JSON.stringify(data.address));
     formData.append('bio', data.bio);
     formData.append('phone', data.phone);
+    formData.append('gender', data.gender);
+    formData.append('birthday', data.birthday);
     if (data.avatarUrl.file) {
       formData.append('avatarUrl', data.avatarUrl.file);
     } else {
@@ -63,7 +65,7 @@ export const updateUserInfo = async (dispatch, data) => {
 
 export const updateCurrency = async (dispatch, data) => {
   try {
-    const res = await publicRequest.put('/user/update/currency', data);
+    const res = await userRequest.put('/user/update/currency', data);
     dispatch(updateUserCurrencySuccess(res.data));
   } catch (err) {
     console.log(err);

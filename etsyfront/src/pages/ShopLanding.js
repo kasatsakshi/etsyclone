@@ -8,10 +8,9 @@ import './ShopLanding.css';
 import { useDispatch, useSelector } from 'react-redux';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import {
-  Stack, ListItem, Link, Box, Modal,
+  Stack,
 } from '@mui/material';
 import Navbar from '../components/Navbar';
-import ShopTile from '../components/ShopTile';
 import { getShop, isShopNameAvailable } from '../redux/shop';
 
 const Button = styled.button`
@@ -20,7 +19,6 @@ const Button = styled.button`
   background-color: teal;
   color: white;
   cursor: pointer;
-  margin-bottom: 10px;
   &:disabled {
     color: green;
     cursor: not-allowed;
@@ -29,7 +27,7 @@ const Button = styled.button`
 
 const Container = styled.div`
   width: 100%;
-  height: 10%;
+  height: 15%;
   background: linear-gradient(
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.5)
@@ -108,9 +106,10 @@ function ShopLanding() {
 
                   <Container>
                     <Stack spacing={2}>
-                      <Stack direction="row">
+                      <Stack spacing={2} direction="row">
                         <OutlinedInput
                           required
+                          style={{ width: '80%' }}
                           id="shop-name"
                           label="Shop Name"
                           placeholder="Enter Shop Name"
@@ -125,7 +124,7 @@ function ShopLanding() {
                       <p id="availabilty">{availability}</p>
                       {
                     availability === 'Available' ? (
-                      <Button onClick={nextShop}>
+                      <Button style={{ height: '30px' }} onClick={nextShop}>
                         Next
                       </Button>
                     )

@@ -3,12 +3,12 @@ import {
   shopCreateFailure, getShopCategorySuccess, shopProductUpdateSuccess,
   getShopCategoryFailure, shopProductCreateSuccess,
 } from './shopRedux';
-import { publicRequest } from '../api/http';
+import { publicRequest, userRequest } from '../api/http';
 
 export const getShop = async (dispatch, user) => {
   dispatch(getShopStart());
   try {
-    const res = await publicRequest.get(`/shop/${user.id}`);
+    const res = await userRequest.get('/shop');
     dispatch(getShopSuccess(res.data));
   } catch (err) {
     console.log(err);
@@ -28,7 +28,7 @@ export const getShopCategories = async (dispatch, shop) => {
 
 export const isShopNameAvailable = async (shop) => {
   try {
-    const res = await publicRequest.post('/shop/name', { name: shop.shopName });
+    const res = await userRequest.post('/shop/name', { name: shop.shopName });
     return res.data;
   } catch (err) {
     console.log(err);

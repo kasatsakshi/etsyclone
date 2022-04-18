@@ -101,7 +101,12 @@ const style = {
 };
 
 function ProfileUpdate() {
-  const user = useSelector((state) => state.user.currentUser);
+  const reduxUser = useSelector((state) => state.user.currentUser);
+  const parsedAddress = JSON.parse(reduxUser.address);
+  const user = {
+    ...reduxUser,
+    address: parsedAddress,
+  };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -109,6 +114,7 @@ function ProfileUpdate() {
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
+  const [gender, setGender] = useState(user.gender);
 
   const [address1, setAddress1] = useState(user.address ? user.address.address1 : '');
   const [address2, setAddress2] = useState(user.address ? user.address.address2 : '');
@@ -144,7 +150,7 @@ function ProfileUpdate() {
       zipcode,
     };
     await updateUserInfo(dispatch, {
-      name, email, address, bio, birthday, avatarUrl, phone, userId: user.id,
+      name, email, gender, address, bio, birthday, avatarUrl, phone, userId: user.id,
     });
     navigate('/account');
   };
@@ -207,14 +213,13 @@ function ProfileUpdate() {
                 <div className="update__nameSection">
                   <label className="update__labels">Gender</label>
                   <RadioGroup row defaultValue={user.gender}>
-                    <FormControlLabel value="female" control={<Radio />} label="Female" />
-                    <FormControlLabel value="male" control={<Radio />} label="Male" />
-                    <FormControlLabel value="ratherNotSay" control={<Radio />} label="Rather not say" />
+                    <FormControlLabel onClick={(e) => setGender('female')} value="female" control={<Radio />} label="Female" />
+                    <FormControlLabel onClick={(e) => setGender('male')} value="male" control={<Radio />} label="Male" />
+                    <FormControlLabel onClick={(e) => setGender('ratherNotSay')} value="ratherNotSay" control={<Radio />} label="Rather not say" />
                     <FormControlLabel
-                      value="disabled"
-                      disabled
                       control={<Radio />}
                       label="other"
+                      onClick={(e) => setGender('other')}
                     />
                   </RadioGroup>
                 </div>

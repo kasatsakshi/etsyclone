@@ -1,7 +1,14 @@
 import formidable from 'formidable';
 import path from 'path';
 import fs from 'fs';
-import { findEntity, createEntity, updateEntity } from '../models';
+import {
+  findEntity, findOneEntity,
+  createEntity, updateEntity,
+} from '../models';
+import { decodeToken } from '../helpers/auth';
+import Shop from '../models/shop';
+import User from '../models/users';
+import Inventory from '../models/inventory';
 
 export async function createShop(req, res) {
   // Check incoming validation
@@ -81,28 +88,30 @@ export async function createShop(req, res) {
 }
 
 export async function getShop(req, res) {
-  const { id } = req.params;
+  const token = req.headers.authorization;
+  const payload = await decodeToken(token);
+  const id = payload.data.id;
 
   if (!id) {
     return res.status(400).json({ message: 'user id is missing' });
   }
 
-  const user = await findEntity('user', ['*'], ['id', id]);
+  const user = await findOneEntity(User, { _id: id });
   // Check if this user exists
-  if (user.length === 0) {
+  if (!user) {
     console.error('User does not exists!');
     return res.status(400).json({ message: 'User does not exists' });
   }
 
-  const shop = await findEntity('shop', ['*'], ['userId', id]);
+  const shop = await findOneEntity(Shop, { userId: id });
   let inventory = [];
-  if (shop.length > 0) {
-    inventory = await findEntity('inventory', ['*'], ['shopId', shop[0].id]);
+  if (shop) {
+    inventory = await findOneEntity(Inventory, { shopId: shop._id });
   }
 
   const response = {
-    user: user[0],
-    shop: shop[0],
+    user,
+    shop,
     inventory,
   };
 
@@ -125,9 +134,9 @@ export async function isShopNameAvailable(req, res) {
     return res.status(400).json({ message: 'shop name is missing' });
   }
 
-  const findShop = await findEntity('shop', ['*'], ['name', name]);
+  const findShop = await findOneEntity(Shop, { name });
 
-  if (findShop.length >= 1) {
+  if (findShop) {
     return res.status(200).json({ message: false });
   }
 
