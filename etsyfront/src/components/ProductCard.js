@@ -81,7 +81,7 @@ export default function ProductCard({ productData }) {
   const handleClick = async (e) => {
     e.preventDefault();
     await shopProductUpdate(dispatch, {
-      name, description, pictureUrl, isCustom, category, price, quantity, productId: productData.id,
+      name, description, pictureUrl, isCustom, category, price, quantity, productId: productData._id,
     });
     handleClose();
     window.location.reload();

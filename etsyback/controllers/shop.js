@@ -3,15 +3,20 @@ import path from 'path';
 import fs from 'fs';
 import {
   findEntity, findOneEntity,
-  createEntity, updateEntity,
+  createEntity, updateOneEntity,
 } from '../models';
 import { decodeToken } from '../helpers/auth';
 import Shop from '../models/shop';
 import User from '../models/users';
 import Inventory from '../models/inventory';
+import Category from '../models/category';
+import OrderDetails from '../models/orderDetails';
 
 export async function createShop(req, res) {
   // Check incoming validation
+  const token = req.headers.authorization;
+  const payload = await decodeToken(token);
+  const userId = payload.data.id;
   const form = new formidable.IncomingForm();
   form.multiples = true;
   form.maxFileSize = 50 * 1024 * 1024; // 5MB
@@ -46,41 +51,31 @@ export async function createShop(req, res) {
       avatarUrl = rest.join('/');
     }
     const {
-      userId, name, description, address1, address2, city, state, country, zipcode,
+      name, description, address,
     } = fields;
-    const user = await findEntity('user', ['*'], ['id', parseInt(userId)]);
+    const user = await findOneEntity(User, { _id: userId });
     // Check if this user id exists
-    if (user.length === 0) {
+    if (!user) {
       return res.status(400).json({ message: "User doesn't exists" });
     }
 
-    const shop = await findEntity('shop', ['*'], ['name', name]);
-    if (shop.length >= 1) {
+    const shop = await findOneEntity(Shop, { name });
+    if (shop) {
       return res.status(400).json({ message: 'Shop name is taken' });
     }
 
-    const address = {
-      address1,
-      address2,
-      city,
-      state,
-      country,
-      zipcode,
-    };
-    const createdAddress = await createEntity('address', address);
-    const shopInput = {
+    const shopInput = new Shop({
       name,
       description,
       avatarUrl,
       userId,
-      addressId: createdAddress[0],
-    };
-    const createdShop = await createEntity('shop', shopInput);
-    const shopinfo = await findEntity('shop', ['*'], ['id', parseInt(createdShop[0])]);
+      address,
+    });
+    const createdShop = await createEntity(shopInput);
 
     const response = {
-      user: user[0],
-      shop: shopinfo[0],
+      user,
+      shop: createdShop,
       inventory: [],
     };
     return res.status(200).json(response);
@@ -106,7 +101,7 @@ export async function getShop(req, res) {
   const shop = await findOneEntity(Shop, { userId: id });
   let inventory = [];
   if (shop) {
-    inventory = await findOneEntity(Inventory, { shopId: shop._id });
+    inventory = await findEntity(Inventory, { shopId: shop._id });
   }
 
   const response = {
@@ -118,7 +113,7 @@ export async function getShop(req, res) {
   let total = 0;
   await Promise.all(
     inventory.map(async (item) => {
-      const temp = await findEntity('orderDetails', ['orderQuantity'], ['inventoryId', item.id]);
+      const temp = await findEntity(OrderDetails, { inventoryId: item._id }, ['orderQuantity']);
       total += temp.length;
     }),
   );
@@ -150,15 +145,14 @@ export async function getShopCategories(req, res) {
     return res.status(400).json({ message: 'shop id is missing' });
   }
 
-  const shop = await findEntity('shop', ['*'], ['id', shopId]);
-  if (shop.length === 0) {
+  const shop = await findOneEntity(Shop, { _id: shopId });
+  if (!shop) {
     console.error('Shop does not exists!');
     return res.status(400).json({ message: 'Shop does not exists' });
   }
 
   const defaultCategories = ['Art', 'Clothing', 'Jewellery', 'Entertainment', 'Home Decor'];
-  const customCategories = await findEntity('category', ['*'], ['shopId', shopId]);
-
+  const customCategories = await findEntity(Category, { shopId });
   const response = {
     default: defaultCategories,
     custom: customCategories,
@@ -203,34 +197,49 @@ export async function createShopProduct(req, res) {
       shopId, name, description, isCustom, category, price, quantity,
     } = fields;
 
-    const findShop = await findEntity('shop', ['*'], ['id', parseInt(shopId)]);
-    if (findShop.length === 0) {
+    const shop = await findOneEntity(Shop, { _id: shopId });
+    if (!shop) {
       return res.status(400).json({ message: "Shop doesn't exists" });
     }
 
-    const user = await findEntity('user', ['*'], ['id', parseInt(findShop[0].userId)]);
+    const user = await findOneEntity(User, { _id: shop.userId });
 
-    const productInput = {
-      name,
-      description,
-      pictureUrl,
-      price,
-      quantity,
-      shopId,
-    };
-
+    let inventoryInput;
     if (isCustom) {
-      const createdCategory = await createEntity('category', { name: category, shopId });
-      productInput.categoryId = createdCategory[0];
+      const newCategory = new Category({
+        name: category,
+        shopId,
+      });
+
+      const createdCategory = await createEntity(newCategory);
+      const categoryId = createdCategory._id;
+      inventoryInput = new Inventory({
+        name,
+        description,
+        pictureUrl,
+        price,
+        quantity,
+        shopId,
+        categoryId,
+        category,
+      });
+    } else {
+      inventoryInput = new Inventory({
+        name,
+        description,
+        pictureUrl,
+        price,
+        quantity,
+        shopId,
+        category,
+      });
     }
 
-    productInput.category = category;
-    const createdProduct = await createEntity('inventory', productInput);
-    const inventory = await findEntity('inventory', ['*'], ['id', parseInt(createdProduct[0])]);
+    const inventory = await createEntity(inventoryInput);
 
     const response = {
-      user: user[0],
-      shop: findShop[0],
+      user,
+      shop,
       inventory,
     };
     return res.status(200).json(response);
@@ -275,13 +284,13 @@ export async function updateShopProduct(req, res) {
       pictureUrl = rest.join('/');
     }
 
-    const findProduct = await findEntity('inventory', ['*'], ['id', parseInt(productId)]);
-    if (findProduct.length === 0) {
+    const findProduct = await findOneEntity(Inventory, { _id: productId });
+    if (!findProduct) {
       return res.status(400).json({ message: "Product doesn't exists" });
     }
 
-    const findShop = await findEntity('shop', ['*'], ['id', findProduct[0].shopId]);
-    const user = await findEntity('user', ['*'], ['id', parseInt(findShop[0].userId)]);
+    const shop = await findOneEntity(Shop, { _id: findProduct.shopId });
+    const user = await findOneEntity(User, { _id: shop.userId });
 
     const productInput = {
       name,
@@ -289,22 +298,28 @@ export async function updateShopProduct(req, res) {
       pictureUrl,
       price,
       quantity,
-      shopId: findShop[0].id,
+      shopId: shop._id,
     };
 
     if (isCustom) {
-      const createdCategory = await createEntity('category', { name: category, productId });
-      productInput.categoryId = createdCategory[0];
+      const newCategory = new Category({
+        name: category,
+        productId,
+      });
+
+      const createdCategory = await createEntity(newCategory);
+      productInput.categoryId = createdCategory._id;
       productInput.category = null;
     } else {
       productInput.category = category;
     }
-    await updateEntity('inventory', productInput, ['id', productId]);
-    const inventory = await findEntity('inventory', ['*'], ['shopId', parseInt(findProduct[0].shopId)]);
+
+    await updateOneEntity(Inventory, { _id: productId }, productInput);
+    const inventory = await findEntity(Inventory, { shopId: findProduct.shopId });
 
     const response = {
-      user: user[0],
-      shop: findShop[0],
+      user,
+      shop,
       inventory,
     };
 

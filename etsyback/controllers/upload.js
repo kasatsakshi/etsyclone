@@ -1,7 +1,9 @@
 import path from 'path';
 import multer from 'multer';
 import fs from 'fs';
-import { updateEntity } from '../models';
+import { updateOneEntity } from '../models';
+import Shop from '../models/shop';
+import User from '../models/users';
 
 const storage = multer.diskStorage({
   destination(req, file, callback) {
@@ -28,9 +30,9 @@ export default async function upload(req, res) {
     }
 
     if (req.body.type === 'user') {
-      await updateEntity(req.body.type, { avatarUrl: req.file.path }, ['email', req.body.id]);
+      await updateOneEntity(User, { email: req.body.id }, { avatarUrl: req.file.path });
     } else if (req.body.type === 'shop') {
-      await updateEntity(req.body.type, { avatarUrl: req.file.path }, ['id', req.body.id]);
+      await updateOneEntity(Shop, { id: req.body.id }, { avatarUrl: req.file.path });
     } else {
       console.log('No valid type found');
       return res.status(400).json('Error in uploading file!');

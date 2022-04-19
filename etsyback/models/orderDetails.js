@@ -5,10 +5,6 @@ const orderDetailsSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  status: {
-    type: String,
-    enum: ['ordered', 'inTransit', 'delivered', 'cancelled'],
-  },
   orderId: {
     type: Number,
   },
@@ -28,10 +24,10 @@ const orderDetailsSchema = new mongoose.Schema({
   price: {
     type: Number,
   },
-  orderedDate: {
-    type: Date,
+  shopId: {
+    type: String,
   },
-  userId: {
+  inventoryId: {
     type: String,
   },
   createdAt: {

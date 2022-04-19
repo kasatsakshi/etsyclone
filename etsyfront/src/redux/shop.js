@@ -3,9 +3,9 @@ import {
   shopCreateFailure, getShopCategorySuccess, shopProductUpdateSuccess,
   getShopCategoryFailure, shopProductCreateSuccess,
 } from './shopRedux';
-import { publicRequest, userRequest } from '../api/http';
+import { userRequest } from '../api/http';
 
-export const getShop = async (dispatch, user) => {
+export const getShop = async (dispatch) => {
   dispatch(getShopStart());
   try {
     const res = await userRequest.get('/shop');
@@ -18,7 +18,7 @@ export const getShop = async (dispatch, user) => {
 
 export const getShopCategories = async (dispatch, shop) => {
   try {
-    const res = await publicRequest.get(`/shop/${shop.id}/categories`);
+    const res = await userRequest.get(`/shop/${shop.id}/categories`);
     dispatch(getShopCategorySuccess(res.data));
   } catch (err) {
     console.log(err);
@@ -41,16 +41,10 @@ export const shopCreate = async (dispatch, data) => {
   formData.append('description', data.description);
   formData.append('phone', data.phone);
   formData.append('avatarUrl', data.avatarUrl.file);
-  formData.append('address1', data.address1);
-  formData.append('address2', data.address2);
-  formData.append('city', data.city);
-  formData.append('state', data.state);
-  formData.append('country', data.country);
-  formData.append('zipcode', data.zipcode);
-  formData.append('userId', data.userId);
+  formData.append('address', JSON.stringify(data.address));
 
   try {
-    const res = await publicRequest.post('/shop/create', formData);
+    const res = await userRequest.post('/shop/create', formData);
     dispatch(shopCreateSuccess(res.data));
     return res.data;
   } catch (err) {
@@ -71,7 +65,7 @@ export const shopProductCreate = async (dispatch, data) => {
   formData.append('shopId', data.shopid);
 
   try {
-    const res = await publicRequest.post('/shop/product/create', formData);
+    const res = await userRequest.post('/shop/product/create', formData);
     dispatch(shopProductCreateSuccess(res.data));
     return res.data;
   } catch (err) {
@@ -94,7 +88,7 @@ export const shopProductUpdate = async (dispatch, data) => {
     formData.append('pictureUrl', data.pictureUrl);
   }
   try {
-    const res = await publicRequest.post('/shop/product/update', formData);
+    const res = await userRequest.post('/shop/product/update', formData);
     dispatch(shopProductUpdateSuccess(res.data));
     return res.data;
   } catch (err) {

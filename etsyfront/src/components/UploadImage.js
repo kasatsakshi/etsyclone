@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { publicRequest } from '../api/http';
+import { userRequest } from '../api/http';
 
 const Button = styled.button`
   width: 100%;
@@ -47,7 +47,7 @@ class UploadImage extends React.Component {
         'content-type': 'multipart/form-data',
       },
     };
-    publicRequest.post('/upload', formData, config)
+    userRequest.post('/upload', formData, config)
       .then((response) => {
         alert('The file is successfully uploaded');
         this.resetFileInput();

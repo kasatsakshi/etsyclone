@@ -26,15 +26,12 @@ margin-right:100px;
 `;
 
 const Button = styled.button`
-  width: 100%;
-  height: 100%;
+  width: 90px;
+  height: 30px;
   border: none;
   background-color: black;
   color: white;
   cursor: pointer;
-  margin-bottom: 10px;
-  padding: 3px;
-  height: 35px;
   &:disabled {
     color: grey;
     cursor: not-allowed;
@@ -125,7 +122,7 @@ function ShopHome() {
   const handleClick = async (e) => {
     e.preventDefault();
     await shopProductCreate(dispatch, {
-      name, description, pictureUrl, isCustom, category, price, quantity, shopid: shopInfo.shop.id,
+      name, description, pictureUrl, isCustom, category, price, quantity, shopid: shopInfo.shop._id,
     });
     handleCloseNewProduct();
     window.location.reload();
@@ -147,7 +144,7 @@ function ShopHome() {
     const fetchShops = async () => {
       try {
         if (user) {
-          getShop(dispatch, { id: user.id });
+          getShop(dispatch);
         }
       } catch (err) {
         console.log(err);
@@ -156,7 +153,7 @@ function ShopHome() {
     const fetchShopCategories = async () => {
       try {
         if (user) {
-          getShopCategories(dispatch, { id: shopInfo.shop.id });
+          getShopCategories(dispatch, { id: shopInfo.shop._id });
         }
       } catch (err) {
         console.log(err);
@@ -189,7 +186,7 @@ function ShopHome() {
                     </p>
                   </ListItem>
                   <Stack direction="row" spacing={2}>
-                    <ListItem><Button onClick={handleOpenEditShop}>Edit Shop</Button></ListItem>
+                    <Button onClick={handleOpenEditShop}>Edit Shop</Button>
                     <Modal
                       open={shopOpen}
                       onClose={handleCloseEditShop}
@@ -209,7 +206,7 @@ function ShopHome() {
                       </Box>
                     </Modal>
 
-                    <ListItem><Button onClick={(handleOpenNewProduct)}>Add Product</Button></ListItem>
+                    <Button onClick={(handleOpenNewProduct)}>Add Product</Button>
                     <Modal
                       open={productOpen}
                       onClose={handleCloseNewProduct}
@@ -241,6 +238,7 @@ function ShopHome() {
                           <Select
                             placeholder="category"
                             onChange={(e) => setCategory(e.target.value)}
+                            defaultChecked
                             disabled={isDisabled}
                           >
                             <option color="grey" value="">category</option>

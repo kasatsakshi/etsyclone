@@ -11,7 +11,7 @@ const inventorySchema = new mongoose.Schema({
   pictureUrl: {
     type: String,
   },
-  cateogry: {
+  category: {
     type: String,
   },
   categoryId: {

@@ -63,8 +63,16 @@ function ShopCreate() {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    const address = {
+      address1,
+      address2,
+      city,
+      state,
+      country,
+      zipcode,
+    };
     await shopCreate(dispatch, {
-      name, description, phone, avatarUrl, address1, address2, city, state, country, zipcode, userId: user.id,
+      name, description, phone, avatarUrl, address,
     });
     navigate('/shophome');
   };

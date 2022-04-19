@@ -77,7 +77,7 @@ function ShopLanding() {
     const fetchShops = async () => {
       try {
         if (user) {
-          getShop(dispatch, { id: user.id });
+          getShop(dispatch);
         }
       } catch (err) {
         console.log(err);
@@ -96,7 +96,7 @@ function ShopLanding() {
               <h1 className="shop__landing__text">Sell on Etsy</h1>
             </div>
             {
-            shop && shop.shop && shop.shop.id > 0
+            shop && shop.shop && shop.shop._id
               ? <Navigate to="/shophome" />
               : (
                 <div>
