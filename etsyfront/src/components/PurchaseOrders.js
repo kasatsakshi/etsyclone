@@ -1,15 +1,12 @@
-import { FavoriteBorder, ShoppingCartOutlined } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import * as React from 'react';
 import {
-  Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal, Button,
+  Card, CardHeader, Stack, CardActions, CardMedia, CardContent, IconButton, Box, Modal, Button,
 } from '@mui/material';
 import defaultProduct from '../assets/defaultProduct.png';
 import { BASE } from '../api/http';
-import { createFavoriteProduct, deleteFavoriteProduct } from '../redux/product';
 
 const Info = styled.div`
     opacity: 0;

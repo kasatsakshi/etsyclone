@@ -1,17 +1,17 @@
 import {
-  createEntity, findEntity, findOneEntity, findByNameEntity,
+  createEntity, findEntity, findOneEntity, findByNameEntity, deleteOneEntity,
 } from '../models';
-import { getKnexClient } from '../helpers/knex-client';
 import { decodeToken } from '../helpers/auth';
 import UserFavorites from '../models/userFavorites';
 import Inventory from '../models/inventory';
+import OrderDetails from '../models/orderDetails';
 
 export async function getProducts(req, res) {
   const products = await findEntity(Inventory);
   let total = 0;
   await Promise.all(
     products.map(async (product) => {
-      const temp = await findEntity('orderDetails', ['orderQuantity'], ['inventoryId', product.id]);
+      const temp = await findEntity(OrderDetails, { inventoryId: product._id }, 'orderQuantity');
       total = temp.length;
       product.totalSales = total;
     }),
@@ -21,17 +21,27 @@ export async function getProducts(req, res) {
 }
 
 export async function favoriteProduct(req, res) {
-  const input = req.body;
-  await createEntity('userFavorites', input);
-  const findFavorites = await findEntity('userFavorites', ['*'], ['userId', input.userId]);
+  const token = req.headers.authorization;
+  const payload = await decodeToken(token);
+  const userId = payload.data.id;
+  const inventoryId = req.body.inventoryId;
+  const userFavorites = new UserFavorites({
+    inventoryId,
+    userId,
+  });
+  await createEntity(userFavorites);
+  const findFavorites = await findEntity(UserFavorites, { userId });
 
   return res.status(200).json(findFavorites);
 }
 
 export async function deleteFavoriteProduct(req, res) {
-  const input = req.body;
-  await getKnexClient()('userFavorites').where('userId', input.userId).where('inventoryId', input.inventoryId).del();
-  const findFavorites = await findEntity('userFavorites', ['*'], ['userId', input.userId]);
+  const token = req.headers.authorization;
+  const payload = await decodeToken(token);
+  const userId = payload.data.id;
+  const inventoryId = req.body.inventoryId;
+  await deleteOneEntity(UserFavorites, { userId, inventoryId });
+  const findFavorites = await findEntity(UserFavorites, { userId });
   return res.status(200).json(findFavorites);
 }
 
@@ -44,7 +54,9 @@ export async function getUserFavorites(req, res) {
   await Promise.all(
     findFavorites.map(async (product) => {
       const temp = await findOneEntity(Inventory, { _id: product.inventoryId });
-      response.push(temp[0]);
+      if (temp) {
+        response.push(temp);
+      }
     }),
   );
 

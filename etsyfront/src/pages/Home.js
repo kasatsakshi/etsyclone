@@ -60,7 +60,9 @@ function Home() {
       }
     };
     fetchProducts();
-    fetchFavorites();
+    if (localStorage.getItem('token')) {
+      fetchFavorites();
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

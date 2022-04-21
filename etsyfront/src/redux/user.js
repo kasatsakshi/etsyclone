@@ -74,4 +74,5 @@ export const updateCurrency = async (dispatch, data) => {
 
 export const logout = (dispatch) => {
   dispatch(logoutUser());
+  localStorage.removeItem('token');
 };

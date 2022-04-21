@@ -1,4 +1,4 @@
-import { FavoriteBorder, ShoppingCartOutlined } from '@mui/icons-material';
+import { AlignVerticalCenterOutlined, FavoriteBorder, ShoppingCartOutlined } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
@@ -96,12 +96,11 @@ function ProductTile({ productData }) {
   const user = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const handleCheckboxChange = async (e) => {
     user
       ? e.target.checked
-        ? await createFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
-        : await deleteFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
+        ? await createFavoriteProduct(dispatch, { inventoryId: productData._id })
+        : await deleteFavoriteProduct(dispatch, { inventoryId: productData._id })
       : navigate('/login');
 
     window.location.reload();
@@ -111,7 +110,7 @@ function ProductTile({ productData }) {
     if (!favorites) {
       return false;
     }
-    const data = favorites.find((ele) => ele.id === id);
+    const data = favorites.find((ele) => ele._id === id);
 
     if (data) {
       return true;
@@ -120,7 +119,7 @@ function ProductTile({ productData }) {
   };
 
   const viewMore = (e) => {
-    navigate(`/productPage/${productData.id}`);
+    navigate(`/productPage/${productData._id}`);
   };
 
   return (
@@ -130,7 +129,7 @@ function ProductTile({ productData }) {
         style={{ textAlign: 'center' }}
         action={(
           <Checkbox
-            checked={checkFavorite(productData.id)}
+            checked={checkFavorite(productData._id)}
             icon={<FavoriteBorder />}
             checkedIcon={<FavoriteIcon />}
             onChange={handleCheckboxChange}

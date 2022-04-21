@@ -1,5 +1,11 @@
 import cuid from 'cuid';
-import { findEntity, createEntity, updateEntity } from '../models';
+import {
+  findEntity, findOneEntity, createEntity, updateEntity,
+} from '../models';
+import { decodeToken } from '../helpers/auth';
+import User from '../models/users';
+import Order from '../models/order';
+import OrderDetails from '../models/orderDetails';
 
 export async function createOrder(req, res) {
   const input = req.body;
@@ -62,21 +68,23 @@ export async function createOrder(req, res) {
 }
 
 export async function getOrders(req, res) {
-  const { id } = req.params;
-  const findUser = await findEntity('user', ['*'], ['id', id]);
+  const token = req.headers.authorization;
+  const payload = await decodeToken(token);
+  const userId = payload.data.id;
+  const findUser = await findOneEntity(User, { _id: userId });
   // Check if this user  exists
-  if (findUser.length === 0) {
+  if (!findUser) {
     console.error('User does not exists!');
     return res.status(400).json({ message: 'User does not exists' });
   }
   const response = [];
-  const orders = await findEntity('order', ['*'], ['userId', id]);
+  const orders = await findEntity(Order, { userId });
 
   await Promise.all(
     orders.map(async (order) => {
       const item = {};
       item.order = order;
-      const orderDetails = await findEntity('orderDetails', ['*'], ['orderId', order.orderId]);
+      const orderDetails = await findEntity(OrderDetails, { orderId: order.orderId });
       item.orderDetails = orderDetails;
       response.push(item);
     }),

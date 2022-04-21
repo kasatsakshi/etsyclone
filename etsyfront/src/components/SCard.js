@@ -34,8 +34,8 @@ function SCard({ productData }) {
 
   const handleCheckboxChange = async (e) => {
     e.target.checked
-      ? await createFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id })
-      : await deleteFavoriteProduct(dispatch, { userId: user.id, inventoryId: productData.id });
+      ? await createFavoriteProduct(dispatch, { inventoryId: productData._id })
+      : await deleteFavoriteProduct(dispatch, { inventoryId: productData._id });
 
     // window.location.reload()
   };

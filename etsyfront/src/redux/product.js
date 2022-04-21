@@ -18,7 +18,7 @@ export const getProducts = async (dispatch, shop) => {
 
 export const createFavoriteProduct = async (dispatch, product) => {
   try {
-    const res = await publicRequest.post('/product/favorite', product);
+    const res = await userRequest.post('/product/favorite', product);
     await dispatch(createFavoriteProductSuccess(res.data));
   } catch (err) {
     console.log(err);
@@ -28,7 +28,7 @@ export const createFavoriteProduct = async (dispatch, product) => {
 
 export const deleteFavoriteProduct = async (dispatch, product) => {
   try {
-    const res = await publicRequest.post('/product/favorite/delete', product);
+    const res = await userRequest.post('/product/favorite/delete', product);
     dispatch(deleteFavoriteProductSuccess(res.data));
   } catch (err) {
     console.log(err);

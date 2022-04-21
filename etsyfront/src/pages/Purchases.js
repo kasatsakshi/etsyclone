@@ -37,13 +37,12 @@ const Heading = styled.h1`
 function Purchases() {
   const orders = useSelector((state) => state.cart.purchases);
   const user = useSelector((state) => state.user.currentUser);
-  console.log(orders);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        getOrders(dispatch, { id: user.id });
+        getOrders(dispatch);
       } catch (err) {
         console.log(err);
       }

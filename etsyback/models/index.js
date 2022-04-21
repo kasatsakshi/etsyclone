@@ -51,9 +51,18 @@ function updateOneEntity(DB, condition, data) {
   }
 }
 
-function deleteEntity(table, condition) {
+function deleteEntity(DB, condition) {
   try {
-    return getKnexClient()(table).where(...condition).del();
+    return DB.deleteMany(condition);
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
+function deleteOneEntity(DB, condition) {
+  try {
+    return DB.deleteOne(condition);
   } catch (e) {
     console.error(e);
     return null;
@@ -76,5 +85,6 @@ export {
   updateEntity,
   updateOneEntity,
   deleteEntity,
+  deleteOneEntity,
   findByNameEntity,
 };

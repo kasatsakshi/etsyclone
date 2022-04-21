@@ -99,7 +99,7 @@ function ProductPage() {
   const [cartLink, setCartLink] = React.useState(false);
 
   products.map((product) => {
-    if (parseInt(product.id) === parseInt(productId)) {
+    if (product._id === productId) {
       filterProduct = product;
       return filterProduct;
     }
