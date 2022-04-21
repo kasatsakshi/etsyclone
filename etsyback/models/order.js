@@ -10,13 +10,16 @@ const orderSchema = new mongoose.Schema({
     enum: ['ordered', 'inTransit', 'delivered', 'cancelled'],
   },
   orderId: {
-    type: Number,
+    type: String,
+    required: true,
   },
   orderedDate: {
     type: Date,
+    required: true,
   },
   userId: {
     type: String,
+    required: true,
   },
   createdAt: {
     type: Date,

@@ -60,7 +60,7 @@ function Cart() {
 
   const checkout = async (e) => {
     e.preventDefault();
-    await createOrder(dispatch, { orderItems: cartOrders, userId: user.id });
+    await createOrder(dispatch, { orderItems: cartOrders });
     navigate('/purchases');
   };
 

@@ -14,7 +14,7 @@ export const addToCart = async (dispatch, order) => {
 
 export const createOrder = async (dispatch, order) => {
   try {
-    const res = await publicRequest.post('/order', order);
+    const res = await userRequest.post('/order', order);
     await dispatch(createOrderSuccess(res.data));
   } catch (err) {
     console.log(err);

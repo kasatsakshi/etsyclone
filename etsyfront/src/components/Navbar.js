@@ -20,8 +20,7 @@ function Navbar() {
       if (e.key === 'Enter') {
         e.preventDefault();
         setSearchParam(e.target.value);
-        // this.props.onSelectParams(searchParam);
-        await searchProductsByName(dispatch, { searchParam });
+        await searchProductsByName(dispatch, { searchParam: e.target.value });
       }
     } catch (err) {
       console.log(err);

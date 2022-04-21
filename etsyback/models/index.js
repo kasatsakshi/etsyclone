@@ -1,5 +1,3 @@
-import { getKnexClient } from '../helpers/knex-client';
-
 function createEntity(DB) {
   try {
     return DB.save();
@@ -69,15 +67,6 @@ function deleteOneEntity(DB, condition) {
   }
 }
 
-async function findByNameEntity(table, filter, condition) {
-  try {
-    return getKnexClient()(table).select(...filter).where(...condition);
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
-}
-
 export {
   createEntity,
   findEntity,
@@ -86,5 +75,4 @@ export {
   updateOneEntity,
   deleteEntity,
   deleteOneEntity,
-  findByNameEntity,
 };

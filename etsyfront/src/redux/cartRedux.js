@@ -20,6 +20,7 @@ const cartSlice = createSlice({
     createOrderSuccess: (state, action) => {
       state.isFetching = false;
       state.purchases = action.payload;
+      state.cartProducts = [];
     },
     createOrderFailure: (state) => {
       state.isFetching = false;

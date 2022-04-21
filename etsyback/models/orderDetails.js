@@ -6,7 +6,7 @@ const orderDetailsSchema = new mongoose.Schema({
     required: true,
   },
   orderId: {
-    type: Number,
+    type: String,
   },
   name: {
     type: String,

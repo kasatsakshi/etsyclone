@@ -36,9 +36,10 @@ export const deleteFavoriteProduct = async (dispatch, product) => {
   }
 };
 
-export const getUserFavorites = async (dispatch, user) => {
+export const getUserFavorites = async (dispatch) => {
   try {
     const res = await userRequest.get('/user/favorites');
+    console.log(res);
     dispatch(getUserFavoritesSuccess(res.data));
   } catch (err) {
     console.log(err);
@@ -48,9 +49,7 @@ export const getUserFavorites = async (dispatch, user) => {
 
 export const searchProductsByName = async (dispatch, data) => {
   try {
-    console.log(data.searchParam);
     const res = await publicRequest.get(`/product/search/${data.searchParam}`);
-    console.log(res.data);
     dispatch(getSearchProductByNameSuccess(res.data));
   } catch (err) {
     console.log(err);

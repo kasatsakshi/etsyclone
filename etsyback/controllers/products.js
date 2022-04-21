@@ -1,5 +1,5 @@
 import {
-  createEntity, findEntity, findOneEntity, findByNameEntity, deleteOneEntity,
+  createEntity, findEntity, findOneEntity, deleteOneEntity,
 } from '../models';
 import { decodeToken } from '../helpers/auth';
 import UserFavorites from '../models/userFavorites';
@@ -66,10 +66,9 @@ export async function getUserFavorites(req, res) {
 export async function searchProductsByName(req, res) {
   let products = [];
   if (req.params.name) {
-    const input = `%${req.params.name}%` || '';
-    products = await findByNameEntity('inventory', ['*'], ['name', 'LIKE', input]);
+    products = await findEntity(Inventory, { name: new RegExp(req.params.name, 'i') });
   } else {
-    products = await findEntity('inventory', ['*']);
+    products = await findEntity(Inventory, {});
   }
   return res.status(200).json(products);
 }
