@@ -84,11 +84,46 @@ router.post('/shop/create', passport.authenticate('jwt', { session: false }), cr
 router.post('/shop/product/create', passport.authenticate('jwt', { session: false }), createShopProduct);
 router.post('/shop/product/update', passport.authenticate('jwt', { session: false }), updateShopProduct);
 router.get('/shop/:shopId/categories', passport.authenticate('jwt', { session: false }), getShopCategories);
-router.get('/products', getProducts);
+router.get('/products', async (req, res) => {
+  makeRequest('product', req.body, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'System error, try again',
+      });
+    } else {
+      const { message, status } = results;
+      if (status !== 200) {
+        res.status(status).json({ message });
+      } else {
+        res.status(status).json(message);
+      }
+      res.end();
+    }
+  });
+});
 
 router.post('/product/favorite', passport.authenticate('jwt', { session: false }), favoriteProduct);
 router.post('/product/favorite/delete', passport.authenticate('jwt', { session: false }), deleteFavoriteProduct);
-router.get('/user/favorites', passport.authenticate('jwt', { session: false }), getUserFavorites);
+router.get('/user/favorites', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  makeRequest('favorite', token, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'System error, try again',
+      });
+    } else {
+      const { message, status } = results;
+      if (status !== 200) {
+        res.status(status).json({ message });
+      } else {
+        res.status(status).json(message);
+      }
+      res.end();
+    }
+  });
+});
 
 router.get('/product/search/:name', searchProductsByName);
 

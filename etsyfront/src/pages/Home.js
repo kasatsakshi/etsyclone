@@ -44,7 +44,7 @@ function Home() {
     firstName = 'Guest';
   }
 
-  useEffect(() => {
+  useEffect(async () => {
     const fetchProducts = async () => {
       try {
         await getProducts(dispatch);
@@ -59,9 +59,9 @@ function Home() {
         console.log(err);
       }
     };
-    fetchProducts();
+    await fetchProducts();
     if (localStorage.getItem('token')) {
-      fetchFavorites();
+      await fetchFavorites();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

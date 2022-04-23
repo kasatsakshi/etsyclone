@@ -17,6 +17,16 @@ const topicsToCreate = [{
   partitions: 1,
   replicationFactor: 1,
 },
+{
+  topic: 'product',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
+  topic: 'favorite',
+  partitions: 1,
+  replicationFactor: 1,
+},
 ];
 
 client.createTopics(topicsToCreate, (error, result) => {

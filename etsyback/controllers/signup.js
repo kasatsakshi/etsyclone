@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { createEntity, findOneEntity } from '../models';
 import { isValidEmail } from '../helpers/validator';
 import User from '../models/users';
@@ -56,6 +57,11 @@ export default async function signup(req, res) {
   if (findUser) {
     return res.status(400).json({ message: 'Email Address already exists' });
   }
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(trimmedInput.password, salt);
+  trimmedInput.password = hashedPassword;
+
   const userData = new User({
     ...trimmedInput,
     userLevel: 0,

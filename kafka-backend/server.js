@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 
-import { ConnectionProvider } from "./kafka/connection.js";
+import { ConnectionProvider } from './kafka/connection';
 import config from '../etsyback/config';
 
 import { login } from './services/login';
 import { user } from './services/user';
 import { shop } from './services/shop';
+import { getProducts, getUserFavorites } from './services/product';
 
 // Connect to MongoDB
 mongoose
@@ -28,7 +29,7 @@ function handleTopicRequest(topicName, fname) {
     const data = JSON.parse(message.value);
 
     fname(data.data, (err, res) => {
-      console.log(`after handle: ${res}`);
+      // console.log(`after handle: ${res}`);
       const payloads = [
         {
           topic: data.replyTo,
@@ -50,3 +51,5 @@ function handleTopicRequest(topicName, fname) {
 handleTopicRequest("login", login);
 handleTopicRequest("user", user);
 handleTopicRequest("shop", shop);
+handleTopicRequest("product", getProducts);
+handleTopicRequest("favorite", getUserFavorites);
