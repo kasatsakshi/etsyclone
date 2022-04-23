@@ -1,5 +1,5 @@
 import {
-  findEntity, findOneEntity,
+  findEntity, findOneEntity, createEntity, deleteOneEntity,
 } from '../models';
 import Inventory from '../models/inventory';
 import OrderDetails from '../models/orderDetails';
@@ -58,6 +58,42 @@ export const searchProductsByName = async (input, callback) => {
 
   const response = {
     message: products,
+    status: 200,
+  }
+
+  callback(null, response);
+}
+
+export const favoriteProduct = async (inputPayload, callback) => {
+  const { token, input } = inputPayload
+  const { inventoryId } = input;
+  const payload = await decodeToken(token);
+  const userId = payload.data.id;
+  const userFavorites = new UserFavorites({
+    inventoryId,
+    userId,
+  });
+  await createEntity(userFavorites);
+  const findFavorites = await findEntity(UserFavorites, { userId });
+  const response = {
+    message: findFavorites,
+    status: 200,
+  }
+
+  callback(null, response);
+}
+
+export const deleteFavoriteProduct = async (inputPayload, callback) => {
+  const { token, input } = inputPayload
+  const payload = await decodeToken(token);
+  const { inventoryId } = input;
+  const userId = payload.data.id;
+
+  await deleteOneEntity(UserFavorites, { userId, inventoryId });
+  const findFavorites = await findEntity(UserFavorites, { userId });
+
+  const response = {
+    message: findFavorites,
     status: 200,
   }
 

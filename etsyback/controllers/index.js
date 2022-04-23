@@ -4,10 +4,6 @@ import { update } from './user';
 import {
   createShopProduct, createShop, isShopNameAvailable, updateShopProduct,
 } from './shop';
-import {
-  deleteFavoriteProduct, favoriteProduct,
-} from './products';
-import { createOrder } from './order';
 
 import passport from '../helpers/passport';
 import { makeRequest } from '../kafka/client';
@@ -167,8 +163,53 @@ router.get('/products', async (req, res) => {
   });
 });
 
-router.post('/product/favorite', passport.authenticate('jwt', { session: false }), favoriteProduct);
-router.post('/product/favorite/delete', passport.authenticate('jwt', { session: false }), deleteFavoriteProduct);
+router.post('/product/favorite', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  const request = {
+    token,
+    input: req.body,
+  };
+  makeRequest('favoriteProduct', request, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'System error, try again',
+      });
+    } else {
+      const { message, status } = results;
+      if (status !== 200) {
+        res.status(status).json({ message });
+      } else {
+        res.status(status).json(message);
+      }
+      res.end();
+    }
+  });
+});
+
+router.post('/product/favorite/delete', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  const request = {
+    token,
+    input: req.body,
+  };
+  makeRequest('deleteFavoriteProduct', request, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'System error, try again',
+      });
+    } else {
+      const { message, status } = results;
+      if (status !== 200) {
+        res.status(status).json({ message });
+      } else {
+        res.status(status).json(message);
+      }
+      res.end();
+    }
+  });
+});
 
 router.get('/user/favorites', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const token = req.headers.authorization;
@@ -209,7 +250,30 @@ router.get('/product/search/:name', async (req, res) => {
   });
 });
 
-router.post('/order', passport.authenticate('jwt', { session: false }), createOrder);
+router.post('/order', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  const request = {
+    token,
+    input: req.body,
+  };
+  makeRequest('createOrder', request, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'System error, try again',
+      });
+    } else {
+      const { message, status } = results;
+      if (status !== 200) {
+        res.status(status).json({ message });
+      } else {
+        res.status(status).json(message);
+      }
+      res.end();
+    }
+  });
+});
+
 router.get('/orders', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const token = req.headers.authorization;
   makeRequest('order', token, (err, results) => {

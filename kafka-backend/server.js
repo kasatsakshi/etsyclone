@@ -6,8 +6,8 @@ import config from '../etsyback/config';
 import { login } from './services/login';
 import { updateCurrency, user } from './services/user';
 import { getShopCategories, getShop } from './services/shop';
-import { getProducts, getUserFavorites, searchProductsByName } from './services/product';
-import { getOrders } from './services/order';
+import { deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites, searchProductsByName } from './services/product';
+import { createOrder, getOrders } from './services/order';
 import { signup } from './services/signup';
 
 // Connect to MongoDB
@@ -60,3 +60,6 @@ handleTopicRequest("favorite", getUserFavorites);
 handleTopicRequest("order", getOrders);
 handleTopicRequest("category", getShopCategories);
 handleTopicRequest("productSearch", searchProductsByName);
+handleTopicRequest("favoriteProduct", favoriteProduct);
+handleTopicRequest("deleteFavoriteProduct", deleteFavoriteProduct);
+handleTopicRequest("createOrder", createOrder);
