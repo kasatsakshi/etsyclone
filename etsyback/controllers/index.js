@@ -1,5 +1,5 @@
 import express from 'express';
-import login from './login';
+// import login from './login';
 import signup from './signup';
 import upload from './upload';
 import { user, update, updateCurrency } from './user';
@@ -12,11 +12,34 @@ import {
 import { createOrder, getOrders } from './order';
 
 import passport from '../helpers/passport';
+import { makeRequest } from '../kafka/client';
 
 const router = new express.Router();
 
+router.post('/login', async (req, res) => {
+  makeRequest('login', req.body, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.json({
+        status: 'Error',
+        msg: 'System error, try again',
+      });
+    } else {
+      const { token, message, status } = results;
+      res.set({
+        'X-Auth-Token': token,
+      });
+      if (status !== 200) {
+        res.status(status).json({ message });
+      } else {
+        res.status(status).json(message);
+      }
+      res.end();
+    }
+  });
+});
+
 router.post('/signup', signup);
-router.post('/login', login);
 router.get('/user', passport.authenticate('jwt', { session: false }), user);
 router.put('/user/update', passport.authenticate('jwt', { session: false }), update);
 router.put('/user/update/currency', passport.authenticate('jwt', { session: false }), updateCurrency);

@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import { findOneEntity, updateOneEntity } from '../models';
-import { isValidEmail } from '../helpers/validator';
+import { isValidEmail } from '../../etsyback/helpers/validator';
 import User from '../models/users';
-import { signToken } from '../helpers/auth';
+import { signToken } from '../../etsyback/helpers/auth';
 
 function cleanInput(input) {
   const {
@@ -38,43 +38,60 @@ async function validateInput(input) {
   return null;
 }
 
-export default async function login(req, res) {
-  const input = req.body;
+export const login = async (input, callback) => {
+	console.log("Incoming data => ", input);
+
   const trimmedInput = cleanInput(input);
   const inputError = await validateInput(trimmedInput);
 
   if (inputError) {
-    return res.status(400).json({ message: inputError });
+    const response = {
+      message: inputError,
+      status: 400,
+    }
+    callback(null, response);
   }
 
   const findUser = await findOneEntity(User, { email: trimmedInput.email });
+
   // Check if this user email exists
   if (!findUser) {
     console.error('Account does not exists!');
     // Adding the below message so someone cannot create fake accounts
-    return res.status(400).json({ message: 'Invalid Username and Password' });
+    const response = {
+      message: 'Invalid Username and Password',
+      status: 400,
+    }
+    callback(null, response);
   }
 
   const isValidPassword = await bcrypt.compare(trimmedInput.password, findUser.password);
   if (!isValidPassword) {
     console.error('Invalid Username and Password');
-    return res.status(400).json({ message: 'Invalid Username and Password' });
+    const response = {
+      message: 'Invalid Username and Password',
+      status: 400,
+    }
+    callback(null, response);
+  } else {
+    await updateOneEntity(
+      User,
+      { _id: findUser._id },
+      { lastLoginAt: new Date(), updatedAt: new Date() },
+    );
+  
+    const data = ({ ...findUser }._doc);
+    delete data.password;
+  
+    // Generate JWT token
+    const token = await signToken(findUser);
+  
+    const response = {
+      token,
+      message: data,
+      status: 200,
+    }
+  
+    callback(null, response);
   }
-
-  await updateOneEntity(
-    User,
-    { _id: findUser._id },
-    { lastLoginAt: new Date(), updatedAt: new Date() },
-  );
-
-  const response = ({ ...findUser }._doc);
-  delete response.password;
-
-  // Generate JWT token
-  const token = await signToken(findUser);
-
-  res.set({
-    'X-Auth-Token': token,
-  });
-  return res.status(200).json(response);
-}
+};
