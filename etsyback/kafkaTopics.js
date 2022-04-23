@@ -72,6 +72,26 @@ const topicsToCreate = [{
   partitions: 1,
   replicationFactor: 1,
 },
+{
+  topic: 'isShopNameAvailable',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
+  topic: 'createShop',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
+  topic: 'createShopProduct',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
+  topic: 'updateShopProduct',
+  partitions: 1,
+  replicationFactor: 1,
+},
 ];
 
 client.createTopics(topicsToCreate, (error, result) => {

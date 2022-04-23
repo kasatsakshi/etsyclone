@@ -5,97 +5,10 @@ import {
   findEntity, findOneEntity,
   createEntity, updateOneEntity,
 } from '../models';
-import { decodeToken } from '../helpers/auth';
 import Shop from '../models/shop';
 import User from '../models/users';
 import Inventory from '../models/inventory';
 import Category from '../models/category';
-
-export async function createShop(req, res) {
-  // Check incoming validation
-  const token = req.headers.authorization;
-  const payload = await decodeToken(token);
-  const userId = payload.data.id;
-  const form = new formidable.IncomingForm();
-  form.multiples = true;
-  form.maxFileSize = 50 * 1024 * 1024; // 5MB
-  let avatarUrl = null;
-
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json({ message: 'Unable to parse Input' });
-    }
-    if (files.avatarUrl) {
-      const tempFilePath = files.avatarUrl.filepath;
-      const fileName = `image-${Date.now()}${path.extname(files.avatarUrl.originalFilename)}`;
-      const uploadedFolder = './public/shop/';
-
-      if (!fs.existsSync(uploadedFolder)) {
-        fs.mkdirSync(uploadedFolder, { recursive: true });
-      }
-
-      fs.readFile(tempFilePath, (err, data) => {
-        fs.writeFile(uploadedFolder + fileName, data, () => {
-          fs.unlink(tempFilePath, (err) => {
-            if (err) {
-              console.error(err);
-            } else {
-              console.log('Image uploaded successfully');
-            }
-          });
-        });
-      });
-      const [first, ...rest] = (uploadedFolder + fileName).split('/');
-      avatarUrl = rest.join('/');
-    }
-    const {
-      name, description, address,
-    } = fields;
-    const user = await findOneEntity(User, { _id: userId });
-    // Check if this user id exists
-    if (!user) {
-      return res.status(400).json({ message: "User doesn't exists" });
-    }
-
-    const shop = await findOneEntity(Shop, { name });
-    if (shop) {
-      return res.status(400).json({ message: 'Shop name is taken' });
-    }
-
-    const shopInput = new Shop({
-      name,
-      description,
-      avatarUrl,
-      userId,
-      address,
-    });
-    const createdShop = await createEntity(shopInput);
-
-    const response = {
-      user,
-      shop: createdShop,
-      inventory: [],
-    };
-    return res.status(200).json(response);
-  });
-}
-
-export async function isShopNameAvailable(req, res) {
-  const { name } = req.body;
-
-  if (!name) {
-    return res.status(400).json({ message: 'shop name is missing' });
-  }
-
-  const findShop = await findOneEntity(Shop, { name });
-
-  if (findShop) {
-    return res.status(200).json({ message: false });
-  }
-
-  return res.status(200).json({ message: true });
-}
 
 export async function createShopProduct(req, res) {
   // Check incoming validation

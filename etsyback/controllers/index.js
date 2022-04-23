@@ -1,8 +1,9 @@
 import express from 'express';
+import formidable from 'formidable';
 import upload from './upload';
 import { update } from './user';
 import {
-  createShopProduct, createShop, isShopNameAvailable, updateShopProduct,
+  createShopProduct, updateShopProduct,
 } from './shop';
 
 import passport from '../helpers/passport';
@@ -120,8 +121,64 @@ router.get('/shop', passport.authenticate('jwt', { session: false }), async (req
   });
 });
 
-router.post('/shop/name', passport.authenticate('jwt', { session: false }), isShopNameAvailable);
-router.post('/shop/create', passport.authenticate('jwt', { session: false }), createShop);
+router.post('/shop/name', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  makeRequest('isShopNameAvailable', req.body, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'System error, try again',
+      });
+    } else {
+      const { message, status } = results;
+      if (status !== 200) {
+        res.status(status).json({ message });
+      } else {
+        res.status(status).json(message);
+      }
+      res.end();
+    }
+  });
+});
+router.post('/shop/create', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  const form = new formidable.IncomingForm();
+  form.multiples = true;
+  form.maxFileSize = 50 * 1024 * 1024; // 5MB
+  const input = {};
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        message: 'Unable to parse Input',
+      });
+    }
+
+    input.fields = fields;
+    input.files = files;
+
+    const request = {
+      token,
+      input,
+    };
+
+    makeRequest('createShop', request, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({
+          message: 'System error, try again',
+        });
+      } else {
+        const { message, status } = results;
+        if (status !== 200) {
+          res.status(status).json({ message });
+        } else {
+          res.status(status).json(message);
+        }
+        res.end();
+      }
+    });
+  });
+});
 router.post('/shop/product/create', passport.authenticate('jwt', { session: false }), createShopProduct);
 router.post('/shop/product/update', passport.authenticate('jwt', { session: false }), updateShopProduct);
 

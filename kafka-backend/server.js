@@ -5,7 +5,7 @@ import config from '../etsyback/config';
 
 import { login } from './services/login';
 import { updateCurrency, user } from './services/user';
-import { getShopCategories, getShop } from './services/shop';
+import { getShopCategories, getShop, isShopNameAvailable, createShop } from './services/shop';
 import { deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites, searchProductsByName } from './services/product';
 import { createOrder, getOrders } from './services/order';
 import { signup } from './services/signup';
@@ -63,3 +63,5 @@ handleTopicRequest("productSearch", searchProductsByName);
 handleTopicRequest("favoriteProduct", favoriteProduct);
 handleTopicRequest("deleteFavoriteProduct", deleteFavoriteProduct);
 handleTopicRequest("createOrder", createOrder);
+handleTopicRequest("isShopNameAvailable", isShopNameAvailable)
+handleTopicRequest("createShop", createShop);
