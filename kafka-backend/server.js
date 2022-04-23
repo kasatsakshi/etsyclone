@@ -5,8 +5,9 @@ import config from '../etsyback/config';
 
 import { login } from './services/login';
 import { user } from './services/user';
-import { shop } from './services/shop';
-import { getProducts, getUserFavorites } from './services/product';
+import { getShopCategories, getShop } from './services/shop';
+import { getProducts, getUserFavorites, searchProductsByName } from './services/product';
+import { getOrders } from './services/order';
 
 // Connect to MongoDB
 mongoose
@@ -25,7 +26,7 @@ function handleTopicRequest(topicName, fname) {
   console.log('kafka server is running ');
   consumer.on('message', (message) => {
     console.log(`message received for ${topicName}`);
-    console.log(`Incoming message: ${JSON.stringify(message.value)}`);
+    // console.log(`Incoming message: ${JSON.stringify(message.value)}`);
     const data = JSON.parse(message.value);
 
     fname(data.data, (err, res) => {
@@ -50,6 +51,9 @@ function handleTopicRequest(topicName, fname) {
   
 handleTopicRequest("login", login);
 handleTopicRequest("user", user);
-handleTopicRequest("shop", shop);
+handleTopicRequest("shop", getShop);
 handleTopicRequest("product", getProducts);
 handleTopicRequest("favorite", getUserFavorites);
+handleTopicRequest("order", getOrders);
+handleTopicRequest("category", getShopCategories);
+handleTopicRequest("productSearch", searchProductsByName);

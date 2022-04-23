@@ -10,7 +10,6 @@ import Shop from '../models/shop';
 import User from '../models/users';
 import Inventory from '../models/inventory';
 import Category from '../models/category';
-import OrderDetails from '../models/orderDetails';
 
 export async function createShop(req, res) {
   // Check incoming validation
@@ -82,46 +81,6 @@ export async function createShop(req, res) {
   });
 }
 
-export async function getShop(req, res) {
-  const token = req.headers.authorization;
-  const payload = await decodeToken(token);
-  const id = payload.data.id;
-
-  if (!id) {
-    return res.status(400).json({ message: 'user id is missing' });
-  }
-
-  const user = await findOneEntity(User, { _id: id });
-  // Check if this user exists
-  if (!user) {
-    console.error('User does not exists!');
-    return res.status(400).json({ message: 'User does not exists' });
-  }
-
-  const shop = await findOneEntity(Shop, { userId: id });
-  let inventory = [];
-  if (shop) {
-    inventory = await findEntity(Inventory, { shopId: shop._id });
-  }
-
-  const response = {
-    user,
-    shop,
-    inventory,
-  };
-
-  let total = 0;
-  await Promise.all(
-    inventory.map(async (item) => {
-      const temp = await findEntity(OrderDetails, { inventoryId: item._id }, ['orderQuantity']);
-      total += temp.length;
-    }),
-  );
-  response.totalSales = total;
-
-  return res.status(200).json(response);
-}
-
 export async function isShopNameAvailable(req, res) {
   const { name } = req.body;
 
@@ -136,28 +95,6 @@ export async function isShopNameAvailable(req, res) {
   }
 
   return res.status(200).json({ message: true });
-}
-
-export async function getShopCategories(req, res) {
-  const { shopId } = req.params;
-
-  if (!shopId) {
-    return res.status(400).json({ message: 'shop id is missing' });
-  }
-
-  const shop = await findOneEntity(Shop, { _id: shopId });
-  if (!shop) {
-    console.error('Shop does not exists!');
-    return res.status(400).json({ message: 'Shop does not exists' });
-  }
-
-  const defaultCategories = ['Art', 'Clothing', 'Jewellery', 'Entertainment', 'Home Decor'];
-  const customCategories = await findEntity(Category, { shopId });
-  const response = {
-    default: defaultCategories,
-    custom: customCategories,
-  };
-  return res.status(200).json(response);
 }
 
 export async function createShopProduct(req, res) {

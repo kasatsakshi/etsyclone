@@ -140,11 +140,11 @@ function ShopHome() {
   const handleOpenEditShop = () => setEditShop(true);
   const handleCloseEditShop = () => setEditShop(false);
 
-  useEffect(() => {
+  useEffect(async () => {
     const fetchShops = async () => {
       try {
         if (user) {
-          getShop(dispatch);
+          await getShop(dispatch);
         }
       } catch (err) {
         console.log(err);
@@ -153,14 +153,14 @@ function ShopHome() {
     const fetchShopCategories = async () => {
       try {
         if (user) {
-          getShopCategories(dispatch, { id: shopInfo.shop._id });
+          await getShopCategories(dispatch, { id: shopInfo.shop._id });
         }
       } catch (err) {
         console.log(err);
       }
     };
-    fetchShops();
-    fetchShopCategories();
+    await fetchShops();
+    await fetchShopCategories();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

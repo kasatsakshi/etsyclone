@@ -46,3 +46,20 @@ export const getUserFavorites = async (token, callback) => {
 
   callback(null, response);
 };
+
+export const searchProductsByName = async (input, callback) => {
+  const searchParam = input.name;
+  let products = [];
+  if (searchParam) {
+    products = await findEntity(Inventory, { name: new RegExp(searchParam, 'i') });
+  } else {
+    products = await findEntity(Inventory, {});
+  }
+
+  const response = {
+    message: products,
+    status: 200,
+  }
+
+  callback(null, response);
+}

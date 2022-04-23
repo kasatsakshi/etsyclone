@@ -3,6 +3,11 @@ import kafka from 'kafka-node';
 const client = new kafka.KafkaClient('localhost:2181');
 
 const topicsToCreate = [{
+  topic: 'response_topic',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
   topic: 'login',
   partitions: 1,
   replicationFactor: 1,
@@ -24,6 +29,21 @@ const topicsToCreate = [{
 },
 {
   topic: 'favorite',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
+  topic: 'order',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
+  topic: 'category',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
+  topic: 'productSearch',
   partitions: 1,
   replicationFactor: 1,
 },

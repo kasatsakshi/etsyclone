@@ -1,67 +1,11 @@
 import formidable from 'formidable';
 import path from 'path';
 import fs from 'fs';
-import { isValidEmail } from '../helpers/validator';
 import {
   findOneEntity, updateOneEntity,
 } from '../models';
 import { decodeToken } from '../helpers/auth';
 import User from '../models/users';
-
-function cleanInput(input) {
-  const {
-    email,
-  } = input;
-
-  input.email = email.trim();
-
-  return input;
-}
-
-async function validateInput(input) {
-  const {
-    email,
-  } = input;
-
-  let errorMsg;
-  if (!email) {
-    errorMsg = 'Email is missing';
-  }
-
-  if (!isValidEmail(email)) {
-    errorMsg = 'Email is in incorrect format';
-  }
-
-  if (errorMsg) {
-    return errorMsg;
-  }
-
-  return null;
-}
-
-export async function user(req, res) {
-  const token = req.headers.authorization;
-  const payload = await decodeToken(token);
-  const input = payload.data;
-  const trimmedInput = cleanInput(input);
-  const inputError = await validateInput(trimmedInput);
-
-  if (inputError) {
-    return res.status(400).json({ message: inputError });
-  }
-
-  const findUser = await findOneEntity(User, { email: trimmedInput.email });
-  // Check if this user email exists
-  if (!findUser) {
-    console.error('Email does not exists!');
-    // Adding the below message so someone cannot create fake accounts
-    return res.status(400).json({ message: 'User does not exists' });
-  }
-
-  const response = ({ ...findUser }._doc);
-  delete response.password;
-  return res.status(200).json(response);
-}
 
 export async function updateCurrency(req, res) {
   const input = req.body;

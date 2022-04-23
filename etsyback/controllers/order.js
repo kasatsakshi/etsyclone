@@ -71,29 +71,3 @@ export async function createOrder(req, res) {
   );
   return res.status(200).json(response);
 }
-
-export async function getOrders(req, res) {
-  const token = req.headers.authorization;
-  const payload = await decodeToken(token);
-  const userId = payload.data.id;
-  const findUser = await findOneEntity(User, { _id: userId });
-  // Check if this user  exists
-  if (!findUser) {
-    console.error('User does not exists!');
-    return res.status(400).json({ message: 'User does not exists' });
-  }
-  const response = [];
-  const orders = await findEntity(Order, { userId });
-
-  await Promise.all(
-    orders.map(async (order) => {
-      const item = {};
-      item.order = order;
-      const orderDetails = await findEntity(OrderDetails, { orderId: order.orderId });
-      item.orderDetails = orderDetails;
-      response.push(item);
-    }),
-  );
-
-  return res.status(200).json(response);
-}

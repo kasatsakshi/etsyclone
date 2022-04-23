@@ -6,8 +6,9 @@ import Shop from '../models/shop';
 import User from '../models/users';
 import Inventory from '../models/inventory';
 import OrderDetails from '../models/orderDetails';
+import Category from '../models/category';
 
-export const shop = async (token, callback) => {
+export const getShop = async (token, callback) => {
  const payload = await decodeToken(token);
  const id = payload.data.id;
 
@@ -58,5 +59,32 @@ export const shop = async (token, callback) => {
   }
 
   callback(null, response);
+};
 
-}
+export const getShopCategories = async (input, callback) => {
+  const { shopId } = input;
+
+  if (!shopId) {
+    return res.status(400).json({ message: 'shop id is missing' });
+  }
+
+  const shop = await findOneEntity(Shop, { _id: shopId });
+  if (!shop) {
+    console.error('Shop does not exists!');
+    return res.status(400).json({ message: 'Shop does not exists' });
+  }
+
+  const defaultCategories = ['Art', 'Clothing', 'Jewellery', 'Entertainment', 'Home Decor'];
+  const customCategories = await findEntity(Category, { shopId });
+  const data = {
+    default: defaultCategories,
+    custom: customCategories,
+  };
+
+  const response = {
+    message: data,
+    status: 200,
+  }
+
+  callback(null, response);
+};
