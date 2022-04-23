@@ -94,7 +94,7 @@ function Signup() {
           <Button onClick={handleClick} disabled={isFetching}>
             Signup
           </Button>
-          {error && <Error>Something went wrong! Try again</Error>}
+          {error ? <Error>Something went wrong! Try again</Error> : <p />}
           <Link className="signup__link" to="/">Take me to home</Link>
           <Link className="signup__link" to="/login">Login</Link>
         </Form>

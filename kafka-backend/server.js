@@ -4,10 +4,11 @@ import { ConnectionProvider } from './kafka/connection';
 import config from '../etsyback/config';
 
 import { login } from './services/login';
-import { user } from './services/user';
+import { updateCurrency, user } from './services/user';
 import { getShopCategories, getShop } from './services/shop';
 import { getProducts, getUserFavorites, searchProductsByName } from './services/product';
 import { getOrders } from './services/order';
+import { signup } from './services/signup';
 
 // Connect to MongoDB
 mongoose
@@ -48,9 +49,11 @@ function handleTopicRequest(topicName, fname) {
     });
   });
 }
-  
+
+handleTopicRequest("signup", signup);
 handleTopicRequest("login", login);
 handleTopicRequest("user", user);
+handleTopicRequest("updateCurrency", updateCurrency);
 handleTopicRequest("shop", getShop);
 handleTopicRequest("product", getProducts);
 handleTopicRequest("favorite", getUserFavorites);

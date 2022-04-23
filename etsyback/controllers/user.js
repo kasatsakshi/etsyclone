@@ -7,29 +7,6 @@ import {
 import { decodeToken } from '../helpers/auth';
 import User from '../models/users';
 
-export async function updateCurrency(req, res) {
-  const input = req.body;
-  const token = req.headers.authorization;
-  const payload = await decodeToken(token);
-  const { id, email } = payload.data;
-  const { currency } = input;
-
-  const findUser = await findOneEntity(User, { email });
-  // Check if this user exists
-  if (!findUser) {
-    console.error('User does not exists!');
-    return res.status(400).json({ message: 'User does not exists' });
-  }
-
-  await updateOneEntity(User, { _id: id }, { currency });
-
-  const findUpdatedUser = await findOneEntity(User, { _id: id });
-  const response = ({ ...findUpdatedUser }._doc);
-  delete response.password;
-
-  return res.status(200).json(response);
-}
-
 export async function update(req, res) {
   const token = req.headers.authorization;
   const payload = await decodeToken(token);

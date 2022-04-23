@@ -13,6 +13,11 @@ const topicsToCreate = [{
   replicationFactor: 1,
 },
 {
+  topic: 'signup',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
   topic: 'user',
   partitions: 1,
   replicationFactor: 1,
@@ -44,6 +49,11 @@ const topicsToCreate = [{
 },
 {
   topic: 'productSearch',
+  partitions: 1,
+  replicationFactor: 1,
+},
+{
+  topic: 'updateCurrency',
   partitions: 1,
   replicationFactor: 1,
 },

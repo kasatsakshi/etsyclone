@@ -64,15 +64,4 @@ const userInfoSchema = new mongoose.Schema({
   },
 });
 
-/* for hashing password */
-userInfoSchema.pre('save', async () => {
-  const user = this;
-  if (!user.isModified('password')) {
-    return;
-  }
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(user.password, salt);
-  user.password = hashedPassword;
-});
-
 export default mongoose.model('user', userInfoSchema);

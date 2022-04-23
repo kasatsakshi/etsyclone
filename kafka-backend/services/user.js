@@ -1,6 +1,7 @@
 import { isValidEmail } from '../helpers/validator';
 import {
   findOneEntity,
+  updateOneEntity,
 } from '../models';
 import { decodeToken } from '../helpers/auth';
 import User from '../models/users';
@@ -70,5 +71,35 @@ export const user = async (token, callback) => {
     status: 200,
   }
   callback(null, response);
-
 }
+
+export const updateCurrency = async(inputPayload, callback) => {
+  const { token, input } = inputPayload
+  const payload = await decodeToken(token);
+  const { id, email } = payload.data;
+  const { currency } = input;
+
+  const findUser = await findOneEntity(User, { email });
+  // Check if this user exists
+  if (!findUser) {
+    console.error('User does not exists!');
+    const response = {
+      message: 'User does not exists',
+      status: 400,
+    }
+    callback(null, response);
+  }
+
+  await updateOneEntity(User, { _id: id }, { currency });
+
+  const findUpdatedUser = await findOneEntity(User, { _id: id });
+  const data = ({ ...findUpdatedUser }._doc);
+  delete data.password;
+
+  const response = {
+    message: data,
+    status: 200,
+  }
+
+  callback(null, response);
+};

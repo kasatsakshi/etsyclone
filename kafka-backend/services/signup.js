@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { createEntity, findOneEntity } from '../models';
 import { isValidEmail } from '../helpers/validator';
 import User from '../models/users';
+import { signToken } from '../helpers/auth';
 
 function cleanInput(input) {
   const {
@@ -41,21 +42,28 @@ async function validateInput(input) {
 
   return null;
 }
-
-export default async function signup(req, res) {
-  const input = req.body;
+export const signup = async(input, callback) => {
   const trimmedInput = cleanInput(input);
   const inputError = await validateInput(trimmedInput);
 
   if (inputError) {
-    return res.status(400).json({ message: inputError });
+    const response = {
+      message: inputError,
+      status: 400,
+    }
+    callback(null, response);
   }
 
   const findUser = await findOneEntity(User, { email: trimmedInput.email });
 
   // Check if this user email exists
   if (findUser) {
-    return res.status(400).json({ message: 'Email Address already exists' });
+    console.error('Email Address already exists');
+    const response = {
+      message: 'Email Address already exists',
+      status: 400,
+    }
+    callback(null, response);
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -71,11 +79,25 @@ export default async function signup(req, res) {
   const createdUser = await createEntity(userData);
 
   if (!createdUser) {
-    return res.status(500).json({ message: 'Signup failed. Try again' });
+    console.error('Signup failed. Try again');
+    const response = {
+      message: 'Signup failed. Try again',
+      status: 500,
+    }
+    callback(null, response);
   }
 
-  const response = ({ ...createdUser }._doc);
-  delete response.password;
+  const data = ({ ...createdUser }._doc);
+  delete data.password;
 
-  return res.status(200).json(response);
-}
+  // Generate JWT token
+  const token = await signToken(createdUser);
+  
+  const response = {
+    token,
+    message: data,
+    status: 200,
+  }
+ 
+  callback(null, response);
+};
