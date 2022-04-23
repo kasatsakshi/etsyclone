@@ -1,10 +1,9 @@
 import express from 'express';
-// import login from './login';
 import signup from './signup';
 import upload from './upload';
-import { user, update, updateCurrency } from './user';
+import { update, updateCurrency } from './user';
 import {
-  createShopProduct, createShop, getShop, isShopNameAvailable, getShopCategories, updateShopProduct,
+  createShopProduct, createShop, isShopNameAvailable, getShopCategories, updateShopProduct,
 } from './shop';
 import {
   deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites, searchProductsByName,
@@ -20,9 +19,8 @@ router.post('/login', async (req, res) => {
   makeRequest('login', req.body, (err, results) => {
     if (err) {
       console.error(err);
-      res.json({
-        status: 'Error',
-        msg: 'System error, try again',
+      res.status(500).json({
+        message: 'System error, try again',
       });
     } else {
       const { token, message, status } = results;
@@ -40,11 +38,47 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/signup', signup);
-router.get('/user', passport.authenticate('jwt', { session: false }), user);
+router.get('/user', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  makeRequest('user', token, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'System error, try again',
+      });
+    } else {
+      const { message, status } = results;
+      if (status !== 200) {
+        res.status(status).json({ message });
+      } else {
+        res.status(status).json(message);
+      }
+      res.end();
+    }
+  });
+});
 router.put('/user/update', passport.authenticate('jwt', { session: false }), update);
 router.put('/user/update/currency', passport.authenticate('jwt', { session: false }), updateCurrency);
 router.post('/upload', passport.authenticate('jwt', { session: false }), upload);
-router.get('/shop', passport.authenticate('jwt', { session: false }), getShop);
+router.get('/shop', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  makeRequest('shop', token, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'System error, try again',
+      });
+    } else {
+      const { message, status } = results;
+      if (status !== 200) {
+        res.status(status).json({ message });
+      } else {
+        res.status(status).json(message);
+      }
+      res.end();
+    }
+  });
+});
 router.post('/shop/name', passport.authenticate('jwt', { session: false }), isShopNameAvailable);
 router.post('/shop/create', passport.authenticate('jwt', { session: false }), createShop);
 router.post('/shop/product/create', passport.authenticate('jwt', { session: false }), createShopProduct);

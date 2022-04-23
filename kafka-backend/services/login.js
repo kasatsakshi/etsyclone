@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import { findOneEntity, updateOneEntity } from '../models';
-import { isValidEmail } from '../../etsyback/helpers/validator';
+import { isValidEmail } from '../helpers/validator';
 import User from '../models/users';
-import { signToken } from '../../etsyback/helpers/auth';
+import { signToken } from '../helpers/auth';
 
 function cleanInput(input) {
   const {
@@ -39,8 +39,6 @@ async function validateInput(input) {
 }
 
 export const login = async (input, callback) => {
-	console.log("Incoming data => ", input);
-
   const trimmedInput = cleanInput(input);
   const inputError = await validateInput(trimmedInput);
 

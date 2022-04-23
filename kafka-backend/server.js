@@ -4,6 +4,8 @@ import { ConnectionProvider } from "./kafka/connection.js";
 import config from '../etsyback/config';
 
 import { login } from './services/login';
+import { user } from './services/user';
+import { shop } from './services/shop';
 
 // Connect to MongoDB
 mongoose
@@ -46,3 +48,5 @@ function handleTopicRequest(topicName, fname) {
 }
   
 handleTopicRequest("login", login);
+handleTopicRequest("user", user);
+handleTopicRequest("shop", shop);

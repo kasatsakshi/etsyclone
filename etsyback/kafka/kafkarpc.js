@@ -21,8 +21,7 @@ export class KafkaRPC {
     // create a timeout for what should happen if we don't get a response
     const tId = setTimeout(
       (corrId) => {
-        // if this ever gets called we didn't get a response in a
-        // timely fashion
+        // if this ever gets called we didn't get a response in a timely fashion
         callback(new Error(`timeout  + ${corrId}`));
         // delete the entry from hash
         delete self.requests[corrId];
@@ -69,7 +68,6 @@ export class KafkaRPC {
     // subscribe to messages
     const consumer = self.connection.getConsumer('response_topic');
     consumer.on('message', (message) => {
-      console.log('msg received');
       const data = JSON.parse(message.value);
       // get the correlationId
       const correlationId = data.correlationId;
