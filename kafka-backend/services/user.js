@@ -103,3 +103,57 @@ export const updateCurrency = async(inputPayload, callback) => {
 
   callback(null, response);
 };
+
+export const updateUser = async(inputPayload, callback) => {
+  const { input, token } = inputPayload;
+  const payload = await decodeToken(token);
+  const userId = payload.data.id;
+  const { files, fields } = input;
+
+  const {
+    name, bio, address, phone, email, gender, birthday,
+  } = fields;
+  let { avatarUrl } = fields;
+  if (files.avatarUrl) {
+    const tempFilePath = files.avatarUrl.filepath;
+    const fileName = `image-${Date.now()}${path.extname(files.avatarUrl.originalFilename)}`;
+    const uploadedFolder = './public/uploads/';
+
+    if (!fs.existsSync(uploadedFolder)) {
+      fs.mkdirSync(uploadedFolder, { recursive: true });
+    }
+
+    fs.readFile(tempFilePath, (err, data) => {
+      fs.writeFile(uploadedFolder + fileName, data, (err) => {
+        fs.unlink(tempFilePath, (err) => {
+          if (err) {
+            console.error(err);
+          }
+        });
+      });
+    });
+    const [first, ...rest] = (uploadedFolder + fileName).split('/');
+    avatarUrl = rest.join('/');
+  }
+  const user = await findOneEntity(User, { _id: userId });
+  // Check if this user exists
+  if (!user) {
+    return res.status(400).json({ message: "User doesn't exists" });
+  }
+
+  await updateOneEntity(User, { _id: userId }, {
+    name, bio, phone, email, address, avatarUrl, gender, birthday, updatedAt: new Date(),
+  });
+
+  const findUpdatedUser = await findOneEntity(User, { _id: userId });
+
+  const data = ({ ...findUpdatedUser }._doc);
+  delete data.password;
+
+  const response = {
+    message: data,
+    status: 200,
+  }
+
+  callback(null, response)
+};

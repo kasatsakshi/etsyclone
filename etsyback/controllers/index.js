@@ -1,10 +1,6 @@
 import express from 'express';
 import formidable from 'formidable';
 import upload from './upload';
-import { update } from './user';
-import {
-  createShopProduct, updateShopProduct,
-} from './shop';
 
 import passport from '../helpers/passport';
 import { makeRequest } from '../kafka/client';
@@ -75,7 +71,47 @@ router.get('/user', passport.authenticate('jwt', { session: false }), async (req
   });
 });
 
-router.put('/user/update', passport.authenticate('jwt', { session: false }), update);
+router.put('/user/update', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  const form = new formidable.IncomingForm();
+  form.multiples = true;
+  form.maxFileSize = 50 * 1024 * 1024; // 5MB
+  const input = {};
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        message: 'Unable to parse Input',
+      });
+    }
+
+    input.fields = fields;
+    input.files = files;
+
+    const request = {
+      token,
+      input,
+    };
+
+    makeRequest('updateUser', request, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({
+          message: 'System error, try again',
+        });
+      } else {
+        const { message, status } = results;
+        if (status !== 200) {
+          res.status(status).json({ message });
+        } else {
+          res.status(status).json(message);
+        }
+        res.end();
+      }
+    });
+  });
+});
+
 router.put('/user/update/currency', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const token = req.headers.authorization;
   const request = {
@@ -139,6 +175,7 @@ router.post('/shop/name', passport.authenticate('jwt', { session: false }), asyn
     }
   });
 });
+
 router.post('/shop/create', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const token = req.headers.authorization;
   const form = new formidable.IncomingForm();
@@ -179,8 +216,86 @@ router.post('/shop/create', passport.authenticate('jwt', { session: false }), as
     });
   });
 });
-router.post('/shop/product/create', passport.authenticate('jwt', { session: false }), createShopProduct);
-router.post('/shop/product/update', passport.authenticate('jwt', { session: false }), updateShopProduct);
+
+router.post('/shop/product/create', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  const form = new formidable.IncomingForm();
+  form.multiples = true;
+  form.maxFileSize = 50 * 1024 * 1024; // 5MB
+  const input = {};
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        message: 'Unable to parse Input',
+      });
+    }
+
+    input.fields = fields;
+    input.files = files;
+
+    const request = {
+      token,
+      input,
+    };
+
+    makeRequest('createShopProduct', request, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({
+          message: 'System error, try again',
+        });
+      } else {
+        const { message, status } = results;
+        if (status !== 200) {
+          res.status(status).json({ message });
+        } else {
+          res.status(status).json(message);
+        }
+        res.end();
+      }
+    });
+  });
+});
+
+router.post('/shop/product/update', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const form = new formidable.IncomingForm();
+  form.multiples = true;
+  form.maxFileSize = 50 * 1024 * 1024; // 5MB
+  const input = {};
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        message: 'Unable to parse Input',
+      });
+    }
+
+    input.fields = fields;
+    input.files = files;
+
+    const request = {
+      input,
+    };
+
+    makeRequest('updateShopProduct', request, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({
+          message: 'System error, try again',
+        });
+      } else {
+        const { message, status } = results;
+        if (status !== 200) {
+          res.status(status).json({ message });
+        } else {
+          res.status(status).json(message);
+        }
+        res.end();
+      }
+    });
+  });
+});
 
 router.get('/shop/:shopId/categories', passport.authenticate('jwt', { session: false }), async (req, res) => {
   makeRequest('category', req.params, (err, results) => {

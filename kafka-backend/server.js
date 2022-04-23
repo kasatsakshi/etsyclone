@@ -4,8 +4,8 @@ import { ConnectionProvider } from './kafka/connection';
 import config from '../etsyback/config';
 
 import { login } from './services/login';
-import { updateCurrency, user } from './services/user';
-import { getShopCategories, getShop, isShopNameAvailable, createShop } from './services/shop';
+import { updateCurrency, updateUser, user } from './services/user';
+import { getShopCategories, getShop, isShopNameAvailable, createShop, createShopProduct, updateShopProduct } from './services/shop';
 import { deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites, searchProductsByName } from './services/product';
 import { createOrder, getOrders } from './services/order';
 import { signup } from './services/signup';
@@ -65,3 +65,6 @@ handleTopicRequest("deleteFavoriteProduct", deleteFavoriteProduct);
 handleTopicRequest("createOrder", createOrder);
 handleTopicRequest("isShopNameAvailable", isShopNameAvailable)
 handleTopicRequest("createShop", createShop);
+handleTopicRequest("createShopProduct", createShopProduct);
+handleTopicRequest("updateShopProduct", updateShopProduct);
+handleTopicRequest("updateUser", updateUser);

@@ -12,7 +12,6 @@ import { BASE } from '../api/http';
 import VisitShopProduct from '../components/VisitShopProduct';
 import defaultShop from '../assets/defaultShop.png';
 import defaultUser from '../assets/defaultUser.png';
-import UploadImage from '../components/UploadImage';
 
 const Container = styled.div`
 position: relative;
