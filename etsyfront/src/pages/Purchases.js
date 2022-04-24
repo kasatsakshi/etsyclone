@@ -1,11 +1,17 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Grid, Stack } from '@mui/material';
+import moment from 'moment';
+import {
+  Table, TableBody, TableContainer, TableFooter, TableRow, TableCell, TablePagination, Avatar,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { grey } from '@mui/material/colors';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import PurchaseOrders from '../components/PurchaseOrders';
 import { getOrders } from '../redux/cart';
+import { numberFormat } from '../util/currency';
+import { BASE } from '../api/http';
+import defaultProduct from '../assets/defaultProduct.png';
 
 const Container = styled.div`
 position: relative;
@@ -36,8 +42,27 @@ const Heading = styled.h1`
 
 function Purchases() {
   const orders = useSelector((state) => state.cart.purchases);
+  console.log(orders);
+  const pastPurchases = [];
+  orders.map((order) => {
+    order.orderDetails.map((orderDetail) => {
+      pastPurchases.push(orderDetail);
+    });
+  });
+  console.log(pastPurchases);
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
+
+  const [rowsPerPage, setRowsPerPage] = React.useState(2);
+  const [page, setPage] = React.useState(0);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -53,36 +78,79 @@ function Purchases() {
   return (
     <Container>
       <Navbar />
-      { orders && orders.length > 0
+      { pastPurchases && pastPurchases.length > 0
         ? (
           <Wrapper>
             <Heading>Your Purchase Orders</Heading>
-
-            <Stack container spacing={2}>
-              {orders && orders.length > 0
-                ? orders.map((order) => (
-                  <div>
-                    <h4>
-                      Order Id:
-                      {order.order.orderId}
-                    </h4>
-                    <p>
-                      Final Amount:
-                      {order.order.finalAmount}
-                    </p>
-                    <p>
-                      Ordered Date:
-                      {order.order.orderedDate}
-                    </p>
-                    <Stack direction="row">
-                      { order.orderDetails.map((orderDetail) => (
-                        <PurchaseOrders orderData={order.order} orderItemData={orderDetail} />
-                      ))}
-                    </Stack>
-                  </div>
-                ))
-                : <div /> }
-            </Stack>
+            {/* <Pagination length={orders.length} /> */}
+            <TableContainer>
+              <Table>
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? pastPurchases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    : pastPurchases
+                  ).map((pastPurchase) => (
+                    <TableRow key={pastPurchase.orderId}>
+                      <TableCell component="th" scope="row">
+                        {/* {(pastPurchase.pictureUrl ? `${BASE}/${pastPurchase.pictureUrl}` : defaultProduct)} */}
+                        <Avatar
+                          sx={{ bgcolor: grey }}
+                          src={defaultProduct}
+                          variant="square"
+                        />
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {pastPurchase.name}
+                      </TableCell>
+                      <TableCell style={{ width: 160 }} align="right">
+                        <span>qty: </span>
+                        {pastPurchase.orderQuantity}
+                      </TableCell>
+                      <TableCell style={{ width: 160 }} align="right">
+                        {numberFormat(pastPurchase.price, user ? user.currency : 'USD')}
+                      </TableCell>
+                      <TableCell style={{ width: 160 }} align="right">
+                        {moment(pastPurchase.createdAt).format('MM/DD/YYYY')}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[2, 5, 10]}
+                      count={orders.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      SelectProps={{
+                        inputProps: {
+                          'aria-label': 'rows per page',
+                        },
+                      }}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      // ActionsComponent={TablePaginationActions}
+                      // component={Box}
+                      labelDisplayedRows={({ page }) => `page: ${page}`}
+                      backIconButtonProps={{
+                        color: 'primary',
+                      }}
+                      nextIconButtonProps={{ color: 'primary' }}
+                      labelRowsPerPage={<span style={{ color: 'black' }}>size:</span>}
+                      sx={{
+                        '.MuiTablePagination-toolbar': {
+                          backgroundColor: 'white',
+                        },
+                        '.MuiTablePagination-selectLabel, .MuiTablePagination-input': {
+                          fontWeight: 'bold',
+                          color: 'black',
+                        },
+                      }}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
           </Wrapper>
         )
         : <NoOrders> No Purchase Orders </NoOrders>}
