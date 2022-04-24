@@ -140,28 +140,28 @@ export const createShop = async (requestPayload, callback) => {
   let avatarUrl = null;
 
   if (files.avatarUrl) {
-    const tempFilePath = files.avatarUrl.filepath;
-    const fileName = `image-${Date.now()}${path.extname(files.avatarUrl.originalFilename)}`;
-    const uploadedFolder = './public/shop/';
-
-    if (!fs.existsSync(uploadedFolder)) {
-      fs.mkdirSync(uploadedFolder, { recursive: true });
-    }
-
-    fs.readFile(tempFilePath, (err, data) => {
-      fs.writeFile(uploadedFolder + fileName, data, () => {
-        fs.unlink(tempFilePath, (err) => {
-          if (err) {
-            console.error(err);
-          } else {
-            console.log('Image uploaded successfully');
-          }
-        });
-      });
+    const s3 = new AWS.S3({
+      accessKeyId: 'AKIA3UMIWUHMD2YBFSTL',
+      secretAccessKey: '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',
     });
-    const [first, ...rest] = (uploadedFolder + fileName).split('/');
-    avatarUrl = rest.join('/');
+
+    const tempFilePath = files.avatarUrl.filepath;
+    const fileContent = fs.readFileSync(tempFilePath);
+    const fileName = `image-${Date.now()}${path.extname(files.avatarUrl.originalFilename)}`;
+
+    // Setting up S3 upload parameters
+    const params = {
+      Bucket: BUCKET_NAME,
+      Key: fileName, // File name you want to save as in S3
+      Body: fileContent,
+    };
+
+    // Uploading files to the bucket
+    const data = await s3.upload(params).promise();
+    console.log(`User image uploaded successfully. ${data.Location}`);
+    avatarUrl = data.Location;
   }
+
   const {
     name, description, address,
   } = fields;

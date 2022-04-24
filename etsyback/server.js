@@ -10,7 +10,6 @@ const corsOptions = { origin: '*', exposedHeaders: 'X-Auth-Token' };
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public/uploads'));
 
 app.use('/api/', routes);
 
@@ -32,3 +31,5 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+export default app;

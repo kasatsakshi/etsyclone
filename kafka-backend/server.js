@@ -32,11 +32,11 @@ function handleTopicRequest(topicName, fname) {
   console.log('kafka server is running ');
   consumer.on('message', (message) => {
     console.log(`message received for ${topicName}`);
-    // console.log(`Incoming message: ${JSON.stringify(message.value)}`);
+    console.log(`Incoming message: ${JSON.stringify(message.value)}`);
     const data = JSON.parse(message.value);
 
     fname(data.data, (err, res) => {
-      // console.log(`after handle: ${res}`);
+      console.log(`after handle: ${res}`);
       const payloads = [
         {
           topic: data.replyTo,
