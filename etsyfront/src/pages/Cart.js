@@ -51,7 +51,8 @@ const Button = styled.button`
 `;
 
 function Cart() {
-  const cartOrders = useSelector((state) => state.cart.cartProducts);
+  // const cartOrders = useSelector((state) => state.cart.cartProducts);
+  const cartOrders = JSON.parse(localStorage.getItem('cartOrders'));
   let finalPrice = 0;
 
   const user = useSelector((state) => state.user.currentUser);

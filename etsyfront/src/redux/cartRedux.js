@@ -9,14 +9,6 @@ const cartSlice = createSlice({
     error: false,
   },
   reducers: {
-    addCartSuccess: (state, action) => {
-      state.isFetching = false;
-      state.cartProducts = action.payload;
-    },
-    addCartFailure: (state) => {
-      state.isFetching = false;
-      state.error = true;
-    },
     createOrderSuccess: (state, action) => {
       state.isFetching = false;
       state.purchases = action.payload;
@@ -34,6 +26,6 @@ const cartSlice = createSlice({
 });
 
 export const {
-  addCartSuccess, addCartFailure, getOrderSuccess, createOrderSuccess, createOrderFailure,
+  getOrderSuccess, createOrderSuccess, createOrderFailure,
 } = cartSlice.actions;
 export default cartSlice.reducer;

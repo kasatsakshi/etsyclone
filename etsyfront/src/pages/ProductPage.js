@@ -6,7 +6,6 @@ import { Button, ButtonGroup } from '@mui/material';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SCard from '../components/SCard';
-import { addToCart } from '../redux/cart';
 import { numberFormat } from '../util/currency';
 
 const Container = styled.div`
@@ -91,7 +90,8 @@ function ProductPage() {
   const [quantityNeeded, setQuantityNeeded] = useState(1);
   const user = useSelector((state) => state.user.currentUser);
   const products = useSelector((state) => state.products.currentProducts);
-  const cartProducts = useSelector((state) => state.cart.cartProducts);
+  // const cartProducts = useSelector((state) => state.cart.cartProducts);
+  const cartProducts = JSON.parse(localStorage.getItem('cartOrders')) || [];
   let filterProduct = null;
   const dispatch = useDispatch();
   const navigate = new useNavigate();
@@ -111,13 +111,13 @@ function ProductPage() {
     }
     setCartLink(true);
     let cartItems = [];
-    if (cartProducts) {
+    if (cartProducts.length > 0) {
       cartItems = [...cartProducts];
     }
     const order = { ...filterProduct };
     order.quantityNeeded = quantityNeeded;
     cartItems.push(order);
-    addToCart(dispatch, cartItems);
+    localStorage.setItem('cartOrders', JSON.stringify(cartItems));
   };
 
   const shopLink = `/shop/${filterProduct.shopId}`;

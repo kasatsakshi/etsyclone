@@ -1,6 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch, useSelector } from 'react-redux';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import * as React from 'react';
@@ -21,7 +20,40 @@ const cardStyle = {
 function CartItem({ productData }) {
   let productImage;
   const favorites = useSelector((state) => state.products.favoriteProducts);
+  // const cartOrders = useSelector((state) => state.cart.cartProducts);
+  const cartOrders = JSON.parse(localStorage.getItem('cartOrders'));
   const [quantityNeeded, setQuantityNeeded] = useState(productData.quantityNeeded);
+  const dispatch = useDispatch();
+
+  function updateOrder(payload) {
+    const { productId, quantityUpdated } = payload;
+    setQuantityNeeded(quantityUpdated);
+
+    const cartProducts = [];
+    cartOrders.map((cartOrder) => {
+      if (cartOrder._id === productId) {
+        cartOrder.quantityNeeded = quantityUpdated;
+      }
+      cartProducts.push(cartOrder);
+    });
+
+    localStorage.setItem('cartOrders', JSON.stringify(cartProducts));
+    window.location.reload();
+  }
+
+  function deleteItem(item) {
+    const cartOrders = JSON.parse(localStorage.getItem('cartOrders'));
+    const { productId } = item;
+    const cartProducts = [];
+    cartOrders.map((cartOrder) => {
+      if (cartOrder._id !== productId) {
+        cartProducts.push(cartOrder);
+      }
+    });
+
+    localStorage.setItem('cartOrders', JSON.stringify(cartProducts));
+    window.location.reload();
+  }
   if (productData.pictureUrl) {
     productImage = `${BASE}/${productData.pictureUrl}`;
   } else {
@@ -30,7 +62,6 @@ function CartItem({ productData }) {
 
   const user = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const viewMore = (e) => {
     navigate(`/productPage/${productData.id}`);
@@ -68,12 +99,12 @@ function CartItem({ productData }) {
             variant="outlined"
             color="inherit"
           >
-            <Button disabled={quantityNeeded >= productData.quantity} onClick={() => setQuantityNeeded(quantityNeeded + 1)}>+</Button>
+            <Button disabled={quantityNeeded >= productData.quantity} onClick={() => updateOrder({ productId: productData._id, quantityUpdated: (quantityNeeded + 1) })}>+</Button>
             <Button>{quantityNeeded}</Button>
-            <Button disabled={quantityNeeded <= 1} onClick={() => setQuantityNeeded(quantityNeeded - 1)}>-</Button>
+            <Button disabled={quantityNeeded <= 0} onClick={() => updateOrder({ productId: productData._id, quantityUpdated: (quantityNeeded - 1) })}>-</Button>
           </ButtonGroup>
           <IconButton sx={{ height: 25, paddingTop: '58px', marginLeft: 2 }} size="large" aria-label="delete">
-            <DeleteIcon />
+            <DeleteIcon onClick={() => deleteItem({ productId: productData._id })} />
           </IconButton>
         </Stack>
         <Stack direction="row" sx={{ paddingLeft: '8px', paddingTop: '4px' }}>
