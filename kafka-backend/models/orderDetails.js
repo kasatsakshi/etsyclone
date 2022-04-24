@@ -24,6 +24,12 @@ const orderDetailsSchema = new mongoose.Schema({
   price: {
     type: Number,
   },
+  isGift: {
+    type: Boolean
+  },
+  giftMessage: {
+    type: String
+  },
   shopId: {
     type: String,
   },

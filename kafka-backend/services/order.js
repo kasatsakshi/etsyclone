@@ -66,6 +66,8 @@ export const createOrder = async(inputPayload, callback) => {
         pictureUrl: item.pictureUrl,
         name: item.name,
         description: item.description,
+        isGift: item.isGift,
+        giftMessage: item.giftMessage,
         category: item.category,
         shopId: item.shopId,
         inventoryId: item._id,

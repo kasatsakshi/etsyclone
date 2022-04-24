@@ -4,7 +4,8 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import * as React from 'react';
 import {
-  Card, Checkbox, Stack, ButtonGroup, CardActions, CardMedia, CardContent, IconButton, Modal, Button,
+  Card, Checkbox, Stack, ButtonGroup, Box,
+  CardActions, CardMedia, CardContent, IconButton, Modal, Button,
 } from '@mui/material';
 import { useState } from 'react';
 import defaultProduct from '../assets/defaultProduct.png';
@@ -14,16 +15,55 @@ const cardStyle = {
   margin: 4,
   display: 'flex',
   width: '75%',
-  height: 200,
+  height: 250,
 };
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  height: 200,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+const MessageButton = styled.button`
+  width: 50%;
+  border: none;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding: 3px;
+  height: 35px;
+  &:disabled {
+    color: grey;
+    cursor: not-allowed;
+  }
+`;
+
+const Input = styled.textarea`
+  width: 100%;
+  height: 50%;
+  margin: 10px 0;
+`;
 
 function CartItem({ productData }) {
   let productImage;
+  const [messageBoxOpen, setMessageBoxOpen] = React.useState(false);
+  const handleOpenAddMessage = () => { setMessageBoxOpen(true); };
+  const handleCloseAddMessage = () => setMessageBoxOpen(false);
+
   const favorites = useSelector((state) => state.products.favoriteProducts);
-  // const cartOrders = useSelector((state) => state.cart.cartProducts);
   const cartOrders = JSON.parse(localStorage.getItem('cartOrders'));
   const [quantityNeeded, setQuantityNeeded] = useState(productData.quantityNeeded);
   const dispatch = useDispatch();
+  const [giftMessage, setGiftMessage] = useState('');
+  const [isGift, setIsGift] = useState(false);
 
   function updateOrder(payload) {
     const { productId, quantityUpdated } = payload;
@@ -54,6 +94,7 @@ function CartItem({ productData }) {
     localStorage.setItem('cartOrders', JSON.stringify(cartProducts));
     window.location.reload();
   }
+
   if (productData.pictureUrl) {
     productImage = `${BASE}/${productData.pictureUrl}`;
   } else {
@@ -64,7 +105,24 @@ function CartItem({ productData }) {
   const navigate = useNavigate();
 
   const viewMore = (e) => {
-    navigate(`/productPage/${productData.id}`);
+    navigate(`/productPage/${productData._id}`);
+  };
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+
+    const cartProducts = [];
+    cartOrders.map((cartOrder) => {
+      if (cartOrder._id === productData._id) {
+        cartOrder.isGift = isGift;
+        cartOrder.giftMessage = giftMessage;
+      }
+      cartProducts.push(cartOrder);
+    });
+
+    localStorage.setItem('cartOrders', JSON.stringify(cartProducts));
+    handleCloseAddMessage();
+    window.location.reload();
   };
 
   return (
@@ -78,7 +136,7 @@ function CartItem({ productData }) {
         onClick={viewMore}
         alt="Product picture"
       />
-      <Stack direction="column" sx={{ display: 'flex', height: 200 }}>
+      <Stack direction="column" sx={{ display: 'flex', height: 300 }}>
         <CardContent sx={{ paddingLeft: '16px', paddingBottom: '1px' }}>
           <h3>{productData.name}</h3>
         </CardContent>
@@ -108,13 +166,21 @@ function CartItem({ productData }) {
           </IconButton>
         </Stack>
         <Stack direction="row" sx={{ paddingLeft: '8px', paddingTop: '4px' }}>
-          <Checkbox sx={{ paddingTop: '0px' }} />
+          <Checkbox sx={{ paddingTop: '0px' }} onClick={handleOpenAddMessage} checked={productData.isGift} />
+          <Modal
+            open={messageBoxOpen}
+            onClose={handleCloseAddMessage}
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Input autoFocus placeholder="Enter a message" onChange={(e) => { setGiftMessage(e.target.value); setIsGift(true); }} />
+              <MessageButton onClick={handleClick}>Add message</MessageButton>
+            </Box>
+          </Modal>
           <p sx={{ paddingLeft: '0px' }}>This order is a gift</p>
         </Stack>
+        <p style={{ marginLeft: '10px', te: 'red' }}>{productData.giftMessage}</p>
       </Stack>
-      {/* <CardActions sx={{ width: 271 }}>
-
-      </CardActions> */}
     </Card>
   );
 }
