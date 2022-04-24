@@ -101,7 +101,7 @@ const style = {
 
 function ProfileUpdate() {
   const reduxUser = useSelector((state) => state.user.currentUser);
-  const parsedAddress = JSON.parse(reduxUser.address);
+  const parsedAddress = reduxUser.address ? JSON.parse(reduxUser.address) : {};
   const user = {
     ...reduxUser,
     address: parsedAddress,

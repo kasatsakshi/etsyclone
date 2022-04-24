@@ -95,17 +95,20 @@ function Purchases() {
                           variant="square"
                         />
                       </TableCell>
-                      <TableCell component="th" scope="row">
+                      <TableCell style={{ width: 300 }} component="th" scope="row">
                         {pastPurchase.name}
                       </TableCell>
-                      <TableCell style={{ width: 160 }} align="right">
+                      <TableCell style={{ width: 300 }} component="th" scope="row">
+                        {pastPurchase.giftMessage}
+                      </TableCell>
+                      <TableCell style={{ width: 60 }} align="right">
                         <span>qty: </span>
                         {pastPurchase.orderQuantity}
                       </TableCell>
-                      <TableCell style={{ width: 160 }} align="right">
+                      <TableCell style={{ width: 60 }} align="right">
                         {numberFormat(pastPurchase.price, user ? user.currency : 'USD')}
                       </TableCell>
-                      <TableCell style={{ width: 160 }} align="right">
+                      <TableCell style={{ width: 260 }} align="right">
                         {moment(pastPurchase.createdAt).format('MM/DD/YYYY')}
                       </TableCell>
                     </TableRow>
