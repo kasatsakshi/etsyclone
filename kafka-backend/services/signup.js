@@ -42,7 +42,7 @@ async function validateInput(input) {
 
   return null;
 }
-export const signup = async(input, callback) => {
+export const signup = async (input, callback) => {
   const trimmedInput = cleanInput(input);
   const inputError = await validateInput(trimmedInput);
 
@@ -50,7 +50,7 @@ export const signup = async(input, callback) => {
     const response = {
       message: inputError,
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -62,7 +62,7 @@ export const signup = async(input, callback) => {
     const response = {
       message: 'Email Address already exists',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -83,7 +83,7 @@ export const signup = async(input, callback) => {
     const response = {
       message: 'Signup failed. Try again',
       status: 500,
-    }
+    };
     callback(null, response);
   }
 
@@ -92,12 +92,12 @@ export const signup = async(input, callback) => {
 
   // Generate JWT token
   const token = await signToken(createdUser);
-  
+
   const response = {
     token,
     message: data,
     status: 200,
-  }
- 
+  };
+
   callback(null, response);
 };

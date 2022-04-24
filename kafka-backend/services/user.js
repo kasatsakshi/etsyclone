@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { isValidEmail } from '../helpers/validator';
 import {
   findOneEntity,
@@ -47,7 +49,7 @@ export const user = async (token, callback) => {
     const response = {
       message: inputError,
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -59,7 +61,7 @@ export const user = async (token, callback) => {
     const response = {
       message: 'User does not exists',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -69,12 +71,12 @@ export const user = async (token, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
   callback(null, response);
-}
+};
 
-export const updateCurrency = async(inputPayload, callback) => {
-  const { token, input } = inputPayload
+export const updateCurrency = async (inputPayload, callback) => {
+  const { token, input } = inputPayload;
   const payload = await decodeToken(token);
   const { id, email } = payload.data;
   const { currency } = input;
@@ -86,7 +88,7 @@ export const updateCurrency = async(inputPayload, callback) => {
     const response = {
       message: 'User does not exists',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -99,12 +101,12 @@ export const updateCurrency = async(inputPayload, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
   callback(null, response);
 };
 
-export const updateUser = async(inputPayload, callback) => {
+export const updateUser = async (inputPayload, callback) => {
   const { input, token } = inputPayload;
   const payload = await decodeToken(token);
   const userId = payload.data.id;
@@ -138,7 +140,12 @@ export const updateUser = async(inputPayload, callback) => {
   const user = await findOneEntity(User, { _id: userId });
   // Check if this user exists
   if (!user) {
-    return res.status(400).json({ message: "User doesn't exists" });
+    console.error('User does not exists!');
+    const response = {
+      message: 'User does not exists',
+      status: 400,
+    };
+    callback(null, response);
   }
 
   await updateOneEntity(User, { _id: userId }, {
@@ -153,7 +160,7 @@ export const updateUser = async(inputPayload, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
-  callback(null, response)
+  callback(null, response);
 };

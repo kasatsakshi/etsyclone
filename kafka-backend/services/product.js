@@ -20,7 +20,7 @@ export const getProducts = async (input, callback) => {
   const response = {
     message: products,
     status: 200,
-  }
+  };
 
   callback(null, response);
 };
@@ -42,7 +42,7 @@ export const getUserFavorites = async (token, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
   callback(null, response);
 };
@@ -59,13 +59,13 @@ export const searchProductsByName = async (input, callback) => {
   const response = {
     message: products,
     status: 200,
-  }
+  };
 
   callback(null, response);
-}
+};
 
 export const favoriteProduct = async (inputPayload, callback) => {
-  const { token, input } = inputPayload
+  const { token, input } = inputPayload;
   const { inventoryId } = input;
   const payload = await decodeToken(token);
   const userId = payload.data.id;
@@ -78,13 +78,13 @@ export const favoriteProduct = async (inputPayload, callback) => {
   const response = {
     message: findFavorites,
     status: 200,
-  }
+  };
 
   callback(null, response);
-}
+};
 
 export const deleteFavoriteProduct = async (inputPayload, callback) => {
-  const { token, input } = inputPayload
+  const { token, input } = inputPayload;
   const payload = await decodeToken(token);
   const { inventoryId } = input;
   const userId = payload.data.id;
@@ -95,7 +95,7 @@ export const deleteFavoriteProduct = async (inputPayload, callback) => {
   const response = {
     message: findFavorites,
     status: 200,
-  }
+  };
 
   callback(null, response);
-}
+};

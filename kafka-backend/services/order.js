@@ -15,7 +15,11 @@ export const getOrders = async (token, callback) => {
   // Check if this user  exists
   if (!findUser) {
     console.error('User does not exists!');
-    return res.status(400).json({ message: 'User does not exists' });
+    const response = {
+      message: 'User does not exists',
+      status: 400,
+    };
+    callback(null, response);
   }
   const data = [];
   const orders = await findEntity(Order, { userId });
@@ -33,13 +37,13 @@ export const getOrders = async (token, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
   callback(null, response);
 };
 
-export const createOrder = async(inputPayload, callback) => {
-  const { input, token} = inputPayload;
+export const createOrder = async (inputPayload, callback) => {
+  const { input, token } = inputPayload;
   const payload = await decodeToken(token);
   const userId = payload.data.id;
 
@@ -50,7 +54,7 @@ export const createOrder = async(inputPayload, callback) => {
     const response = {
       message: 'User does not exists',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -108,7 +112,7 @@ export const createOrder = async(inputPayload, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
   callback(null, response);
-}
+};

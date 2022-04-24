@@ -25,10 +25,10 @@ const orderDetailsSchema = new mongoose.Schema({
     type: Number,
   },
   isGift: {
-    type: Boolean
+    type: Boolean,
   },
   giftMessage: {
-    type: String
+    type: String,
   },
   shopId: {
     type: String,

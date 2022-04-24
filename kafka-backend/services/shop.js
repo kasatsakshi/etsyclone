@@ -11,54 +11,54 @@ import OrderDetails from '../models/orderDetails';
 import Category from '../models/category';
 
 export const getShop = async (token, callback) => {
- const payload = await decodeToken(token);
- const id = payload.data.id;
+  const payload = await decodeToken(token);
+  const id = payload.data.id;
 
- if (!id) {
-   console.error('User id is missing');
-   const response = {
-    message: 'User does not exists!',
-    status: 400,
+  if (!id) {
+    console.error('User id is missing');
+    const response = {
+      message: 'User does not exists!',
+      status: 400,
+    };
+    callback(null, response);
   }
-  callback(null, response);
- }
 
- const user = await findOneEntity(User, { _id: id });
- // Check if this user exists
- if (!user) {
-   console.error('User does not exists!');
-   const response = {
-    message: 'User does not exists!',
-    status: 400,
+  const user = await findOneEntity(User, { _id: id });
+  // Check if this user exists
+  if (!user) {
+    console.error('User does not exists!');
+    const response = {
+      message: 'User does not exists!',
+      status: 400,
+    };
+    callback(null, response);
   }
-  callback(null, response);
- }
 
- const shop = await findOneEntity(Shop, { userId: id });
- let inventory = [];
- if (shop) {
-   inventory = await findEntity(Inventory, { shopId: shop._id });
- }
+  const shop = await findOneEntity(Shop, { userId: id });
+  let inventory = [];
+  if (shop) {
+    inventory = await findEntity(Inventory, { shopId: shop._id });
+  }
 
- const data = {
-   user,
-   shop,
-   inventory,
- };
+  const data = {
+    user,
+    shop,
+    inventory,
+  };
 
- let total = 0;
- await Promise.all(
-   inventory.map(async (item) => {
-     const temp = await findEntity(OrderDetails, { inventoryId: item._id }, ['orderQuantity']);
-     total += temp.length;
-   }),
- );
- data.totalSales = total;
+  let total = 0;
+  await Promise.all(
+    inventory.map(async (item) => {
+      const temp = await findEntity(OrderDetails, { inventoryId: item._id }, ['orderQuantity']);
+      total += temp.length;
+    }),
+  );
+  data.totalSales = total;
 
- const response = {
+  const response = {
     message: data,
     status: 200,
-  }
+  };
 
   callback(null, response);
 };
@@ -70,7 +70,7 @@ export const getShopCategories = async (input, callback) => {
     const response = {
       message: 'Shop id is missing',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -80,7 +80,7 @@ export const getShopCategories = async (input, callback) => {
     const response = {
       message: 'Shop does not exists',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -94,7 +94,7 @@ export const getShopCategories = async (input, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
   callback(null, response);
 };
@@ -106,7 +106,7 @@ export const isShopNameAvailable = async (input, callback) => {
     const response = {
       message: 'Shop name is missing',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -114,28 +114,28 @@ export const isShopNameAvailable = async (input, callback) => {
 
   let data;
   if (findShop) {
-    data = { message: false }
+    data = { message: false };
   } else {
-    data = { message: true }
+    data = { message: true };
   }
 
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
   callback(null, response);
 };
 
 export const createShop = async (requestPayload, callback) => {
   // Check incoming validation
-  const { input , token } = requestPayload;
+  const { input, token } = requestPayload;
   const { files, fields } = input;
-  
+
   const payload = await decodeToken(token);
   const userId = payload.data.id;
   let avatarUrl = null;
- 
+
   if (files.avatarUrl) {
     const tempFilePath = files.avatarUrl.filepath;
     const fileName = `image-${Date.now()}${path.extname(files.avatarUrl.originalFilename)}`;
@@ -165,20 +165,20 @@ export const createShop = async (requestPayload, callback) => {
   const user = await findOneEntity(User, { _id: userId });
   // Check if this user id exists
   if (!user) {
-  const response = {
-    message: 'User does not exists',
-    status: 400,
-  }
-  callback(null, response);
+    const response = {
+      message: 'User does not exists',
+      status: 400,
+    };
+    callback(null, response);
   }
 
   const shop = await findOneEntity(Shop, { name });
   if (shop) {
-  const response = {
-    message: 'Shop name is taken',
-    status: 400,
-  }
-  callback(null, response);
+    const response = {
+      message: 'Shop name is taken',
+      status: 400,
+    };
+    callback(null, response);
   }
 
   const shopInput = new Shop({
@@ -199,16 +199,16 @@ export const createShop = async (requestPayload, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
   callback(null, response);
 };
 
-export const createShopProduct = async(requestPayload, callback) => {
+export const createShopProduct = async (requestPayload, callback) => {
   // Check incoming validation
-  const { input , token } = requestPayload;
+  const { input, token } = requestPayload;
   const { files, fields } = input;
-  
+
   const payload = await decodeToken(token);
   const userId = payload.data.id;
   let pictureUrl = null;
@@ -243,7 +243,7 @@ export const createShopProduct = async(requestPayload, callback) => {
     const response = {
       message: 'Shop does not exists',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -291,10 +291,10 @@ export const createShopProduct = async(requestPayload, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
-  callback(null, response)
-}
+  callback(null, response);
+};
 
 export const updateShopProduct = async (requestPayload, callback) => {
   const { input } = requestPayload;
@@ -332,7 +332,7 @@ export const updateShopProduct = async (requestPayload, callback) => {
     const response = {
       message: 'Product does not exists',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -373,7 +373,7 @@ export const updateShopProduct = async (requestPayload, callback) => {
   const response = {
     message: data,
     status: 200,
-  }
+  };
 
-  callback(null, response)
+  callback(null, response);
 };

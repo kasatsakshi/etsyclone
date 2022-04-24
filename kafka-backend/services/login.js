@@ -46,7 +46,7 @@ export const login = async (input, callback) => {
     const response = {
       message: inputError,
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -59,7 +59,7 @@ export const login = async (input, callback) => {
     const response = {
       message: 'Invalid Username and Password',
       status: 400,
-    }
+    };
     callback(null, response);
   }
 
@@ -69,7 +69,7 @@ export const login = async (input, callback) => {
     const response = {
       message: 'Invalid Username and Password',
       status: 400,
-    }
+    };
     callback(null, response);
   } else {
     await updateOneEntity(
@@ -77,19 +77,19 @@ export const login = async (input, callback) => {
       { _id: findUser._id },
       { lastLoginAt: new Date(), updatedAt: new Date() },
     );
-  
+
     const data = ({ ...findUser }._doc);
     delete data.password;
-  
+
     // Generate JWT token
     const token = await signToken(findUser);
-  
+
     const response = {
       token,
       message: data,
       status: 200,
-    }
-  
+    };
+
     callback(null, response);
   }
 };

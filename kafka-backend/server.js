@@ -1,12 +1,16 @@
 import mongoose from 'mongoose';
 
+import config from './config';
 import { ConnectionProvider } from './kafka/connection';
-import config from '../etsyback/config';
 
 import { login } from './services/login';
 import { updateCurrency, updateUser, user } from './services/user';
-import { getShopCategories, getShop, isShopNameAvailable, createShop, createShopProduct, updateShopProduct } from './services/shop';
-import { deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites, searchProductsByName } from './services/product';
+import {
+  getShopCategories, getShop, isShopNameAvailable, createShop, createShopProduct, updateShopProduct,
+} from './services/shop';
+import {
+  deleteFavoriteProduct, favoriteProduct, getProducts, getUserFavorites, searchProductsByName,
+} from './services/product';
 import { createOrder, getOrders } from './services/order';
 import { signup } from './services/signup';
 
@@ -50,21 +54,21 @@ function handleTopicRequest(topicName, fname) {
   });
 }
 
-handleTopicRequest("signup", signup);
-handleTopicRequest("login", login);
-handleTopicRequest("user", user);
-handleTopicRequest("updateCurrency", updateCurrency);
-handleTopicRequest("shop", getShop);
-handleTopicRequest("product", getProducts);
-handleTopicRequest("favorite", getUserFavorites);
-handleTopicRequest("order", getOrders);
-handleTopicRequest("category", getShopCategories);
-handleTopicRequest("productSearch", searchProductsByName);
-handleTopicRequest("favoriteProduct", favoriteProduct);
-handleTopicRequest("deleteFavoriteProduct", deleteFavoriteProduct);
-handleTopicRequest("createOrder", createOrder);
-handleTopicRequest("isShopNameAvailable", isShopNameAvailable)
-handleTopicRequest("createShop", createShop);
-handleTopicRequest("createShopProduct", createShopProduct);
-handleTopicRequest("updateShopProduct", updateShopProduct);
-handleTopicRequest("updateUser", updateUser);
+handleTopicRequest('signup', signup);
+handleTopicRequest('login', login);
+handleTopicRequest('user', user);
+handleTopicRequest('updateCurrency', updateCurrency);
+handleTopicRequest('shop', getShop);
+handleTopicRequest('product', getProducts);
+handleTopicRequest('favorite', getUserFavorites);
+handleTopicRequest('order', getOrders);
+handleTopicRequest('category', getShopCategories);
+handleTopicRequest('productSearch', searchProductsByName);
+handleTopicRequest('favoriteProduct', favoriteProduct);
+handleTopicRequest('deleteFavoriteProduct', deleteFavoriteProduct);
+handleTopicRequest('createOrder', createOrder);
+handleTopicRequest('isShopNameAvailable', isShopNameAvailable);
+handleTopicRequest('createShop', createShop);
+handleTopicRequest('createShopProduct', createShopProduct);
+handleTopicRequest('updateShopProduct', updateShopProduct);
+handleTopicRequest('updateUser', updateUser);
