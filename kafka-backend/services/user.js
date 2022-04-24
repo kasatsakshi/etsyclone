@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import AWS from 'aws-sdk';
 import { isValidEmail } from '../helpers/validator';
 import {
   findOneEntity,
@@ -7,6 +8,8 @@ import {
 } from '../models';
 import { decodeToken } from '../helpers/auth';
 import User from '../models/users';
+
+const BUCKET_NAME = 'cmpe273sakshi';
 
 function cleanInput(input) {
   const {
@@ -117,25 +120,26 @@ export const updateUser = async (inputPayload, callback) => {
   } = fields;
   let { avatarUrl } = fields;
   if (files.avatarUrl) {
-    const tempFilePath = files.avatarUrl.filepath;
-    const fileName = `image-${Date.now()}${path.extname(files.avatarUrl.originalFilename)}`;
-    const uploadedFolder = './public/uploads/';
-
-    if (!fs.existsSync(uploadedFolder)) {
-      fs.mkdirSync(uploadedFolder, { recursive: true });
-    }
-
-    fs.readFile(tempFilePath, (err, data) => {
-      fs.writeFile(uploadedFolder + fileName, data, (err) => {
-        fs.unlink(tempFilePath, (err) => {
-          if (err) {
-            console.error(err);
-          }
-        });
-      });
+    const s3 = new AWS.S3({
+      accessKeyId: 'AKIA3UMIWUHMD2YBFSTL',
+      secretAccessKey: '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',
     });
-    const [first, ...rest] = (uploadedFolder + fileName).split('/');
-    avatarUrl = rest.join('/');
+
+    const tempFilePath = files.avatarUrl.filepath;
+    const fileContent = fs.readFileSync(tempFilePath);
+    const fileName = `image-${Date.now()}${path.extname(files.avatarUrl.originalFilename)}`;
+
+    // Setting up S3 upload parameters
+    const params = {
+      Bucket: BUCKET_NAME,
+      Key: fileName, // File name you want to save as in S3
+      Body: fileContent,
+    };
+
+    // Uploading files to the bucket
+    const data = await s3.upload(params).promise();
+    console.log(`User image uploaded successfully. ${data.Location}`);
+    avatarUrl = data.Location;
   }
   const user = await findOneEntity(User, { _id: userId });
   // Check if this user exists

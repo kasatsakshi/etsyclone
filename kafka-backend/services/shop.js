@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import AWS from 'aws-sdk';
 import {
   findEntity, findOneEntity, createEntity, updateOneEntity,
 } from '../models';
@@ -9,6 +10,8 @@ import User from '../models/users';
 import Inventory from '../models/inventory';
 import OrderDetails from '../models/orderDetails';
 import Category from '../models/category';
+
+const BUCKET_NAME = 'cmpe273sakshi';
 
 export const getShop = async (token, callback) => {
   const payload = await decodeToken(token);
@@ -214,25 +217,26 @@ export const createShopProduct = async (requestPayload, callback) => {
   let pictureUrl = null;
 
   if (files.pictureUrl) {
-    const tempFilePath = files.pictureUrl.filepath;
-    const fileName = `image-${Date.now()}${path.extname(files.pictureUrl.originalFilename)}`;
-    const uploadedFolder = './public/products/';
-
-    if (!fs.existsSync(uploadedFolder)) {
-      fs.mkdirSync(uploadedFolder, { recursive: true });
-    }
-
-    fs.readFile(tempFilePath, (err, data) => {
-      fs.writeFile(uploadedFolder + fileName, data, (err) => {
-        fs.unlink(tempFilePath, (err) => {
-          if (err) {
-            console.error(err);
-          }
-        });
-      });
+    const s3 = new AWS.S3({
+      accessKeyId: 'AKIA3UMIWUHMD2YBFSTL',
+      secretAccessKey: '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',
     });
-    const [first, ...rest] = (uploadedFolder + fileName).split('/');
-    pictureUrl = rest.join('/');
+
+    const tempFilePath = files.pictureUrl.filepath;
+    const fileContent = fs.readFileSync(tempFilePath);
+    const fileName = `image-${Date.now()}${path.extname(files.pictureUrl.originalFilename)}`;
+
+    // Setting up S3 upload parameters
+    const params = {
+      Bucket: BUCKET_NAME,
+      Key: fileName, // File name you want to save as in S3
+      Body: fileContent,
+    };
+
+    // Uploading files to the bucket
+    const data = await s3.upload(params).promise();
+    console.log(`User image uploaded successfully. ${data.Location}`);
+    pictureUrl = data.Location;
   }
   const {
     shopId, name, description, isCustom, category, price, quantity,
@@ -306,25 +310,26 @@ export const updateShopProduct = async (requestPayload, callback) => {
   let { pictureUrl } = fields;
 
   if (files.pictureUrl) {
-    const tempFilePath = files.pictureUrl.filepath;
-    const fileName = `image-${Date.now()}${path.extname(files.pictureUrl.originalFilename)}`;
-    const uploadedFolder = './public/products/';
-
-    if (!fs.existsSync(uploadedFolder)) {
-      fs.mkdirSync(uploadedFolder, { recursive: true });
-    }
-
-    fs.readFile(tempFilePath, (err, data) => {
-      fs.writeFile(uploadedFolder + fileName, data, (err) => {
-        fs.unlink(tempFilePath, (err) => {
-          if (err) {
-            console.error(err);
-          }
-        });
-      });
+    const s3 = new AWS.S3({
+      accessKeyId: 'AKIA3UMIWUHMD2YBFSTL',
+      secretAccessKey: '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',
     });
-    const [first, ...rest] = (uploadedFolder + fileName).split('/');
-    pictureUrl = rest.join('/');
+
+    const tempFilePath = files.pictureUrl.filepath;
+    const fileContent = fs.readFileSync(tempFilePath);
+    const fileName = `image-${Date.now()}${path.extname(files.pictureUrl.originalFilename)}`;
+
+    // Setting up S3 upload parameters
+    const params = {
+      Bucket: BUCKET_NAME,
+      Key: fileName, // File name you want to save as in S3
+      Body: fileContent,
+    };
+
+    // Uploading files to the bucket
+    const data = await s3.upload(params).promise();
+    console.log(`User image uploaded successfully. ${data.Location}`);
+    pictureUrl = data.Location;
   }
 
   const findProduct = await findOneEntity(Inventory, { _id: productId });

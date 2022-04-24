@@ -1,7 +1,7 @@
 import {
   getShopStart, getShopSuccess, getShopFailure, shopCreateSuccess,
   shopCreateFailure, getShopCategorySuccess, shopProductUpdateSuccess,
-  getShopCategoryFailure, shopProductCreateSuccess,
+  getShopCategoryFailure, shopProductCreateSuccess, shopUpdateFailure, shopUpdateSuccess,
 } from './shopRedux';
 import { userRequest } from '../api/http';
 
@@ -50,6 +50,20 @@ export const shopCreate = async (dispatch, data) => {
   } catch (err) {
     console.log(err);
     dispatch(shopCreateFailure());
+  }
+};
+
+export const shopUpdate = async (dispatch, data) => {
+  const formData = new FormData();
+  formData.append('avatarUrl', data.avatarUrl.file);
+  formData.append('shopId', data.shopId);
+  try {
+    const res = await userRequest.post('/upload', formData);
+    dispatch(shopUpdateSuccess(res.data));
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    dispatch(shopUpdateFailure());
   }
 };
 

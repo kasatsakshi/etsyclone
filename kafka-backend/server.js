@@ -13,6 +13,7 @@ import {
 } from './services/product';
 import { createOrder, getOrders } from './services/order';
 import { signup } from './services/signup';
+import { upload } from './services/upload';
 
 // Connect to MongoDB
 mongoose
@@ -72,3 +73,4 @@ handleTopicRequest('createShop', createShop);
 handleTopicRequest('createShopProduct', createShopProduct);
 handleTopicRequest('updateShopProduct', updateShopProduct);
 handleTopicRequest('updateUser', updateUser);
+handleTopicRequest('upload', upload);

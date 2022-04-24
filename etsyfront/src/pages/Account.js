@@ -9,7 +9,6 @@ import { Grid } from '@mui/material';
 import { accountInfo } from '../redux/user';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { BASE } from '../api/http';
 import defaultUser from '../assets/defaultUser.png';
 import ProductTile from '../components/ProductTile';
 
@@ -73,7 +72,7 @@ function Account() {
       {/* User Info Section */}
       <div className="account__userInfo">
         {
-          user.avatarUrl ? <img className="image__avatar" src={`${BASE}/${user.avatarUrl}`} alt="userProfile" />
+          user.avatarUrl ? <img className="image__avatar" src={`${user.avatarUrl}`} alt="userProfile" />
             : <img src={defaultUser} height="200" width="200" alt="user avatar" />
         }
         <span className="account__userName">{user.name}</span>

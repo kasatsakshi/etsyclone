@@ -97,6 +97,11 @@ const topicsToCreate = [{
   partitions: 1,
   replicationFactor: 1,
 },
+{
+  topic: 'upload',
+  partitions: 1,
+  replicationFactor: 1,
+},
 ];
 
 client.createTopics(topicsToCreate, (error, result) => {

@@ -10,7 +10,6 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import { getOrders } from '../redux/cart';
 import { numberFormat } from '../util/currency';
-import { BASE } from '../api/http';
 import defaultProduct from '../assets/defaultProduct.png';
 
 const Container = styled.div`
@@ -92,7 +91,6 @@ function Purchases() {
                   ).map((pastPurchase) => (
                     <TableRow key={pastPurchase.orderId}>
                       <TableCell component="th" scope="row">
-                        {/* {(pastPurchase.pictureUrl ? `${BASE}/${pastPurchase.pictureUrl}` : defaultProduct)} */}
                         <Avatar
                           sx={{ bgcolor: grey }}
                           src={defaultProduct}

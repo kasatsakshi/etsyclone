@@ -32,7 +32,7 @@ export default async function upload(req, res) {
     if (req.body.type === 'user') {
       await updateOneEntity(User, { email: req.body.id }, { avatarUrl: req.file.path });
     } else if (req.body.type === 'shop') {
-      await updateOneEntity(Shop, { id: req.body.id }, { avatarUrl: req.file.path });
+      await updateOneEntity(Shop, { _id: req.body.id }, { avatarUrl: req.file.path });
     } else {
       console.log('No valid type found');
       return res.status(400).json('Error in uploading file!');

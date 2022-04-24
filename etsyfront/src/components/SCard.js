@@ -6,7 +6,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch, useSelector } from 'react-redux';
 import { FavoriteBorder } from '@mui/icons-material';
 import defaultProduct from '../assets/defaultProduct.png';
-import { BASE } from '../api/http';
 import { createFavoriteProduct, deleteFavoriteProduct } from '../redux/product';
 
 function SCard({ productData }) {
@@ -17,7 +16,7 @@ function SCard({ productData }) {
   const dispatch = useDispatch();
 
   if (productData.pictureUrl) {
-    productImage = `${BASE}/${productData.pictureUrl}`;
+    productImage = `${productData.pictureUrl}`;
   } else {
     productImage = defaultProduct;
   }

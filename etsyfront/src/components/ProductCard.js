@@ -8,7 +8,6 @@ import {
 import { Edit } from '@mui/icons-material';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { BASE } from '../api/http';
 import defaultProduct from '../assets/defaultProduct.png';
 import { shopProductUpdate } from '../redux/shop';
 
@@ -97,7 +96,7 @@ export default function ProductCard({ productData }) {
   };
 
   if (productData.pictureUrl) {
-    productImage = `${BASE}/${productData.pictureUrl}`;
+    productImage = `${productData.pictureUrl}`;
   } else {
     productImage = defaultProduct;
   }
@@ -124,7 +123,7 @@ export default function ProductCard({ productData }) {
           <Stack>
             {
             productData.pictureUrl
-              ? <img src={`${BASE}/${productData.pictureUrl}`} height="200" width="200" alt="product avatar" />
+              ? <img src={`${productData.pictureUrl}`} height="200" width="200" alt="product avatar" />
               : <img src={defaultProduct} height="200" width="200" alt="owner avatar" />
           }
             <input style={{ paddingTop: 20 }} type="file" id="myImage" name="myImage" onChange={pictureChange} accept="image/png, image/jpeg" />

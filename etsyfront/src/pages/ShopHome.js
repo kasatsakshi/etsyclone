@@ -7,12 +7,13 @@ import './ShopLanding.css';
 import { useDispatch, useSelector } from 'react-redux';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { getShop, getShopCategories, shopProductCreate } from '../redux/shop';
-import { BASE } from '../api/http';
+import {
+  getShop, getShopCategories,
+  shopProductCreate, shopUpdate,
+} from '../redux/shop';
 import ProductCard from '../components/ProductCard';
 import defaultShop from '../assets/defaultShop.png';
 import defaultUser from '../assets/defaultUser.png';
-import UploadImage from '../components/UploadImage';
 
 const Container = styled.div`
 position: relative;
@@ -113,10 +114,15 @@ function ShopHome() {
   const [quantity, setQuantity] = useState('');
   const [pictureUrl, setPicture] = useState('');
 
+  const [avatarUrl, setShopPicture] = useState('');
   let isDisabled;
 
   const pictureChange = (e) => {
     setPicture({ file: e.target.files[0] });
+  };
+
+  const shopPictureChange = (e) => {
+    setShopPicture({ file: e.target.files[0] });
   };
 
   const handleClick = async (e) => {
@@ -125,6 +131,15 @@ function ShopHome() {
       name, description, pictureUrl, isCustom, category, price, quantity, shopid: shopInfo.shop._id,
     });
     handleCloseNewProduct();
+    window.location.reload();
+  };
+
+  const handleEditShopClick = async (e) => {
+    e.preventDefault();
+    await shopUpdate(dispatch, {
+      avatarUrl, shopId: shopInfo.shop._id,
+    });
+    handleCloseEditShop();
     window.location.reload();
   };
 
@@ -173,7 +188,7 @@ function ShopHome() {
               <Stack direction="row" spacing={2}>
                 {
                   shopInfo.shop.avatarUrl
-                    ? <img src={`${BASE}/${shopInfo.shop.avatarUrl}`} height="200" width="200" alt="owner avatar" />
+                    ? <img src={`${shopInfo.shop.avatarUrl}`} height="200" width="200" alt="owner avatar" />
                     : <img src={defaultShop} height="200" width="200" alt="owner avatar" />
                 }
                 <Stack spacing={2}>
@@ -196,11 +211,14 @@ function ShopHome() {
                         <Stack>
                           {
                             shopInfo.shop.avatarUrl
-                              ? <img src={`${BASE}/${shopInfo.shop.avatarUrl}`} height="200" width="200" alt="owner avatar" />
+                              ? <img src={`${shopInfo.shop.avatarUrl}`} height="200" width="200" alt="owner avatar" />
                               : <img src={defaultShop} height="200" width="200" alt="owner avatar" />
                           }
                           <div style={{ paddingTop: 30 }}>
-                            <UploadImage type="shop" id={shopInfo.shop.id} />
+                            <input type="file" id="myImage" name="myImage" onChange={shopPictureChange} accept="image/png, image/jpeg" />
+                            <Button onClick={handleEditShopClick}>
+                              Upload
+                            </Button>
                           </div>
                         </Stack>
                       </Box>
@@ -275,7 +293,7 @@ function ShopHome() {
                   <ListItem><h4 style={{ align: 'center' }}>Shop Owner</h4></ListItem>
                   {
                     shopInfo.user.avatarUrl
-                      ? <ListItem><img src={`${BASE}/${shopInfo.user.avatarUrl}`} height="100" width="100" alt="owner avatar" /></ListItem>
+                      ? <ListItem><img src={`${shopInfo.user.avatarUrl}`} height="100" width="100" alt="owner avatar" /></ListItem>
                       : <ListItem><img src={defaultUser} height="100" width="100" alt="owner avatar" /></ListItem>
                   }
                   <ListItem><p>{shopInfo.user.name}</p></ListItem>

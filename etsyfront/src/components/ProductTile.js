@@ -8,7 +8,6 @@ import {
   Card, CardHeader, Stack, Checkbox, CardActions, CardMedia, CardContent, IconButton, Box, Modal, Button,
 } from '@mui/material';
 import defaultProduct from '../assets/defaultProduct.png';
-import { BASE } from '../api/http';
 import { createFavoriteProduct, deleteFavoriteProduct } from '../redux/product';
 import { numberFormat } from '../util/currency';
 
@@ -84,7 +83,7 @@ function ProductTile({ productData }) {
   let productImage;
   const favorites = useSelector((state) => state.products.favoriteProducts);
   if (productData.pictureUrl) {
-    productImage = `${BASE}/${productData.pictureUrl}`;
+    productImage = `${productData.pictureUrl}`;
   } else {
     productImage = defaultProduct;
   }

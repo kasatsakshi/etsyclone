@@ -8,7 +8,6 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './ProfileUpdate.css';
-import { BASE } from '../api/http';
 import './Home.css';
 
 import defaultUser from '../assets/defaultUser.png';
@@ -174,9 +173,9 @@ function ProfileUpdate() {
                 </div>
                 <div className="update__picture">
                   {
-                                        user.avatarUrl ? <img className="image__avatar" src={`${BASE}/${user.avatarUrl}`} alt="userProfile" />
-                                          : <img src={defaultUser} height="200" width="200" alt="user avatar" />
-                                    }
+                      user.avatarUrl ? <img className="image__avatar" src={`${user.avatarUrl}`} alt="userProfile" />
+                        : <img src={defaultUser} height="200" width="200" alt="user avatar" />
+                  }
                   <p className="update__labeltext">Must be a .jpg, .gif or .png file smaller than 5MB and at least 400px by 400px.</p>
                 </div>
               </Stack>

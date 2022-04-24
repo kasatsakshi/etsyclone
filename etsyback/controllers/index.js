@@ -135,7 +135,46 @@ router.put('/user/update/currency', passport.authenticate('jwt', { session: fals
     }
   });
 });
-router.post('/upload', passport.authenticate('jwt', { session: false }), upload);
+router.post('/upload', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const token = req.headers.authorization;
+  const form = new formidable.IncomingForm();
+  form.multiples = true;
+  form.maxFileSize = 50 * 1024 * 1024; // 5MB
+  const input = {};
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        message: 'Unable to parse Input',
+      });
+    }
+
+    input.fields = fields;
+    input.files = files;
+
+    const request = {
+      token,
+      input,
+    };
+
+    makeRequest('upload', request, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({
+          message: 'System error, try again',
+        });
+      } else {
+        const { message, status } = results;
+        if (status !== 200) {
+          res.status(status).json({ message });
+        } else {
+          res.status(status).json(message);
+        }
+        res.end();
+      }
+    });
+  });
+});
 
 router.get('/shop', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const token = req.headers.authorization;
