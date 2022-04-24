@@ -1,7 +1,5 @@
 import express from 'express';
 import formidable from 'formidable';
-import upload from './upload';
-
 import passport from '../helpers/passport';
 import { makeRequest } from '../kafka/client';
 
