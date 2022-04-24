@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import defaultProduct from '../assets/defaultProduct.png';
 import { shopProductUpdate } from '../redux/shop';
+import { numberFormat } from '../util/currency';
 
 const style = {
   position: 'absolute',
@@ -76,6 +77,8 @@ export default function ProductCard({ productData }) {
   const [price, setPrice] = useState(productData.price);
   const [quantity, setQuantity] = useState(productData.quantity);
   const [pictureUrl, setPicture] = useState(productData.pictureUrl);
+
+  const user = useSelector((state) => state.user.currentUser);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -200,7 +203,7 @@ export default function ProductCard({ productData }) {
           <CardContent>
             <p>
               price:
-              {productData.price}
+              {numberFormat(productData.price, user ? user.currency : 'USD')}
             </p>
           </CardContent>
           <CardContent>

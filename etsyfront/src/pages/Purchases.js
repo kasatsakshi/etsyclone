@@ -41,14 +41,12 @@ const Heading = styled.h1`
 
 function Purchases() {
   const orders = useSelector((state) => state.cart.purchases);
-  console.log(orders);
   const pastPurchases = [];
   orders.map((order) => {
     order.orderDetails.map((orderDetail) => {
       pastPurchases.push(orderDetail);
     });
   });
-  console.log(pastPurchases);
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
 
@@ -93,7 +91,7 @@ function Purchases() {
                       <TableCell component="th" scope="row">
                         <Avatar
                           sx={{ bgcolor: grey }}
-                          src={defaultProduct}
+                          src={pastPurchase ? pastPurchase.pictureUrl : defaultProduct}
                           variant="square"
                         />
                       </TableCell>

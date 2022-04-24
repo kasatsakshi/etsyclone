@@ -328,6 +328,7 @@ function ShopHome() {
               </OwnerHeader>
             </ContainerHeader>
 
+            <h2>Products</h2>
             <ContainerBody>
               <Grid container spacing={2}>
                 {shopInfo.inventory.length > 0
